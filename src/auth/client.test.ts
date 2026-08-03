@@ -1,0 +1,154 @@
+import { test } from "node:test"
+import assert from "node:assert/strict"
+import { mkdtemp, rm } from "node:fs/promises"
+import { existsSync } from "node:fs"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { CapabilityGrantClient } from "./client.js"
+import { loadOrGenerateHostKey } from "./keys.js"
+
+/**
+ * Check-in-once lifecycle (ADR-0045).
+ *
+ * A human enrolls the component once and hands over a ONE-TIME bootstrap token.
+ * That token completes the first handshake; from then on the persisted host key
+ * re-registers unattended. The daemon routes on credential type, so sending the
+ * wrong one is not a soft failure — it is a 401.
+ */
+
+const DISCOVERY = {
+  protocol_version: "1.0",
+  provider_name: "Gibson",
+  issuer: "https://api.example.test",
+  default_location: "global",
+  supported_modes: ["autonomous"],
+  endpoints: {
+    register: "https://api.example.test/capabilitygrant/v1/register",
+    execute: "",
+    list: "",
+    status: "",
+    revoke: "",
+    introspect: "",
+  },
+  jwks_uri: "https://api.example.test/.well-known/jwks.json",
+}
+
+/** Stub fetch; records the Authorization header each register call carries. */
+function stubFetch(seen: string[]) {
+  return async (url: unknown, init?: { headers?: Record<string, string> }) => {
+    if (String(url).includes(".well-known/agent-configuration")) {
+      return { ok: true, json: async () => DISCOVERY } as never
+    }
+    seen.push(init?.headers?.authorization ?? "")
+    return {
+      ok: true,
+      json: async () => ({ agent_id: "agent-1", component_scope: "component:zerocool" }),
+    } as never
+  }
+}
+
+async function withTempDir(fn: (dir: string) => Promise<void>) {
+  const dir = await mkdtemp(join(tmpdir(), "cg-"))
+  const originalFetch = globalThis.fetch
+  try {
+    await fn(dir)
+  } finally {
+    globalThis.fetch = originalFetch
+    await rm(dir, { recursive: true, force: true })
+  }
+}
+
+test("a fresh host key reports first check-in; a loaded one does not", async () => {
+  await withTempDir(async (dir) => {
+    const path = join(dir, "host.key")
+    const fresh = loadOrGenerateHostKey(path)
+    assert.equal(fresh.firstCheckIn, true)
+    assert.ok(existsSync(path), "the key is persisted for the next start")
+
+    const loaded = loadOrGenerateHostKey(path)
+    assert.equal(loaded.firstCheckIn, false)
+    assert.equal(loaded.id, fresh.id, "the host identity is stable across restarts")
+  })
+})
+
+test("first registration presents the one-time bootstrap token", async () => {
+  await withTempDir(async (dir) => {
+    const seen: string[] = []
+    globalThis.fetch = stubFetch(seen) as never
+
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+      bootstrapToken: "one-time-token",
+    })
+    const { componentScope } = await client.register()
+
+    assert.equal(componentScope, "component:zerocool")
+    assert.equal(seen[0], "Bearer one-time-token")
+  })
+})
+
+test("a checked-in host re-registers with the host key and never replays the token", async () => {
+  await withTempDir(async (dir) => {
+    const seen: string[] = []
+    globalThis.fetch = stubFetch(seen) as never
+    const hostKeyPath = join(dir, "host.key")
+
+    // First start: the human-issued token.
+    await new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath,
+      bootstrapToken: "one-time-token",
+    }).register()
+
+    // Second start, same token still in the environment — it must NOT be reused.
+    await new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath,
+      bootstrapToken: "one-time-token",
+    }).register()
+
+    assert.equal(seen.length, 2)
+    assert.equal(seen[0], "Bearer one-time-token", "first check-in uses the token")
+    assert.notEqual(seen[1], "Bearer one-time-token", "a spent token must never be replayed")
+    // A host JWT is a signed JWS, so it has three dot-separated sections.
+    assert.equal(seen[1].replace("Bearer ", "").split(".").length, 3)
+  })
+})
+
+test("the environment token is ignored once the host has checked in", async () => {
+  await withTempDir(async (dir) => {
+    const seen: string[] = []
+    globalThis.fetch = stubFetch(seen) as never
+    const hostKeyPath = join(dir, "host.key")
+    loadOrGenerateHostKey(hostKeyPath) // pre-existing check-in
+
+    process.env.GIBSON_BOOTSTRAP_TOKEN = "stale-token"
+    try {
+      await new CapabilityGrantClient({
+        platformURL: "https://api.example.test",
+        agentName: "zerocool",
+        hostKeyPath,
+      }).register()
+    } finally {
+      delete process.env.GIBSON_BOOTSTRAP_TOKEN
+    }
+
+    assert.notEqual(seen[0], "Bearer stale-token")
+  })
+})
+
+test("a never-checked-in host without a token fails with actionable guidance", async () => {
+  await withTempDir(async (dir) => {
+    globalThis.fetch = stubFetch([]) as never
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+    })
+    await assert.rejects(() => client.register(), /gibson agent enroll/)
+  })
+})

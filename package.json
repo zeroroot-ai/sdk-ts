@@ -13,7 +13,8 @@
     "generate": "buf generate buf.build/zeroroot-ai/sdk && buf generate buf.build/bufbuild/protovalidate",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "prepare": "pnpm run build"
+    "prepare": "pnpm run build",
+    "test": "tsc -p tsconfig.test.json && node --test \"dist-test/**/*.test.js\""
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.2.0",

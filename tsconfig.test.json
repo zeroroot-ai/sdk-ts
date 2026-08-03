@@ -1,0 +1,13 @@
+{
+  // Tests are built to a separate output tree so the published `dist` stays
+  // production-only. NodeNext requires `.js` import specifiers in source, which
+  // node's type-stripping cannot resolve from `src` — so tests run compiled.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist-test",
+    "declaration": false
+  },
+  // Override the base exclude — the base keeps tests out of the published dist.
+  "exclude": [],
+  "include": ["src"]
+}

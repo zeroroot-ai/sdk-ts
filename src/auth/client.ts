@@ -44,7 +44,26 @@ export class CapabilityGrantClient {
     const registerURL = doc.endpoints.register
     if (!registerURL) throw new Error("gibson-client: discovery document has no register endpoint")
 
-    const bootstrap = this.config.bootstrapToken ?? process.env.GIBSON_BOOTSTRAP_TOKEN
+    // Check in once, then run unattended (ADR-0045). The daemon routes on the
+    // credential type it receives: `host+jwt` means RE-registration — the caller
+    // proves possession of an already-registered host key — and anything else is
+    // FIRST registration, which requires the one-time, human-issued bootstrap
+    // token (gibson `internal/server/daemon/capabilitygrant_register.go:134-155`).
+    //
+    // So the bootstrap token is used only when this host key was just generated.
+    // Once the host has checked in the token is spent, and replaying it would be
+    // rejected — an operator should be free to drop it from the environment
+    // rather than keep a dead credential around forever.
+    const bootstrap = this.hostKey.firstCheckIn
+      ? (this.config.bootstrapToken ?? process.env.GIBSON_BOOTSTRAP_TOKEN)
+      : undefined
+    if (this.hostKey.firstCheckIn && !bootstrap) {
+      throw new Error(
+        "gibson-client: this host has never checked in and no bootstrap token was supplied. " +
+          "Run `gibson login` then `gibson agent enroll` to obtain a one-time token, and pass it " +
+          "as bootstrapToken (or GIBSON_BOOTSTRAP_TOKEN) for this first registration only.",
+      )
+    }
     const authHeader = bootstrap ? `Bearer ${bootstrap}` : `Bearer ${signHostJWT(this.hostKey, registerURL)}`
 
     const res = await fetch(registerURL, {

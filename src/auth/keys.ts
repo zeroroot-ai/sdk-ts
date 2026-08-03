@@ -2,7 +2,18 @@ import { createHash, createPrivateKey, createPublicKey, generateKeyPairSync, typ
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { dirname } from "node:path"
 
-export interface HostKey { id: string; publicKey: KeyObject; privateKey: KeyObject }
+export interface HostKey {
+  id: string
+  publicKey: KeyObject
+  privateKey: KeyObject
+  /**
+   * True when this key was just generated, i.e. the host has never checked in.
+   * The Capability Grant handshake routes on it: a brand-new host must present
+   * the one-time bootstrap token, an existing one re-registers by proving
+   * possession of this key. See CapabilityGrantClient.register.
+   */
+  firstCheckIn: boolean
+}
 export interface AgentKey { publicKey: KeyObject; privateKey: KeyObject }
 
 /** RFC 7638 JWK thumbprint of an Ed25519 (OKP) public key. Stable host id. */
@@ -28,10 +39,10 @@ export function loadOrGenerateHostKey(path: string): HostKey {
   if (existsSync(path)) {
     const privateKey = createPrivateKey(readFileSync(path, "utf8"))
     const publicKey = createPublicKey(privateKey)
-    return { id: jwkThumbprint(publicKey), publicKey, privateKey }
+    return { id: jwkThumbprint(publicKey), publicKey, privateKey, firstCheckIn: false }
   }
   const { publicKey, privateKey } = generateKeyPairSync("ed25519")
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, (privateKey.export({ type: "pkcs8", format: "pem" }) as string), { mode: 0o600 })
-  return { id: jwkThumbprint(publicKey), publicKey, privateKey }
+  return { id: jwkThumbprint(publicKey), publicKey, privateKey, firstCheckIn: true }
 }

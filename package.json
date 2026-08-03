@@ -1,0 +1,24 @@
+{
+  "name": "@zerocool/sdk",
+  "version": "0.0.0",
+  "description": "TypeScript SDK for the Gibson platform: connect-es bindings, Capability Grant auth, component registration, and an OpenAI-compatible LLM shim. Framework-agnostic.",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "generate": "buf generate buf.build/zeroroot-ai/sdk && buf generate buf.build/bufbuild/protovalidate",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.0",
+    "@connectrpc/connect": "^2.0.0",
+    "@connectrpc/connect-node": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  }
+}

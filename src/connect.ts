@@ -1,7 +1,7 @@
 import { createGrpcTransport } from "@connectrpc/connect-node"
 import { CapabilityGrantClient, type CapabilityGrantConfig } from "./auth/client.js"
 import { createGibsonClients, type GibsonClients } from "./clients.js"
-import { registerAgent, startHeartbeat, type AgentRegistration } from "./component.js"
+import { registerInstance, startHeartbeat, type AgentRegistration, type InstanceRef } from "./component.js"
 
 export interface ConnectGibsonConfig extends CapabilityGrantConfig {
   /** Agent identity for RegisterComponent. */
@@ -13,6 +13,12 @@ export interface ConnectGibsonConfig extends CapabilityGrantConfig {
 export interface GibsonSession {
   clients: GibsonClients
   componentScope: string
+  /**
+   * The session's agent instance. Prefer this over the snapshot below: it stays
+   * correct across a re-registration, which a copied id does not.
+   */
+  instance: InstanceRef
+  /** The instance id at session start. A snapshot — see `instance`. */
   instanceId: string
   stop(): void
 }
@@ -39,7 +45,9 @@ export async function connectGibson(config: ConnectGibsonConfig): Promise<Gibson
   })
   const clients = createGibsonClients(transport)
 
-  const registered = await registerAgent(clients.component, config.agent)
-  const stop = startHeartbeat(clients.component, config.agent, registered)
-  return { clients, componentScope, instanceId: registered.instanceId, stop }
+  // The session's own identity is an agent instance; a process that also serves
+  // work registers that kind separately (see registerInstance).
+  const instance = await registerInstance(clients.component, "agent", config.agent)
+  const stop = startHeartbeat(clients.component, instance)
+  return { clients, componentScope, instance, instanceId: instance.current(), stop }
 }

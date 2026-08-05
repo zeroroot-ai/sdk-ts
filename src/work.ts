@@ -1,5 +1,6 @@
 import type { Client } from "@connectrpc/connect"
 import type { ComponentService } from "./clients.js"
+import type { InstanceRef } from "./component.js"
 
 /**
  * Dispatched work — the pull side of the component contract.
@@ -84,8 +85,6 @@ export function encodeToolError(message: string): Uint8Array {
 }
 
 export interface WorkerOptions {
-  /** Instance id returned by RegisterComponent. */
-  instanceId: string
   /** Handles a claimed tool invocation. */
   handler: ToolHandler
   /** Called on transport errors; polling continues regardless. */
@@ -94,39 +93,20 @@ export interface WorkerOptions {
   onWork?: (item: ToolInvocation) => void
   /** Delay before re-polling after an error, ms (default 2000). */
   backoffMs?: number
-  /**
-   * Re-register and return a fresh instance id.
-   *
-   * The daemon expires a component instance that stops heartbeating, and then
-   * PollWork answers NotFound forever. Without a way back, a worker that
-   * survives a brief disconnect turns into a process that is up, logging, and
-   * permanently invisible to the fleet — the worst failure shape available.
-   */
-  reregister?: () => Promise<string>
 }
 
-/**
- * Poll for work until stopped. Returns a stop function.
- *
- * PollWork long-polls server-side, so this is not a busy loop: each call blocks
- * until work arrives or the server's block timeout expires, then immediately
- * polls again. Errors back off instead of hot-looping, because the common
- * failure here is the daemon being briefly unreachable and a tight retry would
- * turn that into a self-inflicted outage.
- */
 export function startWorker(
   component: Client<typeof ComponentService>,
+  ref: InstanceRef,
   opts: WorkerOptions,
 ): () => void {
   let stopped = false
   const backoff = opts.backoffMs ?? 2_000
 
-  let instanceId = opts.instanceId
-
   const loop = async (): Promise<void> => {
     while (!stopped) {
       try {
-        const res = await component.pollWork({ instanceId })
+        const res = await component.pollWork({ instanceId: ref.current() })
         if (!res.workId) continue // block timeout expired with no work
         const invocation: ToolInvocation = {
           workId: res.workId,
@@ -149,11 +129,13 @@ export function startWorker(
         if (stopped) return
         opts.onError?.(e)
         // An expired instance is recoverable and self-inflicted-looking: the
-        // daemon simply forgot us. Re-register rather than backing off forever
-        // against an id that will never be valid again.
-        if (opts.reregister && /not[ _]?found/i.test((e as Error).message)) {
+        // daemon simply forgot us. Renew through the SHARED ref so the heartbeat
+        // keeps the same instance alive — when the two held separate ids, the
+        // heartbeat kept a dead one warm while this loop polled an id the daemon
+        // let expire, and the process spun forever looking healthy.
+        if (/not[ _]?found/i.test((e as Error).message)) {
           try {
-            instanceId = await opts.reregister()
+            await ref.renew()
             continue
           } catch (re) {
             opts.onError?.(re)

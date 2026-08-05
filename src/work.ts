@@ -9,12 +9,14 @@ import type { ComponentService } from "./clients.js"
  * claims it with PollWork, executes, and answers with SubmitResult. That is how
  * a mission node reaches code that lives outside the cluster.
  *
- * WHICH KINDS ACTUALLY GET WORK. Today the harness enqueues for two kinds:
- * `tool` (work_type `execute_proto`) and `plugin` (`plugin_invoke`) — see
- * gibson internal/engine/harness/implementation.go. Agent mission nodes resolve
- * against an IN-PROCESS agent registry and never reach this queue, so
- * registering as kind=agent and polling will block forever. Serve tool work if
- * you want a mission node to run your code (gibson#1197).
+ * WHICH KINDS GET WORK. All three: `tool` (work_type `execute_proto`), `plugin`
+ * (`plugin_invoke`) and `agent` (`agent_execute`). Agent dispatch was added in
+ * gibson#1197 / ADR-0011 — before that an agent node resolved only against an
+ * in-process registry, and a component registered as kind=agent polled forever.
+ *
+ * Each kind carries its own payload contract. The helpers below cover the tool
+ * contract; an agent worker receives a protojson `gibson.agent.v1.ExecuteRequest`
+ * and answers with an `ExecuteResponse`.
  *
  * The tool payload is a protojson-encoded gibson.tool.v1.ExecuteRequest —
  * `{ inputJson: string }` — and the result must be a protojson-encoded

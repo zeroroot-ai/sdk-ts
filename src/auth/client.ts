@@ -100,7 +100,21 @@ export class CapabilityGrantClient {
         audience: this.config.platformURL,
         componentScope: this.componentScope,
       })
-      req.header.set("authorization", `Bearer ${token}`)
+      // The per-RPC agent+jwt travels in a DEDICATED header, not Authorization.
+      //
+      // The gateway contract (epic unified-cg-identity, "Option A") reserves
+      // Authorization for Zitadel user/service tokens: Envoy's jwt_authn
+      // validates those and populates x-jwt-payload for ext-authz. A CG token in
+      // Authorization is not merely ignored — jwt_authn fails to validate it, no
+      // x-jwt-payload is set, and ext-authz rejects the call with
+      // "missing x-jwt-payload (Envoy jwt_authn must populate)". Every component
+      // RPC 401s at the edge with the daemon never seeing it.
+      //
+      // Carrying both token types in one header was considered and rejected for
+      // exactly this ambiguity. ext-authz reads x-capability-grant, fetches the
+      // verifying key by kid from the daemon, verifies the EdDSA signature, then
+      // runs per-method FGA.
+      req.header.set("x-capability-grant", token)
       return next(req)
     }
   }

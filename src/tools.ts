@@ -63,8 +63,11 @@ export async function listGibsonTools(
       })),
     }
   } catch (e) {
-    if (isUnimplemented(e)) {
-      return { tools: [], unavailable: "the daemon has no component lister wired (gibson#1186)" }
+    if (isSeamUnavailable(e)) {
+      return {
+        tools: [],
+        unavailable: seamReason(e) ?? "the daemon has no component lister wired (gibson#1186)",
+      }
     }
     throw e
   }
@@ -186,8 +189,35 @@ export function parseMaybeJSON(raw: string): unknown {
   }
 }
 
-/** True when a ConnectRPC error carries gRPC status `unimplemented` (code 12). */
-export function isUnimplemented(e: unknown): boolean {
+/**
+ * True when an error means "the platform does not offer this here", as opposed
+ * to a fault the caller could retry through.
+ *
+ * Two codes say that. `unimplemented` (12) is a seam with no backend wired.
+ * `failed_precondition` (9) is the daemon answering that the RPC exists and is
+ * understood, but the platform has not decided this caller may use it — the
+ * mission-origination seam answers that way on purpose, because a bare
+ * `unimplemented` on a healthy cluster was indistinguishable from version skew
+ * (gibson#1186).
+ *
+ * Both are permanent for this daemon, so a caller should surface the server's
+ * own message and stop, never back off and retry.
+ */
+export function isSeamUnavailable(e: unknown): boolean {
   const code = (e as { code?: unknown } | undefined)?.code
-  return code === "unimplemented" || code === 12
+  return code === "unimplemented" || code === 12 || code === "failed_precondition" || code === 9
+}
+
+/**
+ * The daemon's own explanation for an unavailable seam, when it gave one.
+ *
+ * Preferred over a hardcoded string: the daemon knows why, and the reason
+ * changes as seams land. Reads ConnectRPC's `rawMessage` — the server's message
+ * without the code prefix — and NOT `message`, which is just "[code] " plus the
+ * same text and degrades to the bare code when the server sent nothing.
+ * Returns null when there is no real explanation, so callers keep their own.
+ */
+export function seamReason(e: unknown): string | null {
+  const raw = (e as { rawMessage?: unknown } | undefined)?.rawMessage
+  return typeof raw === "string" && raw.trim() ? raw : null
 }

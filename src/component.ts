@@ -10,6 +10,32 @@ export interface AgentRegistration {
 
 export interface RegisteredComponent { instanceId: string; heartbeatIntervalMs: number }
 
+/**
+ * RegisterComponent under an explicit kind.
+ *
+ * Kind is not cosmetic — it decides whether the daemon will ever send this
+ * component work. The harness enqueues for `tool` and `plugin`; agent mission
+ * nodes resolve against an in-process registry and never reach the work queue
+ * (gibson#1195). Register as `tool` to serve mission nodes.
+ */
+export async function registerComponentAs(
+  component: Client<typeof ComponentService>,
+  kind: string,
+  reg: AgentRegistration,
+): Promise<RegisteredComponent> {
+  const res = await component.registerComponent({
+    kind,
+    name: reg.name,
+    version: reg.version,
+    capabilities: reg.capabilities ?? [],
+    metadata: reg.metadata ?? {},
+  })
+  return {
+    instanceId: res.instanceId,
+    heartbeatIntervalMs: res.heartbeatIntervalMs > 0 ? res.heartbeatIntervalMs : 15_000,
+  }
+}
+
 /** RegisterComponent as kind="agent". */
 export async function registerAgent(
   component: Client<typeof ComponentService>,

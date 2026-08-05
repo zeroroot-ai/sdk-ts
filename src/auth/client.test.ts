@@ -152,3 +152,50 @@ test("a never-checked-in host without a token fails with actionable guidance", a
     await assert.rejects(() => client.register(), /gibson agent enroll/)
   })
 })
+
+test("the per-RPC agent+jwt travels in x-capability-grant, not Authorization", async () => {
+  // Gateway contract (epic unified-cg-identity, "Option A"): Authorization is
+  // reserved for Zitadel tokens, which Envoy's jwt_authn validates into
+  // x-jwt-payload. A CG token placed there is not ignored — jwt_authn fails it,
+  // ext-authz sees no x-jwt-payload and rejects the RPC, so every component call
+  // 401s at the edge before the daemon is ever reached.
+  const dir = await mkdtemp(join(tmpdir(), "cg-header-"))
+  const client = new CapabilityGrantClient({
+    platformURL: "https://api.example:30443",
+    hostKeyPath: join(dir, "host.key"),
+    agentName: "probe",
+    bootstrapToken: "bootstrap",
+  })
+
+  // Drive register() through a stub so the interceptor has an agent id + scope.
+  const origFetch = globalThis.fetch
+  globalThis.fetch = (async (url: string | URL) =>
+    String(url).endsWith("/.well-known/agent-configuration")
+      ? new Response(
+          JSON.stringify({
+            protocol_version: "1.0",
+            endpoints: { register: "https://api.example:30443/capabilitygrant/v1/register" },
+          }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        )
+      : new Response(
+          JSON.stringify({ agent_id: "agt_1", component_scope: "component:probe" }),
+          { status: 200, headers: { "content-type": "application/json" } },
+        )) as typeof globalThis.fetch
+  try {
+    await client.register()
+  } finally {
+    globalThis.fetch = origFetch
+  }
+
+  const headers = new Headers()
+  const interceptor = client.authInterceptor()
+  await interceptor((async (r: unknown) => r) as never)({
+    header: headers,
+  } as never)
+
+  const cg = headers.get("x-capability-grant")
+  assert.ok(cg && cg.length > 0, "x-capability-grant must carry the agent+jwt")
+  assert.ok(!cg.startsWith("Bearer "), "the dedicated header carries a bare token, not a Bearer scheme")
+  assert.equal(headers.get("authorization"), null, "Authorization must stay free for Zitadel tokens")
+})

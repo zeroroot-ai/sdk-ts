@@ -1,4 +1,4 @@
-import { createConnectTransport } from "@connectrpc/connect-node"
+import { createGrpcTransport } from "@connectrpc/connect-node"
 import { CapabilityGrantClient, type CapabilityGrantConfig } from "./auth/client.js"
 import { createGibsonClients, type GibsonClients } from "./clients.js"
 import { registerAgent, startHeartbeat, type AgentRegistration } from "./component.js"
@@ -26,9 +26,15 @@ export async function connectGibson(config: ConnectGibsonConfig): Promise<Gibson
   const cg = new CapabilityGrantClient(config)
   const { componentScope } = await cg.register()
 
-  const transport = createConnectTransport({
+  // NATIVE gRPC, not the Connect protocol.
+  //
+  // The daemon's public surface is a gRPC server behind Envoy, and Envoy carries
+  // no grpc_web filter — so a Connect-protocol request reaches the upstream and
+  // comes back 415 Unsupported Media Type, after passing auth. That is a
+  // confusing place to fail: the credential was accepted and the RPC still died,
+  // which reads like a server fault rather than a client protocol choice.
+  const transport = createGrpcTransport({
     baseUrl: config.daemonURL ?? config.platformURL,
-    httpVersion: "2",
     interceptors: [cg.authInterceptor()],
   })
   const clients = createGibsonClients(transport)

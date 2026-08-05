@@ -2,7 +2,8 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import {
   callGibsonTool,
-  isUnimplemented,
+  isSeamUnavailable,
+  seamReason,
   listGibsonTools,
   parseMaybeJSON,
   queryGibsonPlugin,
@@ -121,10 +122,33 @@ test("parseMaybeJSON returns raw text for a non-JSON tool output", () => {
   assert.equal(parseMaybeJSON(""), undefined)
 })
 
-test("isUnimplemented recognises both the string and numeric gRPC codes", () => {
-  assert.equal(isUnimplemented({ code: "unimplemented" }), true)
-  assert.equal(isUnimplemented({ code: 12 }), true)
-  assert.equal(isUnimplemented({ code: "unavailable" }), false)
-  assert.equal(isUnimplemented(new Error("boom")), false)
-  assert.equal(isUnimplemented(undefined), false)
+test("isSeamUnavailable recognises both the string and numeric gRPC codes", () => {
+  assert.equal(isSeamUnavailable({ code: "unimplemented" }), true)
+  assert.equal(isSeamUnavailable({ code: 12 }), true)
+  assert.equal(isSeamUnavailable(new Error("boom")), false)
+  assert.equal(isSeamUnavailable(undefined), false)
+})
+
+test("isSeamUnavailable also covers a daemon that decided this caller may not", () => {
+  // The mission seam answers failed_precondition on purpose: the RPC exists and
+  // is understood, but the platform has not decided a component may originate a
+  // mission. Treating it as a transient fault would make a caller retry forever.
+  assert.equal(isSeamUnavailable({ code: "failed_precondition" }), true)
+  assert.equal(isSeamUnavailable({ code: 9 }), true)
+})
+
+test("isSeamUnavailable does not swallow a transient fault", () => {
+  // `unavailable` is the daemon being down — retrying is exactly right there,
+  // so it must not be reported as a permanently missing capability.
+  assert.equal(isSeamUnavailable({ code: "unavailable" }), false)
+  assert.equal(isSeamUnavailable({ code: 14 }), false)
+})
+
+test("seamReason prefers the daemon's own explanation", () => {
+  assert.equal(seamReason({ rawMessage: "not enabled: pending decisions" }), "not enabled: pending decisions")
+  // `message` is ignored: it is "[code] " plus the same text, and degrades to
+  // the bare code name when the server sent no message at all.
+  assert.equal(seamReason({ message: "[failed_precondition] not enabled" }), null)
+  assert.equal(seamReason({ rawMessage: "   " }), null)
+  assert.equal(seamReason(undefined), null)
 })

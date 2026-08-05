@@ -1,6 +1,6 @@
 import type { Client } from "@connectrpc/connect"
 import type { ComponentService } from "./clients.js"
-import { isUnimplemented } from "./tools.js"
+import { isSeamUnavailable, seamReason } from "./tools.js"
 
 /**
  * Agent delegation and missions (zerocool-plugins#10).
@@ -105,8 +105,11 @@ export async function listAgents(
       })),
     }
   } catch (e) {
-    if (isUnimplemented(e)) {
-      return { agents: [], unavailable: "the daemon has no agent delegator wired (gibson#1186)" }
+    if (isSeamUnavailable(e)) {
+      return {
+        agents: [],
+        unavailable: seamReason(e) ?? "the daemon has no agent delegator wired (gibson#1186)",
+      }
     }
     throw e
   }

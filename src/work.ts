@@ -14,7 +14,7 @@ import type { ComponentService } from "./clients.js"
  * gibson internal/engine/harness/implementation.go. Agent mission nodes resolve
  * against an IN-PROCESS agent registry and never reach this queue, so
  * registering as kind=agent and polling will block forever. Serve tool work if
- * you want a mission node to run your code (gibson#1195).
+ * you want a mission node to run your code (gibson#1197).
  *
  * The tool payload is a protojson-encoded gibson.tool.v1.ExecuteRequest —
  * `{ inputJson: string }` — and the result must be a protojson-encoded

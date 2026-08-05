@@ -16,7 +16,7 @@ export interface RegisteredComponent { instanceId: string; heartbeatIntervalMs: 
  * Kind is not cosmetic — it decides whether the daemon will ever send this
  * component work. The harness enqueues for `tool` and `plugin`; agent mission
  * nodes resolve against an in-process registry and never reach the work queue
- * (gibson#1195). Register as `tool` to serve mission nodes.
+ * (gibson#1197). Register as `tool` to serve mission nodes.
  */
 export async function registerComponentAs(
   component: Client<typeof ComponentService>,

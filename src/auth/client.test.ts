@@ -4,7 +4,7 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { CapabilityGrantClient } from "./client.js"
+import { CapabilityGrantClient, normalizePlatformURL } from "./client.js"
 import { loadOrGenerateHostKey } from "./keys.js"
 
 /**
@@ -198,4 +198,53 @@ test("the per-RPC agent+jwt travels in x-capability-grant, not Authorization", a
   assert.ok(cg && cg.length > 0, "x-capability-grant must carry the agent+jwt")
   assert.ok(!cg.startsWith("Bearer "), "the dedicated header carries a bare token, not a Bearer scheme")
   assert.equal(headers.get("authorization"), null, "Authorization must stay free for Zitadel tokens")
+})
+
+/**
+ * Audience normalization (issue #7).
+ *
+ * ext-authz pins CG-JWT audiences with an exact-string allowlist (gibson#1282),
+ * so the platform URL must canonicalize to one exact string no matter how the
+ * operator wrote GIBSON_PLATFORM_URL. A trailing slash would mint a distinct
+ * `aud` and fail the pin with an opaque 401.
+ */
+
+test("normalizePlatformURL strips trailing slashes and leaves clean URLs alone", () => {
+  assert.equal(normalizePlatformURL("https://api.zeroroot.ai/"), "https://api.zeroroot.ai")
+  assert.equal(normalizePlatformURL("https://api.zeroroot.ai///"), "https://api.zeroroot.ai")
+  assert.equal(normalizePlatformURL("https://api.zeroroot.ai"), "https://api.zeroroot.ai")
+  assert.equal(normalizePlatformURL("https://api.example:30443/"), "https://api.example:30443")
+  assert.equal(normalizePlatformURL("https://api.example:30443"), "https://api.example:30443")
+})
+
+test("normalizePlatformURL rejects invalid or non-http(s) URLs with a clear error", () => {
+  assert.throws(() => normalizePlatformURL("api.zeroroot.ai"), /not a valid URL.*GIBSON_PLATFORM_URL/s)
+  assert.throws(() => normalizePlatformURL(""), /not a valid URL/)
+  assert.throws(() => normalizePlatformURL("grpc://api.zeroroot.ai"), /must be http\(s\)/)
+})
+
+test("a trailing-slash platform URL mints the canonical bare origin as aud", async () => {
+  await withTempDir(async (dir) => {
+    globalThis.fetch = stubFetch([]) as never
+
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test/", // operator typo: trailing slash
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+      bootstrapToken: "one-time-token",
+    })
+    await client.register()
+
+    // The transport baseUrl and the minted audience must agree: connectGibson
+    // wires createGrpcTransport's baseUrl from this same canonical value.
+    assert.equal(client.platformURL, "https://api.example.test")
+
+    const headers = new Headers()
+    await client.authInterceptor()((async (r: unknown) => r) as never)({ header: headers } as never)
+    const token = headers.get("x-capability-grant")
+    assert.ok(token, "interceptor must attach x-capability-grant")
+    const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString()) as { aud: string }
+    assert.equal(payload.aud, "https://api.example.test", "aud must be the normalized bare origin")
+    assert.equal(payload.aud, client.platformURL, "aud and transport baseUrl source must be the same string")
+  })
 })

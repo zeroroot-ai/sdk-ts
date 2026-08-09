@@ -192,6 +192,8 @@ test("the per-RPC agent+jwt travels in x-capability-grant, not Authorization", a
   const interceptor = client.authInterceptor()
   await interceptor((async (r: unknown) => r) as never)({
     header: headers,
+    service: { typeName: "gibson.daemon.v1.DaemonService" },
+    method: { name: "Ping" },
   } as never)
 
   const cg = headers.get("x-capability-grant")
@@ -201,12 +203,12 @@ test("the per-RPC agent+jwt travels in x-capability-grant, not Authorization", a
 })
 
 /**
- * Audience normalization (issue #7).
+ * Platform-URL normalization.
  *
- * ext-authz pins CG-JWT audiences with an exact-string allowlist (gibson#1282),
- * so the platform URL must canonicalize to one exact string no matter how the
- * operator wrote GIBSON_PLATFORM_URL. A trailing slash would mint a distinct
- * `aud` and fail the pin with an opaque 401.
+ * The platform URL feeds the transport/discovery base URL, so it must
+ * canonicalize to one exact string no matter how the operator wrote
+ * GIBSON_PLATFORM_URL. As of gibson#1246 it no longer feeds the CG-JWT `aud`
+ * (that is a fixed constant) — request binding lives in the `method` claim.
  */
 
 test("normalizePlatformURL strips trailing slashes and leaves clean URLs alone", () => {
@@ -223,7 +225,7 @@ test("normalizePlatformURL rejects invalid or non-http(s) URLs with a clear erro
   assert.throws(() => normalizePlatformURL("grpc://api.zeroroot.ai"), /must be http\(s\)/)
 })
 
-test("a trailing-slash platform URL mints the canonical bare origin as aud", async () => {
+test("the agent+jwt binds the request method and mints the stable daemon audience", async () => {
   await withTempDir(async (dir) => {
     globalThis.fetch = stubFetch([]) as never
 
@@ -235,16 +237,26 @@ test("a trailing-slash platform URL mints the canonical bare origin as aud", asy
     })
     await client.register()
 
-    // The transport baseUrl and the minted audience must agree: connectGibson
-    // wires createGrpcTransport's baseUrl from this same canonical value.
+    // Normalization still holds for the transport/discovery base URL.
     assert.equal(client.platformURL, "https://api.example.test")
 
     const headers = new Headers()
-    await client.authInterceptor()((async (r: unknown) => r) as never)({ header: headers } as never)
+    await client.authInterceptor()((async (r: unknown) => r) as never)({
+      header: headers,
+      service: { typeName: "gibson.daemon.v1.DaemonService" },
+      method: { name: "GetMission" },
+    } as never)
     const token = headers.get("x-capability-grant")
     assert.ok(token, "interceptor must attach x-capability-grant")
-    const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString()) as { aud: string }
-    assert.equal(payload.aud, "https://api.example.test", "aud must be the normalized bare origin")
-    assert.equal(payload.aud, client.platformURL, "aud and transport baseUrl source must be the same string")
+    const payload = JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString()) as {
+      aud: string
+      method: string
+    }
+    assert.equal(payload.aud, "zeroroot.ai/gibson-daemon", "aud is the stable daemon constant, never the platform URL")
+    assert.equal(
+      payload.method,
+      "/gibson.daemon.v1.DaemonService/GetMission",
+      "method binds the token to the exact RPC the interceptor saw",
+    )
   })
 })

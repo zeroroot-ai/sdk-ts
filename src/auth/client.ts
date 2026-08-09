@@ -18,17 +18,15 @@ export interface CapabilityGrantConfig {
 interface RegistrationResponse { agent_id: string; component_scope: string; capabilities?: unknown[] }
 
 /**
- * Canonicalize the platform URL once, at config ingestion, so every consumer —
- * the CG-JWT `aud` claim, discovery, and the Connect transport baseUrl — sees
- * one exact string. ext-authz pins audiences with an exact-string allowlist
- * (gibson#1282), so `https://api.zeroroot.ai/` vs `https://api.zeroroot.ai`
- * is the difference between a 200 and an opaque 401.
+ * Canonicalize the platform URL once, at config ingestion, so discovery and the
+ * Connect transport baseUrl see one exact string no matter how the operator
+ * wrote GIBSON_PLATFORM_URL (a stray trailing slash would split the base URL
+ * two ways).
  *
- * The audience SHAPE deliberately stays the bare origin: the deploy chart's
- * allowlist carries that entry for sdk-ts (deploy#1312). Aligning with the Go
- * SDK's per-service `https://<authority>/<proto.package.Service>` form is a
- * coordinated change with ext-authz configuration (see sdk#452 and
- * deploy#1245) and must not be made unilaterally here.
+ * As of gibson#1246 the CG-JWT `aud` is a fixed constant (AUDIENCE_GIBSON_DAEMON),
+ * NOT the platform URL, and request binding lives in the `method` claim — so
+ * this normalization no longer feeds the audience. It still matters for the
+ * transport/discovery base URL.
  */
 export function normalizePlatformURL(raw: string): string {
   let parsed: URL
@@ -59,7 +57,7 @@ export class CapabilityGrantClient {
   private readonly agentKey: AgentKey = generateAgentKey()
   private agentID?: string
   private componentScope?: string
-  /** Canonical platform URL — the exact string minted into every `aud` claim. */
+  /** Canonical platform URL — the transport/discovery base (no longer the `aud`). */
   readonly platformURL: string
 
   constructor(private readonly config: CapabilityGrantConfig) {
@@ -131,10 +129,12 @@ export class CapabilityGrantClient {
       const token = signAgentJWT(this.agentKey, {
         hostID: this.hostKey.id,
         agentID: this.agentID,
-        // The normalized URL, never the raw config value: ext-authz matches
-        // `aud` against an exact-string allowlist, and a stray trailing slash
-        // (GIBSON_PLATFORM_URL=https://api.zeroroot.ai/) would 401 opaquely.
-        audience: this.platformURL,
+        // Bind the token to this exact RPC (gibson#1246). The gRPC method path
+        // is "/<service.typeName>/<method.name>" — the same string ext-authz
+        // reads from the request `:path`, so the verifier can require a match.
+        // The audience is now a fixed constant (AUDIENCE_GIBSON_DAEMON) minted
+        // inside signAgentJWT, not the platform URL.
+        method: `/${req.service.typeName}/${req.method.name}`,
         componentScope: this.componentScope,
       })
       // The per-RPC agent+jwt travels in a DEDICATED header, not Authorization.

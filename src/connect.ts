@@ -1,5 +1,5 @@
 import { createGrpcTransport } from "@connectrpc/connect-node"
-import { CapabilityGrantClient, type CapabilityGrantConfig } from "./auth/client.js"
+import { CapabilityGrantClient, normalizePlatformURL, type CapabilityGrantConfig } from "./auth/client.js"
 import { createGibsonClients, type GibsonClients } from "./clients.js"
 import { registerInstance, startHeartbeat, type AgentRegistration, type InstanceRef } from "./component.js"
 
@@ -40,7 +40,11 @@ export async function connectGibson(config: ConnectGibsonConfig): Promise<Gibson
   // confusing place to fail: the credential was accepted and the RPC still died,
   // which reads like a server fault rather than a client protocol choice.
   const transport = createGrpcTransport({
-    baseUrl: config.daemonURL ?? config.platformURL,
+    // Normalized with the same function that mints the CG-JWT `aud` claim, so
+    // the transport target and the token audience can never disagree on the
+    // exact string ext-authz pins (issue #7). With no daemonURL override the
+    // baseUrl IS the client's canonical platformURL.
+    baseUrl: config.daemonURL ? normalizePlatformURL(config.daemonURL) : cg.platformURL,
     interceptors: [cg.authInterceptor()],
   })
   const clients = createGibsonClients(transport)

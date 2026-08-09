@@ -18,6 +18,37 @@ export interface CapabilityGrantConfig {
 interface RegistrationResponse { agent_id: string; component_scope: string; capabilities?: unknown[] }
 
 /**
+ * Canonicalize the platform URL once, at config ingestion, so every consumer —
+ * the CG-JWT `aud` claim, discovery, and the Connect transport baseUrl — sees
+ * one exact string. ext-authz pins audiences with an exact-string allowlist
+ * (gibson#1282), so `https://api.zeroroot.ai/` vs `https://api.zeroroot.ai`
+ * is the difference between a 200 and an opaque 401.
+ *
+ * The audience SHAPE deliberately stays the bare origin: the deploy chart's
+ * allowlist carries that entry for sdk-ts (deploy#1312). Aligning with the Go
+ * SDK's per-service `https://<authority>/<proto.package.Service>` form is a
+ * coordinated change with ext-authz configuration (see sdk#452 and
+ * deploy#1245) and must not be made unilaterally here.
+ */
+export function normalizePlatformURL(raw: string): string {
+  let parsed: URL
+  try {
+    parsed = new URL(raw)
+  } catch {
+    throw new Error(
+      `gibson-client: platformURL ${JSON.stringify(raw)} is not a valid URL ` +
+        "(expected e.g. https://api.zeroroot.ai — check GIBSON_PLATFORM_URL)",
+    )
+  }
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+    throw new Error(
+      `gibson-client: platformURL ${JSON.stringify(raw)} must be http(s), got ${parsed.protocol.slice(0, -1)}`,
+    )
+  }
+  return raw.trim().replace(/\/+$/, "")
+}
+
+/**
  * Client side of the Gibson Capability Grant Protocol (port of
  * sdk/capabilitygrant; ADR-0045/0036). Discover -> register a persistent host
  * key with the bootstrap API key -> mint short-lived agent+jwt per RPC.
@@ -28,13 +59,16 @@ export class CapabilityGrantClient {
   private readonly agentKey: AgentKey = generateAgentKey()
   private agentID?: string
   private componentScope?: string
+  /** Canonical platform URL — the exact string minted into every `aud` claim. */
+  readonly platformURL: string
 
   constructor(private readonly config: CapabilityGrantConfig) {
+    this.platformURL = normalizePlatformURL(config.platformURL)
     this.hostKey = loadOrGenerateHostKey(config.hostKeyPath)
   }
 
   async discoverPlatform(): Promise<DiscoveryDocument> {
-    this.discovery = await discover(this.config.platformURL)
+    this.discovery = await discover(this.platformURL)
     return this.discovery
   }
 
@@ -97,7 +131,10 @@ export class CapabilityGrantClient {
       const token = signAgentJWT(this.agentKey, {
         hostID: this.hostKey.id,
         agentID: this.agentID,
-        audience: this.config.platformURL,
+        // The normalized URL, never the raw config value: ext-authz matches
+        // `aud` against an exact-string allowlist, and a stray trailing slash
+        // (GIBSON_PLATFORM_URL=https://api.zeroroot.ai/) would 401 opaquely.
+        audience: this.platformURL,
         componentScope: this.componentScope,
       })
       // The per-RPC agent+jwt travels in a DEDICATED header, not Authorization.

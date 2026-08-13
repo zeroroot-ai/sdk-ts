@@ -64,7 +64,7 @@ export function newTask(goal: string, opts: Partial<Omit<Task, "Goal">> = {}): T
     Goal: goal,
     // The Go SDK keeps the goal in Context["goal"] as well; a delegate may read
     // either, so populate both.
-    Context: { goal, ...(opts.Context ?? {}) },
+    Context: { goal, ...opts.Context },
     ...(opts.Constraints ? { Constraints: opts.Constraints } : {}),
     ...(opts.Metadata ? { Metadata: opts.Metadata } : {}),
   }

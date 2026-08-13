@@ -23,12 +23,12 @@ permissions:
 jobs:
   fast:
     if: github.event_name == 'pull_request'
-    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@v2.2.0 # pin: 7f6f1e6
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@main # DEBUG: bisecting startup_failure
     with:
       tier: fast
 
   heavy:
     if: github.event_name == 'merge_group'
-    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@v2.2.0 # pin: 7f6f1e6
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@main # DEBUG: bisecting startup_failure
     with:
       tier: heavy

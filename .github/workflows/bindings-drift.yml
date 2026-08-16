@@ -1,0 +1,89 @@
+name: bindings-drift
+
+# Checks daily that the committed `src/gen` still matches what the BSR module
+# `buf.build/zeroroot-ai/sdk` generates today.
+#
+# Why this exists (sdk-ts#20): `pnpm generate` resolves the module's default
+# `main` label, and nothing in this repo pins or records which BSR commit the
+# checked-in bindings came from. When the SDK's own publish job broke, the label
+# stopped moving and `src/gen` sat two weeks and three releases behind in total
+# silence — it kept an RPC the platform had removed and missed the whole harness
+# session surface. Nothing here could tell, because a frozen label generates
+# clean every time.
+#
+# A schedule rather than a PR gate: drift is caused by an upstream release, not
+# by the PR in front of you, so failing unrelated PRs would be noise. This files
+# one tracked issue instead, the same pattern the SDK's buf-push uses.
+#
+# It reads a public BSR module, so it needs no BUF_TOKEN.
+
+on:
+  schedule:
+    # Daily 07:31 UTC. SDK releases are frequent; a week of drift is too much.
+    - cron: '31 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: bindings drift
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install buf
+        # bufbuild/buf-setup-action ships no annotated v1 tag, only a moving
+        # `v1` branch -- floating-branch risk, re-resolve periodically. Same
+        # SHA the SDK's buf-push workflow pins.
+        uses: bufbuild/buf-setup-action@a47c93e0b1648d5651a065437926377d060baa99 # v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Regenerate from BSR
+        # Mirrors package.json's `generate` script. The plugin is remote, so no
+        # node toolchain is needed to produce the bindings.
+        run: |
+          buf generate buf.build/zeroroot-ai/sdk
+          buf generate buf.build/bufbuild/protovalidate
+
+      - name: Compare against the committed bindings
+        id: diff
+        run: |
+          if git diff --quiet -- src/gen; then
+            echo "src/gen matches the BSR module."
+          else
+            echo "drifted=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- src/gen
+            echo "::error::src/gen is behind buf.build/zeroroot-ai/sdk. Run 'pnpm generate' and commit."
+            exit 1
+          fi
+
+      - name: File or update tracked issue on drift
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TITLE="fix(gen): src/gen has drifted from buf.build/zeroroot-ai/sdk"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          STAT="$(git diff --stat -- src/gen || true)"
+          BODY="## The committed bindings are stale\n\n"
+          BODY="${BODY}Run: ${RUN_URL}\n\n"
+          BODY="${BODY}\`buf generate buf.build/zeroroot-ai/sdk\` produces output that differs from \`src/gen\` on \`main\`:\n\n"
+          BODY="${BODY}\`\`\`\n${STAT}\n\`\`\`\n\n"
+          BODY="${BODY}Fix: \`pnpm generate && pnpm typecheck && pnpm test\`, then commit \`src/gen\`. "
+          BODY="${BODY}Expect real call-site work if the SDK removed or renamed an RPC.\n\n"
+          BODY="${BODY}This issue is auto-filed by the bindings-drift workflow and refreshed in place while the drift lasts."
+          EXISTING=$(gh issue list -R "${{ github.repository }}" \
+                       --state open --search "in:title \"src/gen has drifted\"" \
+                       --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            printf "%b" "$BODY" | gh issue comment "$EXISTING" -R "${{ github.repository }}" --body-file -
+          else
+            printf "%b" "$BODY" | gh issue create -R "${{ github.repository }}" --title "$TITLE" --body-file -
+          fi

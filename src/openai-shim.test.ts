@@ -220,9 +220,39 @@ test("tool history flattens deterministically into role+content messages", async
     assert.equal(assistant.role, "assistant")
     assert.match(assistant.content, /\[tool_calls\]/)
     assert.match(assistant.content, /http_probe/)
-    assert.equal(toolResult.role, "tool")
     assert.match(toolResult.content, /^\[tool_result call_1\]/)
     assert.match(toolResult.content, /"status":200/)
+  })
+})
+
+test("a tool result never travels as a tool-role turn", async () => {
+  // LLMMessage has no tool_call_id, and providers reject a tool-role message
+  // without one — so a tool-role turn would fail the second step of every
+  // agent loop. Nothing the shim emits may carry role "tool".
+  let captured: { messages: { role: string; content: string }[] } | undefined
+  const component = {
+    complete: async (req: typeof captured) => {
+      captured = req
+      return { response: { role: "assistant", content: "done" }, usage: {} }
+    },
+  }
+  await withShim(component, async (shim) => {
+    await post(shim, {
+      model: "primary",
+      messages: [
+        { role: "user", content: "probe example.com" },
+        {
+          role: "assistant",
+          content: null,
+          tool_calls: [{ id: "call_1", type: "function", function: { name: "http_probe", arguments: "{}" } }],
+        },
+        { role: "tool", tool_call_id: "call_1", content: '{"status":200}' },
+        { role: "tool", content: "an id-less result" },
+      ],
+    })
+    const roles = captured!.messages.map((m) => m.role)
+    assert.deepEqual(roles, ["user", "assistant", "user", "user"])
+    assert.match(captured!.messages[3].content, /^\[tool_result\] /)
   })
 })
 

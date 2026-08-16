@@ -22,9 +22,10 @@ import type { ComponentService } from "./clients.js"
  *
  * Tool-history flattening: the wire message (`LLMMessage`) carries role +
  * content only, so assistant `tool_calls` and `tool` results are flattened
- * into content deterministically (JSON for calls, plain content for results,
- * with the originating call id kept). First-class tool history needs a proto
- * change, tracked in zeroroot-ai/sdk#463.
+ * into content deterministically — see toWireMessages for why a tool result
+ * travels as a "user" turn rather than a "tool" one. First-class tool history
+ * landed in the proto as zeroroot-ai/sdk#473 and replaces the flattening once
+ * the generated bindings carry it.
  */
 export interface ShimOptions {
   component: Client<typeof ComponentService>
@@ -61,11 +62,20 @@ function contentToString(c: unknown): string {
 /**
  * Flatten an OpenAI conversation into role+content wire messages.
  *
- * Assistant tool calls become a JSON line appended to the content; tool
- * results keep role "tool" and carry their originating call id inline. The
- * shape is lossy by construction — the wire message has no tool fields — but
- * deterministic, so the model sees a faithful transcript of what it called
- * and what came back.
+ * Assistant tool calls become a JSON line appended to the content. Tool
+ * results become a "user" turn carrying their originating call id inline —
+ * NOT a "tool" turn. `LLMMessage` has no `tool_call_id` field, and every
+ * upstream provider requires one on a tool-role message (the harness maps
+ * role "tool" straight to the provider's tool message with an empty id, which
+ * the provider rejects), so a tool-role turn would fail the whole request on
+ * the second step of any agent loop. A "user" turn always transports.
+ *
+ * The shape is lossy by construction but deterministic, so the model sees a
+ * faithful transcript of what it called and what came back. First-class tool
+ * history exists in the proto (zeroroot-ai/sdk#473: `LLMMessage.tool_calls`
+ * and `tool_call_id`) and replaces this once those fields are reachable from
+ * the generated bindings — see zeroroot-ai/sdk#446 for the BSR module that
+ * still serves the pre-#473 descriptor.
  */
 function toWireMessages(messages: OpenAIMessage[]): { role: string; content: string }[] {
   return (messages ?? []).map((m) => {
@@ -79,8 +89,9 @@ function toWireMessages(messages: OpenAIMessage[]): { role: string; content: str
       const line = `[tool_calls] ${JSON.stringify(calls)}`
       content = content ? `${content}\n${line}` : line
     }
-    if (m.role === "tool" && m.tool_call_id) {
-      content = `[tool_result ${m.tool_call_id}] ${content}`
+    if (m.role === "tool") {
+      const id = m.tool_call_id ?? ""
+      return { role: "user", content: id ? `[tool_result ${id}] ${content}` : `[tool_result] ${content}` }
     }
     return { role: m.role, content }
   })

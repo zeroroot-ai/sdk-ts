@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.2.0...v0.3.0) (2026-08-17)
+
+
+### Features
+
+* **callback:** dial the harness with the task grant, not the component's ([#27](https://github.com/zeroroot-ai/sdk-ts/issues/27)) ([6afc7a4](https://github.com/zeroroot-ai/sdk-ts/commit/6afc7a4b8b4d8ff40caa6d7fbf17ecdbf8ddfe63))
+* **knowledge:** read the graph over the task-scoped harness ([#29](https://github.com/zeroroot-ai/sdk-ts/issues/29)) ([5c44cec](https://github.com/zeroroot-ai/sdk-ts/commit/5c44cec46472ec7a33f0133ceb50c2a63d7f05e9))
+
 ## [0.2.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.1.0...v0.2.0) (2026-08-17)
 
 

@@ -1,4 +1,4 @@
-// @zerocool/sdk — typed access to the Gibson daemon.
+// @zeroroot-ai/sdk — typed access to the Gibson daemon.
 // connect-es bindings are generated from BSR (buf.build/zeroroot-ai/sdk) under ./gen.
 export * from "./clients.js"
 export * from "./component.js"

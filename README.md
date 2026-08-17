@@ -1,4 +1,4 @@
-# @zerocool/sdk (sdk-ts)
+# @zeroroot-ai/sdk (sdk-ts)
 
 The TypeScript SDK for the [Gibson](https://zeroroot.ai) platform — **framework-agnostic**.
 Any TS program can use it to become a Gibson component and talk to the harness.

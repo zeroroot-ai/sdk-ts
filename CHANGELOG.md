@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.3.0...v0.4.0) (2026-08-17)
+
+
+### Features
+
+* **knowledge:** componentKnowledge, the interactive counterpart ([#30](https://github.com/zeroroot-ai/sdk-ts/issues/30)) ([6643a6c](https://github.com/zeroroot-ai/sdk-ts/commit/6643a6c19a76bcf22c58e8eeb43899ea44b392c3))
+
 ## [0.3.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.2.0...v0.3.0) (2026-08-17)
 
 

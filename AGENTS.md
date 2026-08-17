@@ -4,7 +4,7 @@
 
 ## TL;DR
 
-`@zerocool/sdk` — the MIT, framework-agnostic TypeScript SDK for the
+`@zeroroot-ai/sdk` — the MIT, framework-agnostic TypeScript SDK for the
 Gibson platform: connect-es bindings, Capability-Grant auth (Ed25519
 host/agent keys, `agent+jwt` interceptor), component lifecycle
 (`RegisterComponent` + heartbeat, `connectGibson()`), and a local

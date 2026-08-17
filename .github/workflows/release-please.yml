@@ -1,7 +1,7 @@
 name: release-please
 
 # release-please opens a release PR from Conventional Commits; merging it
-# creates the tag and release, and the publish job ships @zerocool/sdk to
+# creates the tag and release, and the publish job ships @zeroroot-ai/sdk to
 # npm. Publishing is gated on the NPM_TOKEN secret existing — until the
 # npm scope is claimed and the token added, the job warns and skips, so
 # releases keep working while npm lags.
@@ -79,7 +79,7 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build
 
-      - name: Publish @zerocool/sdk
+      - name: Publish @zeroroot-ai/sdk
         if: steps.gate.outputs.ready == 'true'
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

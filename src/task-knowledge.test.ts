@@ -75,3 +75,13 @@ test("query defaults topK rather than sending an unbounded request", async () =>
   const q = (seen.queryNodes as { query: { topK: number } }).query
   assert.equal(q.topK, 10)
 })
+
+test("componentKnowledge refuses run history rather than reporting none", async () => {
+  // ComponentService has the RPC but the SDK has never exposed a client for it.
+  // Answering [] would tell an agent this mission has no prior runs, which it
+  // cannot distinguish from "this transport cannot tell you" — the same
+  // conflation ErrKnowledgeUnavailable exists to prevent on the Go side.
+  const { componentKnowledge } = await import("./task-knowledge.js")
+  const k = componentKnowledge({} as never)
+  await assert.rejects(() => k.runHistory(), /not available over ComponentService/)
+})

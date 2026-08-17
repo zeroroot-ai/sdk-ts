@@ -3,7 +3,17 @@ import type { HarnessCallbackService } from "./clients.js"
 import type { AttackChain, AttackPattern, FindingNode } from "./gen/gibson/graphrag/v1/graphrag_pb.js"
 import type { MissionRunSummary } from "./gen/gibson/types/v1/types_pb.js"
 import { RunScope } from "./gen/gibson/harness/v1/harness_callback_pb.js"
-import { decodeProperties, type KnowledgeHit, type QueryKnowledgeOptions } from "./knowledge.js"
+import type { ComponentService } from "./clients.js"
+import {
+  decodeProperties,
+  findSimilarAttacks,
+  findSimilarFindings,
+  getAttackChains,
+  getRelatedFindings,
+  queryKnowledge,
+  type KnowledgeHit,
+  type QueryKnowledgeOptions,
+} from "./knowledge.js"
 
 /**
  * The knowledge reads over the TASK-scoped callback harness.
@@ -90,3 +100,44 @@ export function taskKnowledge(harness: Client<typeof HarnessCallbackService>): K
 
 /** Re-exported so a caller can name a scope without importing generated code. */
 export { RunScope }
+
+/**
+ * Build a {@link KnowledgeSource} over a ComponentService client.
+ *
+ * The counterpart to {@link taskKnowledge}, reading the same graph with the
+ * component's own grant. Correct for an INTERACTIVE agent — a human started it
+ * and there is no task to scope to. A dispatched run should use
+ * {@link taskKnowledge} instead, so it holds only the authority its dispatch
+ * granted.
+ *
+ * Both exist behind one interface so a caller decides once, at startup, and the
+ * rest of its code never asks which grant it is holding.
+ */
+export function componentKnowledge(component: Client<typeof ComponentService>): KnowledgeSource {
+  return {
+    query: (opts) => queryKnowledge(component, opts),
+
+    // ComponentService answers these four with `bytes results_json`, so they
+    // decode here rather than at every caller. The shapes match the typed
+    // callback messages field-for-field — same graph, two transports.
+    similarFindings: async (findingId, topK = 5) =>
+      (await findSimilarFindings(component, findingId, topK)) as unknown as FindingNode[],
+    relatedFindings: async (findingId) =>
+      (await getRelatedFindings(component, findingId)) as unknown as FindingNode[],
+    similarAttacks: async (content, topK = 5) =>
+      (await findSimilarAttacks(component, content, topK)) as unknown as AttackPattern[],
+    attackChains: async (techniqueId, maxDepth = 3) =>
+      (await getAttackChains(component, techniqueId, maxDepth)) as unknown as AttackChain[],
+
+    // ComponentService has GetMissionRunHistory, but the SDK has never exposed a
+    // client for it. Reported as unsupported rather than answered with an empty
+    // list: "no runs" and "this transport cannot tell you" are different, and an
+    // agent that conflates them reports a clean history it never read.
+    runHistory: async () => {
+      throw new Error(
+        "componentKnowledge: mission run history is not available over ComponentService; " +
+          "use a dispatched run's task harness (taskKnowledge)",
+      )
+    },
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "@zeroroot-ai/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TypeScript SDK for the Gibson platform: connect-es bindings, Capability Grant auth, component registration, and an OpenAI-compatible LLM shim. Framework-agnostic.",
   "license": "MIT",
   "type": "module",

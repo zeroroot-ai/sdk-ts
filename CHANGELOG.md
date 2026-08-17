@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.1.0...v0.2.0) (2026-08-17)
+
+
+### Features
+
+* **work:** serve agent_execute work — the kind=agent dispatched shape ([#24](https://github.com/zeroroot-ai/sdk-ts/issues/24)) ([3b68e95](https://github.com/zeroroot-ai/sdk-ts/commit/3b68e956b2866cd3f9e6a0971a8608c68b4b4995))
+
 ## 0.1.0 (2026-08-16)
 
 

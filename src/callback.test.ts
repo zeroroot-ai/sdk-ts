@@ -49,6 +49,17 @@ test("callbackBaseUrl passes an explicit http(s) endpoint through", () => {
   assert.equal(callbackBaseUrl("https://daemon.example:8443/"), "https://daemon.example:8443")
 })
 
+test("callbackBaseUrl strips many trailing slashes in linear time", () => {
+  // `replace(/\/+$/, "")` is quadratic here — the engine retries the `+` from
+  // every start position — and this input arrives off the wire. CodeQL flagged
+  // it as a polynomial ReDoS on the first cut of this file.
+  const many = "gibson:50001" + "/".repeat(50_000)
+  const started = process.hrtime.bigint()
+  assert.equal(callbackBaseUrl(many), "https://gibson:50001")
+  const elapsedMs = Number(process.hrtime.bigint() - started) / 1e6
+  assert.ok(elapsedMs < 250, `expected linear strip, took ${elapsedMs.toFixed(1)}ms`)
+})
+
 test("callbackBaseUrl rejects a non-http scheme rather than mangling it", () => {
   // Gluing "https://" onto "grpc://host:1" yields an unresolvable host and a
   // dial error that points nowhere near the real mistake.

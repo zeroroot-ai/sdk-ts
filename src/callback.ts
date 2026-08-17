@@ -52,6 +52,20 @@ export function callbackAuthInterceptor(token: string): Interceptor {
 }
 
 /**
+ * Strip trailing slashes without a regex.
+ *
+ * `replace(/\/+$/, "")` is the obvious spelling and it is quadratic on a string
+ * of many slashes — the regex engine retries the `+` from each start position.
+ * CodeQL flags it as a polynomial ReDoS, and it is right to: this input arrives
+ * off the wire. A character scan is linear and says the same thing.
+ */
+function stripTrailingSlashes(s: string): string {
+  let end = s.length
+  while (end > 0 && s.charCodeAt(end - 1) === 47 /* "/" */) end -= 1
+  return s.slice(0, end)
+}
+
+/**
  * Turn a `callback_endpoint` into a connect-node `baseUrl`.
  *
  * A value that already carries an http(s) scheme is passed through untouched
@@ -62,7 +76,7 @@ export function callbackBaseUrl(endpoint: string, insecure = false): string {
   const raw = endpoint.trim()
   if (!raw) throw new Error("gibson-sdk: callback endpoint is empty")
 
-  if (/^https?:\/\//i.test(raw)) return raw.replace(/\/+$/, "")
+  if (/^https?:\/\//i.test(raw)) return stripTrailingSlashes(raw)
 
   // Reject anything that looks like a different protocol rather than silently
   // gluing "https://" onto it and producing an unresolvable host.
@@ -71,7 +85,7 @@ export function callbackBaseUrl(endpoint: string, insecure = false): string {
       `gibson-sdk: callback endpoint ${JSON.stringify(endpoint)} must be http(s) or a bare host:port`,
     )
   }
-  return `${insecure ? "http" : "https"}://${raw.replace(/\/+$/, "")}`
+  return `${insecure ? "http" : "https"}://${stripTrailingSlashes(raw)}`
 }
 
 export interface TaskHarnessConfig {

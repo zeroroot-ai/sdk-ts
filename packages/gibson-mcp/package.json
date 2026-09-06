@@ -1,0 +1,58 @@
+{
+  "name": "@zeroroot-ai/gibson-mcp",
+  "version": "0.2.0",
+  "description": "The Gibson MCP server: one tool surface for every coding agent host. Every RPC of every SDK service, every SDK helper and every checked-in platform tool, over stdio or streamable HTTP on localhost.",
+  "license": "Elastic-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeroroot-ai/sdk-ts.git",
+    "directory": "packages/gibson-mcp"
+  },
+  "homepage": "https://github.com/zeroroot-ai/sdk-ts",
+  "bugs": "https://github.com/zeroroot-ai/sdk-ts/issues",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "gibson-mcp": "dist/main.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate-tools.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "sh -c 'tsc -p tsconfig.test.json && node --test \"dist-test/**/*.test.js\"' swallow-forwarded-vitest-args"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.0",
+    "@connectrpc/connect": "^2.0.0",
+    "@connectrpc/connect-node": "^2.0.0",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@zeroroot-ai/sdk": "workspace:^",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "keywords": [
+    "gibson",
+    "mcp",
+    "model-context-protocol",
+    "claude-code",
+    "opencode",
+    "security",
+    "knowledge-graph"
+  ]
+}

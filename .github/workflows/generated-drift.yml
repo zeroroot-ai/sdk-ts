@@ -1,0 +1,58 @@
+name: generated-drift
+
+# The MCP tool table is generated from the SDK's proto descriptors
+# (packages/gibson-mcp/scripts/generate-tools.ts). A stale table would mean
+# tools with the wrong descriptions, or an RPC with no tool at all.
+#
+# On a PR this is a fast, deterministic check: install, regenerate, diff. It
+# needs no BSR access, because it reads the bindings already committed in
+# packages/sdk/src/gen. The sibling bindings-drift workflow is the one that
+# asks the BSR whether those bindings are themselves current, and it runs on
+# a schedule because that drift is caused by an upstream release, not by the
+# PR in front of you.
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generated-drift-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    name: generated tool table
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: "10"
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Regenerate the tool table
+        run: pnpm --filter @zeroroot-ai/gibson-mcp generate
+
+      - name: Compare against what is committed
+        run: |
+          if git diff --quiet -- packages/gibson-mcp/src/generated; then
+            echo "The generated tool table matches the descriptors."
+          else
+            git diff --stat -- packages/gibson-mcp/src/generated
+            git diff -- packages/gibson-mcp/src/generated | head -200
+            echo "::error::packages/gibson-mcp/src/generated is stale. Run 'pnpm generate' and commit it."
+            exit 1
+          fi

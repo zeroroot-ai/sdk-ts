@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "bump-minor-pre-major": true,
+  "packages": {
+    "packages/sdk": {
+      "component": "sdk",
+      "package-name": "@zeroroot-ai/sdk",
+      "include-component-in-tag": false,
+      "initial-version": "0.1.0"
+    },
+    "packages/gibson-mcp": {
+      "component": "gibson-mcp",
+      "package-name": "@zeroroot-ai/gibson-mcp",
+      "include-component-in-tag": true,
+      "initial-version": "0.1.0"
+    }
+  }
+}

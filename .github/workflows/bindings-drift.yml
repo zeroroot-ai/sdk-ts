@@ -1,0 +1,119 @@
+name: bindings-drift
+
+# Checks daily that the committed bindings AND the MCP tool table generated
+# from them still match what the BSR module `buf.build/zeroroot-ai/sdk`
+# produces today.
+#
+# Two guards, and only this one can see upstream. `generated-drift.yml` runs
+# on every PR and regenerates the tool table from the bindings already in the
+# tree, so it catches a table someone forgot to regenerate but is blind to a
+# module that moved: with stale bindings, a stale table matches them exactly.
+# This job is the one that asks the BSR, so it has to run the whole chain,
+# bindings and table both. Checking only `src/gen` let v0.177.0 add two whole
+# services while every guard stayed green.
+#
+# Why this exists (sdk-ts#20): `pnpm generate` resolves the module's default
+# `main` label, and nothing in this repo pins or records which BSR commit the
+# checked-in bindings came from. When the SDK's own publish job broke, the label
+# stopped moving and `src/gen` sat two weeks and three releases behind in total
+# silence — it kept an RPC the platform had removed and missed the whole harness
+# session surface. Nothing here could tell, because a frozen label generates
+# clean every time.
+#
+# A schedule rather than a PR gate: drift is caused by an upstream release, not
+# by the PR in front of you, so failing unrelated PRs would be noise. This files
+# one tracked issue instead, the same pattern the SDK's buf-push uses.
+#
+# It reads a public BSR module, so it needs no BUF_TOKEN.
+
+on:
+  schedule:
+    # Daily 07:31 UTC. SDK releases are frequent; a week of drift is too much.
+    - cron: '31 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    name: bindings drift
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: "10"
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .tool-versions
+          cache: pnpm
+
+      - name: Install buf
+        # bufbuild/buf-setup-action ships no annotated v1 tag, only a moving
+        # `v1` branch -- floating-branch risk, re-resolve periodically. Same
+        # SHA the SDK's buf-push workflow pins.
+        uses: bufbuild/buf-setup-action@a47c93e0b1648d5651a065437926377d060baa99 # v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Regenerate from BSR
+        # Mirrors the SDK package's `generate` script. The plugin is remote, so
+        # no node toolchain is needed to produce the bindings.
+        working-directory: packages/sdk
+        run: |
+          buf generate buf.build/zeroroot-ai/sdk
+          buf generate buf.build/bufbuild/protovalidate
+
+      # The tool table is generated FROM the bindings, so regenerating the
+      # bindings without it would report drift the fix does not fully cover.
+      - name: Regenerate the MCP tool table from the new bindings
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @zeroroot-ai/gibson-mcp generate
+
+      - name: Compare against what is committed
+        id: diff
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- packages/sdk/src/gen packages/gibson-mcp/src/generated; then
+            echo "The bindings and the tool table both match the BSR module."
+            exit 0
+          fi
+          echo "drifted=true" >> "$GITHUB_OUTPUT"
+          git diff --stat -- packages/sdk/src/gen packages/gibson-mcp/src/generated
+          # The tool count is the number that says how much moved, so print it.
+          before=$(git show HEAD:packages/gibson-mcp/src/generated/tools.ts | grep -c "method:" || true)
+          after=$(grep -c "method:" packages/gibson-mcp/src/generated/tools.ts || true)
+          echo "::error::The bindings are behind buf.build/zeroroot-ai/sdk. RPC tools: ${before} committed, ${after} on the module. Run 'pnpm generate' and commit."
+          exit 1
+
+      - name: File or update tracked issue on drift
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TITLE="fix(gen): the bindings have drifted from buf.build/zeroroot-ai/sdk"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          STAT="$(git diff --stat -- packages/sdk/src/gen packages/gibson-mcp/src/generated || true)"
+          BODY="## The committed bindings are stale\n\n"
+          BODY="${BODY}Run: ${RUN_URL}\n\n"
+          BODY="${BODY}\`pnpm generate\` against \`buf.build/zeroroot-ai/sdk\` produces output that differs from what is on \`main\`. Both the bindings and the MCP tool table generated from them are compared:\n\n"
+          BODY="${BODY}\`\`\`\n${STAT}\n\`\`\`\n\n"
+          BODY="${BODY}Fix: \`pnpm generate && pnpm typecheck && pnpm test\`, then commit \`packages/sdk/src/gen\` and \`packages/gibson-mcp/src/generated\`. "
+          BODY="${BODY}Expect real call-site work if the SDK removed or renamed an RPC.\n\n"
+          BODY="${BODY}This issue is auto-filed by the bindings-drift workflow and refreshed in place while the drift lasts."
+          EXISTING=$(gh issue list -R "${{ github.repository }}" \
+                       --state open --search "in:title \"have drifted from buf.build\"" \
+                       --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            printf "%b" "$BODY" | gh issue comment "$EXISTING" -R "${{ github.repository }}" --body-file -
+          else
+            printf "%b" "$BODY" | gh issue create -R "${{ github.repository }}" --title "$TITLE" --body-file -
+          fi

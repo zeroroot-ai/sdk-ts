@@ -1,0 +1,124 @@
+name: release-please
+
+# release-please opens a release PR from Conventional Commits; merging it
+# creates the tag and release, and the publish job ships the released
+# workspace packages (@zeroroot-ai/sdk, @zeroroot-ai/gibson-mcp) to npm with
+# trusted publishing (OIDC). There is no npm token to keep alive.
+#
+# Two packages, one train. release-please reports which package paths it
+# released (`paths_released`), and the publish job publishes exactly those.
+# The SDK keeps its bare `vX.Y.Z` tag; gibson-mcp tags as
+# `gibson-mcp-vX.Y.Z` (release-please-config.json).
+#
+# GITHUB_TOKEN is deliberate: nothing here depends on a tag-triggered
+# workflow — publish reacts to the action's outputs in the same run.
+
+on:
+  push:
+    branches: [main]
+  # Publish an existing release tag again, for example after a publish job
+  # failed for a reason outside this repo. Never hand-tag: the tag must exist.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to publish, e.g. v0.6.0 (the SDK) or gibson-mcp-v0.1.0"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: release-please
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.rp.outputs.releases_created }}
+      paths_released: ${{ steps.rp.outputs.paths_released }}
+    steps:
+      - name: Mint App token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          app-id: ${{ secrets.SDK_FANOUT_APP_ID }}
+          private-key: ${{ secrets.SDK_FANOUT_APP_PRIVATE_KEY }}
+          owner: zeroroot-ai
+          repositories: sdk-ts
+
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+        id: rp
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # Trusted publishing (OIDC). No npm token exists anywhere: the job proves
+  # its identity to npm with a short-lived GitHub OIDC token, and npm accepts
+  # it because the package's trusted publisher names this repo and this
+  # workflow file. Provenance is attached by default. Requires npm >= 11.5.1,
+  # which Node 22 does not ship, so the job installs npm 11 first.
+  # Docs: https://docs.npmjs.com/trusted-publishers
+  publish:
+    name: publish to npm
+    needs: release-please
+    if: ${{ !cancelled() && (needs.release-please.outputs.releases_created == 'true' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.sha }}
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: "10"
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .tool-versions
+          registry-url: https://registry.npmjs.org
+
+      - name: Use npm 11 (trusted publishing needs 11.5.1 or later)
+        run: npm install -g npm@11 && npm --version
+
+      - name: Install and build
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      # `pnpm pack` writes the tarball with `workspace:^` rewritten to the
+      # released SDK range; `npm publish` (npm 11) ships it, so trusted
+      # publishing and provenance apply. On a push the paths come from
+      # release-please; on a dispatch the tag names the package: `vX.Y.Z` is
+      # the SDK, `<component>-vX.Y.Z` is that component.
+      - name: Publish the released packages
+        env:
+          PATHS_RELEASED: ${{ needs.release-please.outputs.paths_released }}
+          DISPATCH_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
+        run: |
+          set -euo pipefail
+          if [ -n "$DISPATCH_TAG" ]; then
+            case "$DISPATCH_TAG" in
+              v[0-9]*) paths='["packages/sdk"]' ;;
+              gibson-mcp-v[0-9]*) paths='["packages/gibson-mcp"]' ;;
+              *) echo "::error::tag $DISPATCH_TAG names no workspace package"; exit 1 ;;
+            esac
+          else
+            paths="$PATHS_RELEASED"
+          fi
+          echo "publishing: $paths"
+          for dir in $(echo "$paths" | jq -r '.[]'); do
+            name=$(jq -r .name "$dir/package.json")
+            version=$(jq -r .version "$dir/package.json")
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$name@$version is already on npm; skipping"
+              continue
+            fi
+            echo "publishing $name@$version from $dir"
+            out="$(mktemp -d)"
+            (cd "$dir" && pnpm pack --pack-destination "$out")
+            npm publish "$out"/*.tgz --access public
+          done

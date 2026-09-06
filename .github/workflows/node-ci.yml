@@ -1,0 +1,40 @@
+name: node-ci
+
+# Thin caller for the org's tiered Node/pnpm CI (reusable-node-ci.yml).
+#
+#   pull_request -> fast tier:  frozen-lockfile install, typecheck, lint
+#                               (oxlint), node:test suites.
+#   merge_group  -> heavy tier: `pnpm build`.
+#
+# Pinned to a commit SHA (never a tag, never @main) per the org's
+# blast-radius rule; the tag that SHA corresponds to is kept as a
+# trailing comment for readability.
+#
+# permissions MUST include packages: read — the reusable's job requests it
+# (GitHub Packages reads, zeroroot-ai/.github#240) and a caller granting
+# only contents: read fails validation as a jobless startup_failure.
+
+on:
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: node-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  fast:
+    if: github.event_name == 'pull_request'
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@cf1c48774b57e552ccdd17a2a4bba3f782587dbe # main, .github recreated 2026-09-06
+    with:
+      tier: fast
+
+  heavy:
+    if: github.event_name == 'merge_group'
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@cf1c48774b57e552ccdd17a2a4bba3f782587dbe # main, .github recreated 2026-09-06
+    with:
+      tier: heavy

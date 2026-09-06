@@ -1,0 +1,11 @@
+# Generates connect-es TypeScript bindings from BSR (never local includes).
+# Sources: the SDK module + its protovalidate dependency (field options).
+# connect-es v2 generates service descriptors via protoc-gen-es; clients are
+# created with @connectrpc/connect's createClient(Service, transport).
+version: v2
+plugins:
+  - remote: buf.build/bufbuild/es
+    out: src/gen
+    opt:
+      - target=ts
+      - import_extension=js

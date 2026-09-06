@@ -26,7 +26,7 @@
     "test": "sh -c 'tsc -p tsconfig.test.json && node --test \"dist-test/**/*.test.js\"' swallow-forwarded-vitest-args"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.2.0",
+    "@bufbuild/protobuf": "^2.14.1",
     "@connectrpc/connect": "^2.0.0",
     "@connectrpc/connect-node": "^2.0.0",
     "@modelcontextprotocol/sdk": "^1.30.0",

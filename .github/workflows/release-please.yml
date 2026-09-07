@@ -89,8 +89,12 @@ jobs:
       - name: Trusted publishing needs npm 11.5.1 or later
         run: |
           set -euo pipefail
-          npm --version
-          node -e 'const [a,b,c]=process.versions.npm.split(".").map(Number); if (a<11||(a===11&&(b<5||(b===5&&c<1)))) { console.error("npm " + process.versions.npm + " is older than 11.5.1"); process.exit(1) }'
+          have="$(npm --version)"
+          echo "npm ${have}"
+          if [ "$(printf '%s\n' 11.5.1 "${have}" | sort -V | head -n1)" != 11.5.1 ]; then
+            echo "::error::npm ${have} is older than 11.5.1; trusted publishing needs 11.5.1 or later"
+            exit 1
+          fi
 
       - name: Install and build
         run: |

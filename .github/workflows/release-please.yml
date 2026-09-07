@@ -110,6 +110,10 @@ jobs:
         env:
           PATHS_RELEASED: ${{ needs.release-please.outputs.paths_released }}
           DISPATCH_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || '' }}
+          # npm logs the OIDC token exchange only at verbose level. Without it
+          # a rejected trusted-publisher binding shows up as a bare E404 on
+          # the PUT with no reason (run 34120381459). npm redacts tokens.
+          NPM_CONFIG_LOGLEVEL: verbose
         run: |
           set -euo pipefail
           if [ -n "$DISPATCH_TAG" ]; then

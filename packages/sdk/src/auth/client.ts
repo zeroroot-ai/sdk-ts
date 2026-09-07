@@ -46,7 +46,12 @@ export function normalizePlatformURL(raw: string): string {
       `gibson-client: platformURL ${JSON.stringify(raw)} must be http(s), got ${parsed.protocol.slice(0, -1)}`,
     )
   }
-  return raw.trim().replace(/\/+$/, "")
+  // Strip trailing slashes with a scan, not /\/+$/: on a long run of
+  // slashes that regex is quadratic (CodeQL js/polynomial-redos).
+  const trimmed = raw.trim()
+  let end = trimmed.length
+  while (end > 0 && trimmed[end - 1] === "/") end--
+  return trimmed.slice(0, end)
 }
 
 /**

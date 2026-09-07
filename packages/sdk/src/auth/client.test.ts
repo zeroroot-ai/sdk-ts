@@ -220,6 +220,15 @@ test("normalizePlatformURL strips trailing slashes and leaves clean URLs alone",
   assert.equal(normalizePlatformURL("https://api.zeroroot.ai"), "https://api.zeroroot.ai")
   assert.equal(normalizePlatformURL("https://api.example:30443/"), "https://api.example:30443")
   assert.equal(normalizePlatformURL("https://api.example:30443"), "https://api.example:30443")
+  assert.equal(normalizePlatformURL("  https://api.zeroroot.ai/  "), "https://api.zeroroot.ai")
+  assert.equal(normalizePlatformURL("https://api.zeroroot.ai/v1/"), "https://api.zeroroot.ai/v1")
+})
+
+test("normalizePlatformURL stays linear on a long run of trailing slashes", () => {
+  const raw = "https://api.zeroroot.ai" + "/".repeat(200_000)
+  const started = performance.now()
+  assert.equal(normalizePlatformURL(raw), "https://api.zeroroot.ai")
+  assert.ok(performance.now() - started < 1_000, "trailing-slash strip must not be quadratic")
 })
 
 test("normalizePlatformURL rejects invalid or non-http(s) URLs with a clear error", () => {

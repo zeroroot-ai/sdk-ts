@@ -1,12 +1,5 @@
 # Changelog
 
-## [0.12.1](https://github.com/zeroroot-ai/sdk-ts/compare/v0.12.0...v0.12.1) (2026-09-07)
-
-
-### Bug Fixes
-
-* **sdk:** linear-time path regex in auth client, pin and scope release workflow ([#9](https://github.com/zeroroot-ai/sdk-ts/issues/9)) ([07a7bdf](https://github.com/zeroroot-ai/sdk-ts/commit/07a7bdff36d8a6cdedc62177dc1d4768d838b693))
-
 ## [0.12.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.11.0...v0.12.0) (2026-09-01)
 
 

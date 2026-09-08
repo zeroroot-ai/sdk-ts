@@ -19,7 +19,7 @@ import type { ComponentService } from "./clients.js"
  *     keys `title`, `severity`, `description` and `category`.
  *
  * The types below are a faithful port of the Go SDK `finding` package
- * (`opensource/sdk/finding/finding.go`) — snake_case keys, same optionality.
+ * (`zeroroot-ai/sdk`, `finding/finding.go`) — snake_case keys, same optionality.
  * The sibling `HarnessCallbackService.SubmitFinding` is a genuinely typed RPC
  * (`gibson.types.v1.Finding`); it is the in-cluster dispatched-work path and is
  * NOT what an off-cluster component calls.

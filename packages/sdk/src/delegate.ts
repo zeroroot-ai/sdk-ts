@@ -10,7 +10,7 @@ import { isSeamUnavailable, seamReason } from "./tools.js"
  *
  * WIRE FORMAT — `Task` and `Result` cross the wire as JSON inside the
  * `task_json` / `result_json` byte fields. The Go structs `agent.Task` and
- * `agent.Result` (`opensource/sdk/agent/types.go`) carry **no JSON tags**, so Go
+ * `agent.Result` (`zeroroot-ai/sdk`, `agent/types.go`) carry **no JSON tags**, so Go
  * marshals them with the Go field names verbatim — `ID`, `Goal`, `Context`,
  * `Constraints`, `Status`, `Output`, `Findings`, `Metadata`. The interfaces below
  * use those exact keys. Renaming them to idiomatic camelCase would produce JSON

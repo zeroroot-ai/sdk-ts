@@ -169,7 +169,7 @@ export type ComponentDescriptor = Message<"gibson.component.v1.ComponentDescript
    * registered before this field existed.
    *
    * NOTE: field 100 is reserved platform-wide for `gibson.graphrag.DiscoveryResult`
-   * on tool response messages (see `enterprise/docs/ARCHITECTURE.md`); do not
+   * on tool response messages (see `api/proto/DISCOVERY_RESULT.md`); do not
    * assign new fields >= 100 on any component message without coordination.
    *
    * @generated from field: gibson.component.v1.ContentTrust content_trust = 18;

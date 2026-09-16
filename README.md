@@ -3,9 +3,14 @@
 The TypeScript workspace for the Gibson platform. Two published packages, one
 release train.
 
+**License: Elastic License 2.0.** It is source-available, not open source. See
+[LICENSE](LICENSE). GitHub reports this repository as `NOASSERTION` because its
+detector does not recognize ELv2, so the sidebar says nothing. This line is the
+statement.
+
 | Package | What it is |
 |---|---|
-| [`@zeroroot-ai/sdk`](packages/sdk) | the MIT, framework-agnostic SDK: connect-es bindings generated from the BSR, Capability Grant auth, component lifecycle, the task harness, and an OpenAI-compatible LLM shim |
+| [`@zeroroot-ai/sdk`](packages/sdk) | the framework-agnostic SDK: connect-es bindings generated from the BSR, Capability Grant auth, component lifecycle, the task harness, and an OpenAI-compatible LLM shim |
 | [`@zeroroot-ai/gibson-mcp`](packages/gibson-mcp) | the Gibson MCP server: one tool surface for every coding agent host, built from the same generated descriptors. Bin: `gibson-mcp`. |
 
 ```bash
@@ -17,7 +22,7 @@ pnpm lint
 pnpm test
 ```
 
-Both packages are MIT.
+Both packages are published under the Elastic License 2.0.
 
 ## License and history
 

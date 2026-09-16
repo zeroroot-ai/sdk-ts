@@ -1,0 +1,12 @@
+sdk-ts
+Copyright 2026 Zero Root AI
+
+Licensed under the Elastic License 2.0. See LICENSE.
+
+This distribution includes third-party material:
+
+Protovalidate standard annotations
+  File: packages/sdk/src/gen/buf/validate/validate_pb.ts
+  Copyright 2023-2026 Buf Technologies, Inc.
+  License: Apache-2.0. The full notice is retained in the file header.
+  Source: https://github.com/bufbuild/protovalidate

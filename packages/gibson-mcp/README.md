@@ -197,4 +197,5 @@ carries fewer tools than the one before it.
 
 ## License
 
-MIT.
+Elastic License 2.0. Zero Root AI is the licensor. It is source-available, not
+open source.

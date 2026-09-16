@@ -13,4 +13,5 @@ plugins build on this SDK. Nothing opencode-specific lives here.
 
 ## License
 
-MIT.
+Elastic License 2.0. Zero Root AI is the licensor. It is source-available, not
+open source.

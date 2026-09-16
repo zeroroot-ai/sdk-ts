@@ -6,7 +6,7 @@
 
 A pnpm workspace with two published packages.
 
-`packages/sdk` → `@zeroroot-ai/sdk` — the MIT, framework-agnostic TypeScript SDK for the
+`packages/sdk` → `@zeroroot-ai/sdk` — the framework-agnostic TypeScript SDK for the
 Gibson platform: connect-es bindings, Capability-Grant auth (Ed25519
 host/agent keys, `agent+jwt` interceptor), component lifecycle
 (`RegisterComponent` + heartbeat, `connectGibson()`), and a local
@@ -48,9 +48,10 @@ dashboard).
   stale, check that the BSR module actually carries the release you
   expect — the tag-push publish job in `zeroroot-ai/sdk` is the
   producer (see sdk#459 for its failure mode).
-- This is a **customer-facing OSS surface** (MIT). Component-dev scope
-  only — no admin/operator/billing surface belongs here (ADR-0058
-  discipline applies to what the SDK exposes).
+- This is a **customer-facing, source-available surface** under the Elastic
+  License 2.0, not open source. Component-dev scope only — no
+  admin/operator/billing surface belongs here (ADR-0058 discipline applies to
+  what the SDK exposes).
 
 ## Links
 

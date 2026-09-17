@@ -10,9 +10,9 @@ name: node-ci
 # blast-radius rule; the tag that SHA corresponds to is kept as a
 # trailing comment for readability.
 #
-# permissions MUST include packages: read — the reusable's job requests it
-# (GitHub Packages reads, zeroroot-ai/.github#240) and a caller granting
-# only contents: read fails validation as a jobless startup_failure.
+# permissions must grant at least what the reusable's job requests
+# (contents: read). A caller that grants less fails validation as a
+# jobless startup_failure.
 
 on:
   pull_request:
@@ -24,17 +24,16 @@ concurrency:
 
 permissions:
   contents: read
-  packages: read
 
 jobs:
   fast:
     if: github.event_name == 'pull_request'
-    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@cf1c48774b57e552ccdd17a2a4bba3f782587dbe # main, .github recreated 2026-09-06
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@26202a5181acc259188b0a21b0fc2e75a9f1dac3 # v0.4.1
     with:
       tier: fast
 
   heavy:
     if: github.event_name == 'merge_group'
-    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@cf1c48774b57e552ccdd17a2a4bba3f782587dbe # main, .github recreated 2026-09-06
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@26202a5181acc259188b0a21b0fc2e75a9f1dac3 # v0.4.1
     with:
       tier: heavy

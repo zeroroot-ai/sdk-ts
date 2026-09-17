@@ -13,6 +13,14 @@ updates:
         update-types:
           - minor
           - patch
+  - package-ecosystem: npm
+    directory: /tools/npm
+    schedule:
+      interval: weekly
+      day: tuesday
+    open-pull-requests-limit: 1
+    labels:
+      - dependencies
   - package-ecosystem: github-actions
     directory: /
     schedule:

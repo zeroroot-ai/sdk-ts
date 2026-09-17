@@ -12,7 +12,7 @@ host/agent keys, `agent+jwt` interceptor), component lifecycle
 (`RegisterComponent` + heartbeat, `connectGibson()`), and a local
 OpenAI-compatible LLM shim proxying to `ComponentService.Complete`.
 `packages/gibson-mcp` → `@zeroroot-ai/gibson-mcp` — the Gibson MCP server, the
-one tool surface every coding agent host loads (gibson#1706, ADR-0008). It is
+one tool surface every coding agent host loads (ADR-0008). It is
 built from the same generated descriptors and rides the SDK release train.
 Hosts are thin adapters in `zerocool-plugins` and hold no tools of their own.
 
@@ -47,7 +47,7 @@ dashboard).
   `packages/sdk/src/gen`. If generated types look
   stale, check that the BSR module actually carries the release you
   expect — the tag-push publish job in `zeroroot-ai/sdk` is the
-  producer (see sdk#459 for its failure mode).
+  producer.
 - This is a **customer-facing, source-available surface** under the Elastic
   License 2.0, not open source. Component-dev scope only — no
   admin/operator/billing surface belongs here (ADR-0058 discipline applies to

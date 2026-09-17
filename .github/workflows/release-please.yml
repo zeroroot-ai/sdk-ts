@@ -83,13 +83,20 @@ jobs:
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "24"
+          node-version-file: .tool-versions
           registry-url: https://registry.npmjs.org
+
+      # tools/npm/package-lock.json pins npm 11 by hash. Node 22 bundles
+      # npm 10, which trusted publishing rejects. Dependabot bumps it.
+      - name: Use npm 11 (trusted publishing needs 11.5.1 or later)
+        run: |
+          npm ci --prefix tools/npm --no-audit --no-fund
+          echo "$PWD/tools/npm/node_modules/.bin" >> "$GITHUB_PATH"
 
       - name: Trusted publishing needs npm 11.5.1 or later
         run: |
           set -euo pipefail
-          have="$(npm --version)"
+          have="$(tools/npm/node_modules/.bin/npm --version)"
           echo "npm ${have}"
           if [ "$(printf '%s\n' 11.5.1 "${have}" | sort -V | head -n1)" != 11.5.1 ]; then
             echo "::error::npm ${have} is older than 11.5.1; trusted publishing needs 11.5.1 or later"

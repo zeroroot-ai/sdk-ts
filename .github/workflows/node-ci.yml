@@ -10,9 +10,9 @@ name: node-ci
 # blast-radius rule; the tag that SHA corresponds to is kept as a
 # trailing comment for readability.
 #
-# permissions MUST include packages: read — the reusable's job requests it
-# (GitHub Packages reads, zeroroot-ai/.github#240) and a caller granting
-# only contents: read fails validation as a jobless startup_failure.
+# permissions must grant at least what the reusable's job requests
+# (contents: read). A caller that grants less fails validation as a
+# jobless startup_failure.
 
 on:
   pull_request:
@@ -24,7 +24,6 @@ concurrency:
 
 permissions:
   contents: read
-  packages: read
 
 jobs:
   fast:

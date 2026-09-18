@@ -33,7 +33,7 @@ export async function discover(platformURL: string): Promise<DiscoveryDocument> 
  * platform URL. Empty endpoints are skipped: the daemon leaves the ones it does
  * not serve blank.
  */
-export function assertEndpointsOnPlatform(doc: DiscoveryDocument, platformURL: string): void {
+function assertEndpointsOnPlatform(doc: DiscoveryDocument, platformURL: string): void {
   const platformOrigin = new URL(platformURL).origin
   if (!doc.endpoints) return
   for (const [name, endpoint] of Object.entries(doc.endpoints)) {

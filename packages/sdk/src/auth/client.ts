@@ -20,6 +20,11 @@ export interface CapabilityGrantConfig {
 
 interface RegistrationResponse { agent_id: string; component_scope: string; capabilities?: unknown[] }
 
+function isLoopbackHost(hostname: string): boolean {
+  // URL.hostname keeps the brackets on an IPv6 literal.
+  return hostname === "localhost" || hostname === "[::1]" || /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)
+}
+
 /**
  * Canonicalize the platform URL once, at config ingestion, so discovery and the
  * Connect transport baseUrl see one exact string no matter how the operator
@@ -41,9 +46,13 @@ export function normalizePlatformURL(raw: string): string {
         "(expected e.g. https://api.zeroroot.ai — check GIBSON_PLATFORM_URL)",
     )
   }
-  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+  // The bootstrap token travels in the Authorization header of the register
+  // call, so the platform URL must be HTTPS. Plain HTTP is accepted only for a
+  // loopback host, where the bytes never leave the machine (GHSA-84gm-35rm-x5m4).
+  if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && isLoopbackHost(parsed.hostname))) {
     throw new Error(
-      `gibson-client: platformURL ${JSON.stringify(raw)} must be http(s), got ${parsed.protocol.slice(0, -1)}`,
+      `gibson-client: platformURL ${JSON.stringify(raw)} must be https ` +
+        `(http is allowed only for localhost), got ${parsed.protocol.slice(0, -1)}`,
     )
   }
   // Strip trailing slashes with a scan, not /\/+$/: on a long run of

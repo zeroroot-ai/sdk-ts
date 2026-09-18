@@ -231,10 +231,84 @@ test("normalizePlatformURL stays linear on a long run of trailing slashes", () =
   assert.ok(performance.now() - started < 1_000, "trailing-slash strip must not be quadratic")
 })
 
-test("normalizePlatformURL rejects invalid or non-http(s) URLs with a clear error", () => {
+test("normalizePlatformURL rejects invalid or non-https URLs with a clear error", () => {
   assert.throws(() => normalizePlatformURL("api.zeroroot.ai"), /not a valid URL.*GIBSON_PLATFORM_URL/s)
   assert.throws(() => normalizePlatformURL(""), /not a valid URL/)
-  assert.throws(() => normalizePlatformURL("grpc://api.zeroroot.ai"), /must be http\(s\)/)
+  assert.throws(() => normalizePlatformURL("grpc://api.zeroroot.ai"), /must be https/)
+  // The bootstrap token rides the Authorization header, so plain http to a
+  // remote host would send it in cleartext (GHSA-84gm-35rm-x5m4).
+  assert.throws(() => normalizePlatformURL("http://api.zeroroot.ai"), /must be https/)
+  assert.throws(() => normalizePlatformURL("http://10.0.0.5:8080"), /must be https/)
+})
+
+test("normalizePlatformURL accepts plain http only on a loopback host", () => {
+  assert.equal(normalizePlatformURL("http://localhost:8080/"), "http://localhost:8080")
+  assert.equal(normalizePlatformURL("http://127.0.0.1:8080"), "http://127.0.0.1:8080")
+  assert.equal(normalizePlatformURL("http://[::1]:8080"), "http://[::1]:8080")
+})
+
+/**
+ * Discovery-document origin pinning (GHSA-84gm-35rm-x5m4).
+ *
+ * The discovery document is fetched unauthenticated, and register() POSTs the
+ * one-time bootstrap token to the register endpoint it names. So an endpoint on
+ * any origin other than the platform URL must be refused before the POST.
+ */
+
+/** Stub fetch that serves a discovery document with the given register endpoint. */
+function stubDiscovery(register: string, posted: string[]) {
+  return async (url: unknown) => {
+    if (String(url).includes(".well-known/agent-configuration")) {
+      return { ok: true, json: async () => ({ ...DISCOVERY, endpoints: { ...DISCOVERY.endpoints, register } }) } as never
+    }
+    posted.push(String(url))
+    return { ok: true, json: async () => ({ agent_id: "agent-1", component_scope: "component:zerocool" }) } as never
+  }
+}
+
+test("a discovery document that names another host is rejected before the token is sent", async () => {
+  await withTempDir(async (dir) => {
+    const posted: string[] = []
+    globalThis.fetch = stubDiscovery("https://evil.example.test/capabilitygrant/v1/register", posted) as never
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+      bootstrapToken: "one-time-token",
+    })
+    await assert.rejects(() => client.register(), /register .*evil\.example\.test.*not on the platform origin https:\/\/api\.example\.test/)
+    assert.deepEqual(posted, [], "nothing may be POSTed to the foreign host")
+  })
+})
+
+test("a discovery document that downgrades the register endpoint to http is rejected", async () => {
+  await withTempDir(async (dir) => {
+    const posted: string[] = []
+    globalThis.fetch = stubDiscovery("http://api.example.test/capabilitygrant/v1/register", posted) as never
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+      bootstrapToken: "one-time-token",
+    })
+    await assert.rejects(() => client.register(), /not on the platform origin/)
+    assert.deepEqual(posted, [], "the token must not travel in cleartext")
+  })
+})
+
+test("a discovery document that names a different port on the same host is rejected", async () => {
+  await withTempDir(async (dir) => {
+    const posted: string[] = []
+    globalThis.fetch = stubDiscovery("https://api.example.test:8443/capabilitygrant/v1/register", posted) as never
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+      bootstrapToken: "one-time-token",
+    })
+    await assert.rejects(() => client.register(), /not on the platform origin/)
+    assert.deepEqual(posted, [])
+  })
 })
 
 test("the agent+jwt binds the request method and mints the stable daemon audience", async () => {

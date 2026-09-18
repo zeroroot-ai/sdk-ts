@@ -5,7 +5,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { buildSurface } from "./build.js"
 import { parseFlags, usage, type Flags } from "./flags.js"
-import { serveHttp } from "./http.js"
+import { serveHttp, TURN_TOKEN_ENV } from "./http.js"
 import { log, TAG } from "./log.js"
 import { packageVersion } from "./server.js"
 import { describeGibson } from "./tools/status.js"
@@ -54,7 +54,7 @@ async function main(): Promise<void> {
     return
   }
 
-  const http = await serveHttp(surface, flags.listen, log)
+  const http = await serveHttp(surface, flags.listen, log, { turnToken: process.env[TURN_TOKEN_ENV] })
   log(`${TAG} listening on ${http.url}${surface.turn ? `; POST ${http.url.replace(/\/mcp$/, "/turn")} sets the per-turn grant` : ""}`)
   for (const sig of ["SIGINT", "SIGTERM"] as const) process.on(sig, () => void close(http.close).finally(() => process.exit(0)))
 }

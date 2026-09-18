@@ -122,9 +122,9 @@ full RPC tier as well; see the tool surface below.
 | `GET /mcp` | the session's notification stream |
 | `DELETE /mcp` | ends a session |
 | `GET /healthz` | liveness, plus the check-in source, the posture, the listed tool count, the reachable RPC count and the open job |
-| `POST /turn` | puts a dispatch's grant in force |
+| `POST /turn` | puts a dispatch's grant in force. Requires the turn token. |
 | `GET /turn` | reports the turn in force |
-| `DELETE /turn` | ends it |
+| `DELETE /turn` | ends it. Requires the turn token. |
 
 ### Per-turn grants
 
@@ -150,6 +150,14 @@ work to nothing.
 
 `/turn` exists only where there is a task grant to swap. Elsewhere it is a
 404.
+
+`POST /turn` and `DELETE /turn` are authenticated. The driver mints one random
+token per process, starts the server with it in `GIBSON_TURN_TOKEN`, and sends
+it as `Authorization: Bearer <token>` on each call. The Claude Code child
+shares the sandbox's network namespace, so an open `/turn` would let it
+install or drop any grant it has seen. A server started without
+`GIBSON_TURN_TOKEN` answers 401 to every `POST` and `DELETE /turn` and logs
+the refusal. `GET /turn` and `/healthz` need no token.
 
 ## Check-in sources
 
@@ -193,6 +201,7 @@ carries fewer tools than the one before it.
 | `GIBSON_HOST_KEY_PATH` | the host key (default `~/.zerocool/host.key`) |
 | `GIBSON_CA_CERT` | a private CA to trust |
 | `GIBSON_CALLBACK_INSECURE` | `1` dials the callback endpoint without TLS. Local daemons only. |
+| `GIBSON_TURN_TOKEN` | the bearer token `POST /turn` and `DELETE /turn` require. Unset closes `/turn`. |
 | `ZEROCOOL_STATE_DIR` | the state directory (default `~/.zerocool`) |
 
 ## License

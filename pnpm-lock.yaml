@@ -21,14 +21,14 @@ importers:
   packages/gibson-mcp:
     dependencies:
       '@bufbuild/protobuf':
-        specifier: ^2.14.1
-        version: 2.14.1
+        specifier: ^2.15.0
+        version: 2.15.0
       '@connectrpc/connect':
         specifier: ^2.0.0
-        version: 2.1.2(@bufbuild/protobuf@2.14.1)
+        version: 2.1.2(@bufbuild/protobuf@2.15.0)
       '@connectrpc/connect-node':
         specifier: ^2.0.0
-        version: 2.1.2(@bufbuild/protobuf@2.14.1)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.14.1))
+        version: 2.1.2(@bufbuild/protobuf@2.15.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.15.0))
       '@modelcontextprotocol/sdk':
         specifier: ^1.30.0
         version: 1.30.0(zod@4.5.4)
@@ -49,14 +49,14 @@ importers:
   packages/sdk:
     dependencies:
       '@bufbuild/protobuf':
-        specifier: ^2.14.1
-        version: 2.14.1
+        specifier: ^2.15.0
+        version: 2.15.0
       '@connectrpc/connect':
         specifier: ^2.0.0
-        version: 2.1.2(@bufbuild/protobuf@2.14.1)
+        version: 2.1.2(@bufbuild/protobuf@2.15.0)
       '@connectrpc/connect-node':
         specifier: ^2.0.0
-        version: 2.1.2(@bufbuild/protobuf@2.14.1)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.14.1))
+        version: 2.1.2(@bufbuild/protobuf@2.15.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.15.0))
     devDependencies:
       '@types/node':
         specifier: ^26.4.1
@@ -67,8 +67,8 @@ importers:
 
 packages:
 
-  '@bufbuild/protobuf@2.14.1':
-    resolution: {integrity: sha512-agRJn3+EJDUe8AvxTx/LnHA/GErvLE62pSaSk7+MwFOtOv8eWBu/qCq2qoZjBjVZ3C2aiFJCveuSs17KMkYGOw==}
+  '@bufbuild/protobuf@2.15.0':
+    resolution: {integrity: sha512-DAheWUkVr/SJTWCc+lg9dhY0eN4SaWlf4+bG1KzHeXbnqt0AfB/NX0Z+VunGlM1ki1B4zVvye27MpKh/svySUA==}
 
   '@connectrpc/connect-node@2.1.2':
     resolution: {integrity: sha512-+i/aAOpsI8sIx1mbYp6d99zvxaUSF6t/jP9Ux9maAmjsZPgmIQ3JuIeYi0zJIP9zlCnBlJjkpPosshCgdRuThQ==}
@@ -720,16 +720,16 @@ packages:
 
 snapshots:
 
-  '@bufbuild/protobuf@2.14.1': {}
+  '@bufbuild/protobuf@2.15.0': {}
 
-  '@connectrpc/connect-node@2.1.2(@bufbuild/protobuf@2.14.1)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.14.1))':
+  '@connectrpc/connect-node@2.1.2(@bufbuild/protobuf@2.15.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.15.0))':
     dependencies:
-      '@bufbuild/protobuf': 2.14.1
-      '@connectrpc/connect': 2.1.2(@bufbuild/protobuf@2.14.1)
+      '@bufbuild/protobuf': 2.15.0
+      '@connectrpc/connect': 2.1.2(@bufbuild/protobuf@2.15.0)
 
-  '@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.14.1)':
+  '@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.15.0)':
     dependencies:
-      '@bufbuild/protobuf': 2.14.1
+      '@bufbuild/protobuf': 2.15.0
 
   '@hono/node-server@2.1.1(hono@4.13.5)':
     dependencies:

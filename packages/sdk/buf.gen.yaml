@@ -4,7 +4,7 @@
 # created with @connectrpc/connect's createClient(Service, transport).
 version: v2
 plugins:
-  - remote: buf.build/bufbuild/es
+  - remote: buf.build/bufbuild/es:v2.15.0
     out: src/gen
     opt:
       - target=ts

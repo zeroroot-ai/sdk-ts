@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { randomUUID } from "node:crypto"
+import { createHash, randomUUID, timingSafeEqual } from "node:crypto"
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http"
 import type { AddressInfo } from "node:net"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js"
@@ -22,6 +22,12 @@ import { TAG, type Log } from "./log.js"
  *   GET  /healthz    liveness and the current posture, as JSON
  *
  * DNS-rebinding protection is on: only the loopback host names are accepted.
+ *
+ * `POST /turn` and `DELETE /turn` require the per-process bearer token the
+ * driver hands the server in `GIBSON_TURN_TOKEN`. The Claude Code child shares
+ * the sandbox's network namespace, so an open `/turn` would let it install or
+ * drop any grant it has seen. Without the token in the environment `/turn`
+ * fails closed: every POST and DELETE answers 401.
  */
 export interface HttpSurface {
   attach(transport: Transport): Promise<unknown>
@@ -45,6 +51,14 @@ export interface TurnRoute {
   set(turn: { jobId: string; grant: string; endpoint?: string; insecure?: boolean }): void
   clear(): void
   current(): { jobId: string; endpoint: string } | undefined
+}
+
+/** The environment name the server reads its `/turn` bearer token from. */
+export const TURN_TOKEN_ENV = "GIBSON_TURN_TOKEN"
+
+export interface HttpOptions {
+  /** The bearer token `POST /turn` and `DELETE /turn` require. Unset means `/turn` is closed. */
+  turnToken?: string
 }
 
 export interface HttpHandle {
@@ -77,9 +91,47 @@ export function sendJson(res: ServerResponse, status: number, body: unknown): vo
   res.end(text)
 }
 
-export async function serveHttp(surface: HttpSurface, listen: Listen, log: Log): Promise<HttpHandle> {
+/** Constant-time equality on the SHA-256 of both sides, so neither length nor content leaks by timing. */
+function tokenMatches(presented: string, expected: string): boolean {
+  const a = createHash("sha256").update(presented).digest()
+  const b = createHash("sha256").update(expected).digest()
+  return timingSafeEqual(a, b)
+}
+
+/** The bearer token a request carries, or undefined when the scheme is not `Bearer`. */
+function bearerOf(req: IncomingMessage): string | undefined {
+  const header = req.headers.authorization
+  if (!header) return undefined
+  const [scheme, token, ...rest] = header.trim().split(/\s+/)
+  if (scheme?.toLowerCase() !== "bearer" || !token || rest.length) return undefined
+  return token
+}
+
+export async function serveHttp(surface: HttpSurface, listen: Listen, log: Log, opts: HttpOptions = {}): Promise<HttpHandle> {
   const sessions = new Map<string, StreamableHTTPServerTransport>()
   let allowedHosts: string[] = []
+  const turnToken = opts.turnToken
+  if (surface.turn && !turnToken) {
+    log(`${TAG} http: ${TURN_TOKEN_ENV} is not set; POST and DELETE /turn answer 401 until the server is started with it`)
+  }
+
+  /** True when the request carries the per-process turn token. Logs the refusal otherwise. */
+  const turnAuthorized = (req: IncomingMessage): boolean => {
+    if (!turnToken) {
+      log(`${TAG} http: ${req.method} /turn refused: ${TURN_TOKEN_ENV} is not set, so no caller can drive a turn`)
+      return false
+    }
+    const presented = bearerOf(req)
+    if (presented === undefined) {
+      log(`${TAG} http: ${req.method} /turn refused: no bearer token`)
+      return false
+    }
+    if (!tokenMatches(presented, turnToken)) {
+      log(`${TAG} http: ${req.method} /turn refused: the bearer token does not match ${TURN_TOKEN_ENV}`)
+      return false
+    }
+    return true
+  }
 
   const handleMcp = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
     const header = req.headers["mcp-session-id"]
@@ -127,11 +179,17 @@ export async function serveHttp(surface: HttpSurface, listen: Listen, log: Log):
       const current = turn.current()
       return sendJson(res, 200, current ? { job_id: current.jobId, endpoint: current.endpoint } : { job_id: null })
     }
+    if (req.method !== "POST" && req.method !== "DELETE") {
+      return sendJson(res, 405, { error: "POST to set a turn, DELETE to end it, GET to read it" })
+    }
+    if (!turnAuthorized(req)) {
+      res.setHeader("www-authenticate", "Bearer")
+      return sendJson(res, 401, { error: `POST and DELETE /turn require the bearer token the server was started with in ${TURN_TOKEN_ENV}` })
+    }
     if (req.method === "DELETE") {
       turn.clear()
       return sendJson(res, 200, { job_id: null })
     }
-    if (req.method !== "POST") return sendJson(res, 405, { error: "POST to set a turn, DELETE to end it, GET to read it" })
     const body = (await readJsonBody(req)) as Record<string, unknown> | undefined
     const jobId = typeof body?.job_id === "string" ? body.job_id : ""
     const grant = typeof body?.grant === "string" ? body.grant : ""

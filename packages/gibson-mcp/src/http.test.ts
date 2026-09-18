@@ -81,8 +81,10 @@ test("a POST that is not initialize and carries no session id is refused", async
   await s.close()
 })
 
+const TURN_TOKEN = "turn-token-of-this-driver"
+
 /** A surface that serves turns, so the /turn contract can be exercised whole. */
-async function serveWithTurns() {
+async function serveWithTurns(opts: { turnToken?: string; log?: (line: string) => void } = { turnToken: TURN_TOKEN }) {
   const turns: { jobId: string; endpoint: string }[] = []
   let current: { jobId: string; endpoint: string } | undefined
   const surface = {
@@ -99,13 +101,17 @@ async function serveWithTurns() {
       current: () => current,
     },
   }
-  const http = await serveHttp(surface, { host: "127.0.0.1", port: 0 }, quiet)
+  const http = await serveHttp(surface, { host: "127.0.0.1", port: 0 }, opts.log ?? quiet, { turnToken: opts.turnToken })
   const turnURL = new URL("/turn", http.url)
   return { http, turnURL, turns, close: () => http.close() }
 }
 
-const postTurn = (url: URL, body: unknown) =>
-  fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
+const bearer = (token: string) => ({ authorization: `Bearer ${token}` })
+
+const postTurn = (url: URL, body: unknown, headers: Record<string, string> = bearer(TURN_TOKEN)) =>
+  fetch(url, { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) })
+
+const deleteTurn = (url: URL, headers: Record<string, string> = bearer(TURN_TOKEN)) => fetch(url, { method: "DELETE", headers })
 
 test("POST /turn puts a dispatch's grant in force, and DELETE /turn ends it", async () => {
   const s = await serveWithTurns()
@@ -114,7 +120,8 @@ test("POST /turn puts a dispatch's grant in force, and DELETE /turn ends it", as
   assert.deepEqual(await set.json(), { job_id: "job-1", endpoint: "daemon:50001" })
   assert.deepEqual(await (await fetch(s.turnURL)).json(), { job_id: "job-1", endpoint: "daemon:50001" })
 
-  const cleared = await fetch(s.turnURL, { method: "DELETE" })
+  const cleared = await deleteTurn(s.turnURL)
+  assert.equal(cleared.status, 200)
   assert.deepEqual(await cleared.json(), { job_id: null })
   assert.deepEqual(await (await fetch(s.turnURL)).json(), { job_id: null })
   await s.close()
@@ -129,6 +136,74 @@ test("a turn with no job or no grant is refused: a grant with no job attributes 
   }
   assert.deepEqual(s.turns, [])
   await s.close()
+})
+
+test("POST /turn with no bearer token is a 401, and the grant is not installed", async (t) => {
+  const s = await serveWithTurns()
+  // Close the server even when an assertion fails, so a red run ends instead of hanging on an open handle.
+  t.after(() => s.close())
+  const res = await postTurn(s.turnURL, { job_id: "job-1", grant: "grant-1" }, {})
+  assert.equal(res.status, 401)
+  assert.equal(res.headers.get("www-authenticate"), "Bearer")
+  assert.match(JSON.stringify(await res.json()), /GIBSON_TURN_TOKEN/)
+  assert.deepEqual(s.turns, [])
+  assert.deepEqual(await (await fetch(s.turnURL)).json(), { job_id: null }, "GET /turn stays open for the driver's probe")
+})
+
+test("POST /turn with the wrong token is a 401, whatever the scheme or the body", async (t) => {
+  const s = await serveWithTurns()
+  // Close the server even when an assertion fails, so a red run ends instead of hanging on an open handle.
+  t.after(() => s.close())
+  for (const headers of [bearer("guess"), bearer(TURN_TOKEN + "x"), bearer(TURN_TOKEN.slice(0, -1)), { authorization: TURN_TOKEN }, { authorization: `Basic ${TURN_TOKEN}` }]) {
+    const res = await postTurn(s.turnURL, { job_id: "job-1", grant: "grant-1" }, headers)
+    assert.equal(res.status, 401, JSON.stringify(headers))
+  }
+  // Authentication comes before validation: a bad body with no token is still a 401, not a 400.
+  assert.equal((await postTurn(s.turnURL, {}, {})).status, 401)
+  assert.deepEqual(s.turns, [])
+})
+
+test("POST /turn with the right token installs the grant", async (t) => {
+  const s = await serveWithTurns()
+  // Close the server even when an assertion fails, so a red run ends instead of hanging on an open handle.
+  t.after(() => s.close())
+  const res = await postTurn(s.turnURL, { job_id: "job-1", grant: "grant-1" }, bearer(TURN_TOKEN))
+  assert.equal(res.status, 200)
+  assert.equal(s.turns.length, 1)
+})
+
+test("DELETE /turn requires the same token, so the child cannot drop a grant either", async (t) => {
+  const s = await serveWithTurns()
+  // Close the server even when an assertion fails, so a red run ends instead of hanging on an open handle.
+  t.after(() => s.close())
+  assert.equal((await postTurn(s.turnURL, { job_id: "job-1", grant: "grant-1" })).status, 200)
+
+  assert.equal((await deleteTurn(s.turnURL, {})).status, 401, "no token")
+  assert.equal((await deleteTurn(s.turnURL, bearer("guess"))).status, 401, "wrong token")
+  assert.deepEqual(await (await fetch(s.turnURL)).json(), { job_id: "job-1", endpoint: "daemon:50001" }, "the turn is still in force")
+
+  assert.equal((await deleteTurn(s.turnURL, bearer(TURN_TOKEN))).status, 200, "right token")
+  assert.deepEqual(await (await fetch(s.turnURL)).json(), { job_id: null })
+})
+
+test("a server started without GIBSON_TURN_TOKEN closes /turn and says so", async (t) => {
+  const logged: string[] = []
+  const s = await serveWithTurns({ log: (line) => logged.push(line) })
+  // Close the server even when an assertion fails, so a red run ends instead of hanging on an open handle.
+  t.after(() => s.close())
+  assert.ok(logged.some((l) => /GIBSON_TURN_TOKEN is not set/.test(l)), "the start-up log names the missing variable")
+
+  // Even a caller that guesses right cannot drive a turn: there is no token to match.
+  for (const headers of [{}, bearer(TURN_TOKEN), bearer("")]) {
+    assert.equal((await postTurn(s.turnURL, { job_id: "job-1", grant: "grant-1" }, headers)).status, 401)
+    assert.equal((await deleteTurn(s.turnURL, headers)).status, 401)
+  }
+  assert.deepEqual(s.turns, [])
+  assert.ok(logged.some((l) => /POST \/turn refused: GIBSON_TURN_TOKEN is not set/.test(l)), "each refusal is logged")
+  assert.ok(logged.every((l) => !l.includes(TURN_TOKEN)), "the log never carries a token")
+
+  const health = await fetch(new URL("/healthz", s.http.url))
+  assert.equal(health.status, 200, "/healthz keeps answering without the token")
 })
 
 test("/turn is absent where there is no task grant to swap", async () => {

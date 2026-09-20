@@ -1,6 +1,6 @@
 {
   "name": "@zeroroot-ai/gibson-mcp",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "The Gibson MCP server: one tool surface for every coding agent host. Every RPC of every SDK service, every SDK helper and every checked-in platform tool, over stdio or streamable HTTP on localhost.",
   "license": "Elastic-2.0",
   "repository": {

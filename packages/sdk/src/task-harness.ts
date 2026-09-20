@@ -19,7 +19,11 @@ import type { ContextInfo } from "./gen/gibson/harness/v1/harness_callback_pb.js
  *    `internal/engine/harness/callback_service.go:496-516`). A request without
  *    it is refused before authorization runs. The grant already names the
  *    mission and task, so the context is derived from its claims once, here,
- *    and no caller has to know the field exists.
+ *    and no caller has to know the field exists. The daemon identifies the
+ *    calling member of a mission run by `mission_run_id`. The grant does not
+ *    carry the run, the launch does (`GIBSON_MISSION_RUN_ID`), so the caller
+ *    that read the launch passes it in and the harness sends it on every
+ *    request.
  *  - **Renewal.** A task grant lives 30 minutes. `DaemonService.RenewCapabilityGrant`
  *    mints a fresh one for the same subject, mission and task (gibson
  *    `internal/server/daemon/api/server_capabilitygrant_renew.go`). A live
@@ -88,8 +92,12 @@ export function contextFromGrant(claims: GrantClaims): TaskContext {
   return { missionId: claims.missionId, taskId: claims.taskId, agentName: m[1] }
 }
 
-/** The subset of `ContextInfo` a task grant fixes. Spread into every request. */
-export type TaskContext = Pick<ContextInfo, "missionId" | "taskId" | "agentName">
+/**
+ * The subset of `ContextInfo` a dispatch fixes. Spread into every request.
+ * `missionRunId` is set when the launch named the run, and absent otherwise,
+ * so a request from a run that has none carries the proto default.
+ */
+export type TaskContext = Pick<ContextInfo, "missionId" | "taskId" | "agentName"> & Partial<Pick<ContextInfo, "missionRunId">>
 
 export interface TaskHarness {
   /**
@@ -113,6 +121,12 @@ export interface TaskHarness {
 }
 
 export interface OpenTaskHarnessOptions extends TaskHarnessConfig {
+  /**
+   * The mission run this dispatch belongs to, as the launch named it. The
+   * grant does not carry it. When set, every request carries it as
+   * `ContextInfo.mission_run_id`.
+   */
+  missionRunId?: string
   /** Renew the grant before it expires. Default `true`. */
   renew?: boolean
   /** Test seams. */
@@ -148,7 +162,7 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): TaskHarness {
   }
   let current = opts.token
   let claims = decodeGrantClaims(current)
-  const context = contextFromGrant(claims)
+  const context: TaskContext = { ...contextFromGrant(claims), ...(opts.missionRunId ? { missionRunId: opts.missionRunId } : {}) }
   const clock = opts.clock ?? (() => Date.now())
   const timers = opts.timers ?? globalThis
 

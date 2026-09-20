@@ -192,7 +192,7 @@ async function openDispatched(env: NodeJS.ProcessEnv, settings: Settings, log: L
   const base = { source: "dispatched" as const, hostKeyPath: settings.hostKeyPath, settings, ...(runId ? { runId } : {}) }
   let harness
   try {
-    harness = (opts.harness ?? openTaskHarness)({ endpoint, token, insecure: settings.callbackInsecure })
+    harness = (opts.harness ?? openTaskHarness)({ endpoint, token, insecure: settings.callbackInsecure, ...(runId ? { missionRunId: runId } : {}) })
   } catch (e) {
     const reason = `dispatched grant unusable: ${(e as Error).message}`
     log(`${TAG} ${reason}; continuing standalone`)

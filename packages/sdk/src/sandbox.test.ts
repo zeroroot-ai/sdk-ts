@@ -4,8 +4,9 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { create, toJsonString } from "@bufbuild/protobuf"
+import { createRouterTransport } from "@connectrpc/connect"
 import { TaskSchema } from "./gen/gibson/types/v1/types_pb.js"
-import { SANDBOX_ENV, readSandboxDispatch, taskFromB64 } from "./sandbox.js"
+import { SANDBOX_ENV, readSandboxDispatch, sandboxHarness, taskFromB64 } from "./sandbox.js"
 
 const taskB64 = (goal: string) =>
   Buffer.from(toJsonString(TaskSchema, create(TaskSchema, { id: "t-1", goal }))).toString("base64")
@@ -47,4 +48,27 @@ test("a dispatch with no grant, no endpoint, no task, or an empty goal is refuse
 test("taskFromB64 tolerates fields this build does not know", () => {
   const raw = JSON.stringify({ id: "t", goal: "g", futureField: 1 })
   assert.equal(taskFromB64(Buffer.from(raw).toString("base64")).goal, "g")
+})
+
+/** An unsigned JWT with the given payload. The client never verifies. */
+function fakeJwt(payload: Record<string, unknown>): string {
+  const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64url")
+  return `${b64({ alg: "EdDSA", typ: "JWT" })}.${b64(payload)}.sig`
+}
+
+test("sandboxHarness carries GIBSON_MISSION_RUN_ID into the context, and leaves it out when the launch set none", () => {
+  const env = {
+    GIBSON_CG_JWT: fakeJwt({ sub: "component:agent:zerocool", mission_id: "m-1", task_id: "t-1" }),
+    GIBSON_CALLBACK_ENDPOINT: "gibson:50001",
+    GIBSON_AGENT_TASK_B64: taskB64("go"),
+  }
+  const opts = { transport: createRouterTransport(() => {}), renew: false }
+
+  const named = sandboxHarness(readSandboxDispatch({ ...env, GIBSON_MISSION_RUN_ID: "mr-1" }), opts)
+  assert.deepEqual(named.context, { missionId: "m-1", taskId: "t-1", agentName: "zerocool", missionRunId: "mr-1" })
+  named.stop()
+
+  const unnamed = sandboxHarness(readSandboxDispatch(env), opts)
+  assert.deepEqual(unnamed.context, { missionId: "m-1", taskId: "t-1", agentName: "zerocool" })
+  unnamed.stop()
 })

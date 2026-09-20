@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 // Package gibson.bank.v1 declares banks of always-on coding agents and their
-// members (gibson#1706, ADR-0017).
+// members (ADR-0017).
 //
 // A bank is a declarative, daemon-reconciled pool of always-on Claude Code
 // instances. The daemon keeps desired_count members running in sandboxes,

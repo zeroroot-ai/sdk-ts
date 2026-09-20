@@ -6,7 +6,7 @@
 // `is_tool_response` so proto authors can mark a message as a tool
 // response container. Today this annotation is consumed by the SDK's
 // field-100 contract test (see graphrag/field_100_contract_test.go) to
-// scope its assertion to messages that actually need to honour the
+// scope its assertion to messages that actually need to honor the
 // gibson.graphrag.v1.DiscoveryResult slot at field 100.
 //
 // Spec: tdd-coverage-gibson-sdk (Epic #6) — replaces the previous

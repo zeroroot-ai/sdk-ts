@@ -29,7 +29,7 @@ export const file_gibson_test_v1_fixture: GenFile = /*@__PURE__*/
 
 /**
  * GenericRequest is a tool-agnostic request message used by SDK tests for
- * streaming, recording, and feedback behaviour validation. It mirrors the
+ * streaming, recording, and feedback behavior validation. It mirrors the
  * shape of typical tool requests (target list + arbitrary options) without
  * privileging any specific tool's wire format.
  *

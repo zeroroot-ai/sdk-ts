@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 // Package gibson.job.v1 declares jobs, the unit of work a bank member holds
-// (gibson#1706, ADR-0017).
+// (ADR-0017).
 //
 // Every input to a member is a structured job. A chat turn is a job with
 // only a goal. A job is one persistent Claude Code session with its own

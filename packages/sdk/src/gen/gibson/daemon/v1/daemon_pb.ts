@@ -327,7 +327,7 @@ export const StatusResponseSchema: GenMessage<StatusResponse> = /*@__PURE__*/
  */
 export type OperationResult = Message<"gibson.daemon.v1.OperationResult"> & {
   /**
-   * status of the operation ("success", "failed", "timeout", "cancelled")
+   * status of the operation (`success`, `failed`, `timeout`, `cancelled`)
    *
    * @generated from field: string status = 1;
    */
@@ -1447,7 +1447,7 @@ export type CheckpointMetadata = Message<"gibson.daemon.v1.CheckpointMetadata"> 
 
   /**
    * cadence_reason is a free-form classifier for why the checkpoint was
-   * taken. Recognised values per R9.1: "super_step",
+   * taken. Recognized values per R9.1: "super_step",
    * "parallel_group_complete", "approval_required", "graceful_shutdown".
    * Promoted to enum at v1.0.0.
    *
@@ -1554,7 +1554,7 @@ export type ListMissionsRequest = Message<"gibson.daemon.v1.ListMissionsRequest"
   offset: number;
 
   /**
-   * status_filter filters missions by status (running, completed, failed, cancelled)
+   * status_filter filters missions by status (`running`, `completed`, `failed`, `cancelled`)
    *
    * @generated from field: string status_filter = 4;
    */
@@ -1773,7 +1773,7 @@ export type ResumeMissionRequest = Message<"gibson.daemon.v1.ResumeMissionReques
   checkpointId: string;
 
   /**
-   * Empty string = legacy resume-from-latest behaviour (backward compatible).
+   * Empty string = legacy resume-from-latest behavior (backward compatible).
    * When non-empty, the daemon rewinds the mission to the named checkpoint
    * and resumes execution from that point. The handler additionally enforces
    * the mission#admin FGA relation when this field is non-empty per
@@ -1875,7 +1875,7 @@ export type MissionRun = Message<"gibson.daemon.v1.MissionRun"> & {
   runNumber: number;
 
   /**
-   * status is the final status of this run (running, completed, failed, cancelled, paused)
+   * status is the final status of this run (`running`, `completed`, `failed`, `cancelled`, `paused`)
    *
    * @generated from field: string status = 3;
    */
@@ -2467,7 +2467,7 @@ export type CreateMissionRequest = Message<"gibson.daemon.v1.CreateMissionReques
    *     > definition constraints.max_tokens_per_call
    *     > per-node *NodeConfig.max_tokens_per_call (lowest; wins if set)
    *
-   * Spec: ADR 0004, mission-schema-canonicalization; gibson#133 (M4).
+   * Spec: ADR 0004, mission-schema-canonicalization (M4).
    *
    * @generated from field: gibson.mission.v1.MissionConstraints constraints = 5;
    */
@@ -4982,7 +4982,6 @@ export const DaemonService: GenService<{
    * All other fields replace the stored definition; the server-assigned ID and
    * original timestamps are preserved. Returns codes.NotFound if no definition
    * with that name exists.
-   * Spec: gibson#437.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.UpdateMissionDefinition
    */
@@ -4998,7 +4997,7 @@ export const DaemonService: GenService<{
    * needs every author-facing field (workspace, constraints, per-node
    * retry/data/reuse policies). Returns codes.NotFound when the name is
    * not registered.
-   * Spec: mission-author-experience M5 (gibson#134).
+   * Spec: mission-author-experience M5.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.GetMissionDefinition
    */
@@ -5015,7 +5014,7 @@ export const DaemonService: GenService<{
    * mission layout store (SaveMissionLayout) so hand-arranged positions win.
    * This keeps the dashboard a pure renderer — it never re-derives topology.
    * Presentation only: nothing here affects mission execution.
-   * Spec: MissionGraph epic (sdk#278).
+   * Spec: MissionGraph epic.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.GetMissionGraph
    */
@@ -5029,7 +5028,7 @@ export const DaemonService: GenService<{
    * viewport) for a mission definition, or an empty layout when none has been
    * saved. The layout store is separate from the mission definition record —
    * the mission work-schema carries no presentation state. Keyed by
-   * mission_definition_id. Spec: MissionGraph epic (sdk#278).
+   * mission_definition_id. Spec: MissionGraph epic.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.GetMissionLayout
    */
@@ -5044,7 +5043,7 @@ export const DaemonService: GenService<{
    * definition, its nodes/edges/configs, or its cue_source. The optional
    * expected_version enables optimistic concurrency — a stale write (the layout
    * changed underneath) is rejected rather than clobbering. Keyed by
-   * mission_definition_id. Spec: MissionGraph epic (sdk#278).
+   * mission_definition_id. Spec: MissionGraph epic.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.SaveMissionLayout
    */

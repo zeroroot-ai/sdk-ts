@@ -1652,7 +1652,7 @@ export const HarnessPluginDescriptorSchema: GenMessage<HarnessPluginDescriptor> 
 /**
  * DelegateToAgentRequest dispatches a task to another agent. The target
  * selector says WHERE the task runs. Absent means an ephemeral launch, which
- * is the behavior every caller had before banks existed (gibson#1706).
+ * is the behavior every caller had before banks existed.
  *
  * @generated from message gibson.harness.v1.DelegateToAgentRequest
  */
@@ -2360,9 +2360,9 @@ export type ApplicationFinding = Message<"gibson.harness.v1.ApplicationFinding">
   /**
    * priority, priority_rule and priority_reason are what a previous triage
    * pass decided about this Finding, written back by the agent and returned
-   * here so the next pass can read its own history (gibson#1684).
+   * here so the next pass can read its own history.
    *
-   * Two behaviours are dark while they are empty. A triage rule that keeps
+   * Two behaviors are dark while they are empty. A triage rule that keeps
    * the previous priority when a scoring feed is unavailable — so an outage
    * never re-ranks a Finding on severity alone — has nothing to keep. And a
    * pass that explains only what changed sees every decision as a change, so
@@ -3099,8 +3099,7 @@ export const ObserveRequestSchema: GenMessage<ObserveRequest> = /*@__PURE__*/
 /**
  * LifecycleEntityObservation reports a sighting of a typed application-lifecycle
  * entity: an Application, Repository, Image, Package, Deployment, Vulnerability,
- * MergeRequest, Pipeline or Control, and the edges it was seen to have
- * (gibson#1656).
+ * MergeRequest, Pipeline or Control, and the edges it was seen to have.
  *
  * Admission is the Taxonomy's decision, not this message's. The daemon puts
  * label and every edge type to the global Taxonomy; an admitted shape becomes a
@@ -3472,8 +3471,8 @@ export const AccountObservationSchema: GenMessage<AccountObservation> = /*@__PUR
 
 /**
  * MemoryObservation reports a fact the agent wants to keep across runs, in the
- * agent's own words. It is the memory write for coding agents (gibson#1593,
- * decision 10): a memory is a World observation, not a store of its own.
+ * agent's own words. It is the memory write for coding agents: a memory is
+ * a World observation, not a store of its own.
  *
  * Identity is per sighting: the Timeline event id, like every observation. The
  * Taxonomy gate lands it as an `Observation` node with shape "Memory" until
@@ -4928,7 +4927,7 @@ export const ValidationErrorSchema: GenMessage<ValidationError> = /*@__PURE__*/
  * Deprecated: use gibson.mission.v1.MissionConstraints via the
  * canonical_constraints field on CreateMissionRequest instead.
  * This type will be removed in a follow-up release after all microVM
- * consumers have migrated (see sdk#64 migration plan).
+ * consumers have migrated.
  *
  * @generated from message gibson.harness.v1.MissionConstraints
  * @deprecated
@@ -5290,7 +5289,7 @@ export type CreateMissionRequest = Message<"gibson.harness.v1.CreateMissionReque
    * constraints uses the harness-local MissionConstraints shape which only
    * carries max_duration_ms (int64 ms), max_tokens, max_cost, and max_findings.
    * It will be removed in a follow-up release once all microVM consumers
-   * have migrated to canonical_constraints. See sdk#64 migration plan.
+   * have migrated to canonical_constraints.
    *
    * @generated from field: gibson.harness.v1.MissionConstraints constraints = 5 [deprecated = true];
    * @deprecated
@@ -5309,7 +5308,7 @@ export type CreateMissionRequest = Message<"gibson.harness.v1.CreateMissionReque
 
   /**
    * canonical_constraints carries the platform-canonical
-   * gibson.mission.v1.MissionConstraints type (sdk#47 / ADR 0004).
+   * gibson.mission.v1.MissionConstraints type (ADR 0004).
    * Prefer this field over the deprecated constraints (field 5).
    * The daemon merges canonical_constraints with any constraints baked
    * into the mission definition (dispatch wins on conflict).
@@ -5779,7 +5778,7 @@ export type MissionRunSummary = Message<"gibson.harness.v1.MissionRunSummary"> &
   runNumber: number;
 
   /**
-   * status is the final status string (running, completed, failed, cancelled, paused).
+   * status is the final status string (`running`, `completed`, `failed`, `cancelled`, `paused`).
    *
    * @generated from field: string status = 3;
    */
@@ -7323,7 +7322,7 @@ export const HarnessCallbackService: GenService<{
   },
   /**
    * WorldView returns the caller's server-projected slice of the tenant World
-   * (ADR-0012, sdk#341's read half). It is the counterpart to Observe: Observe
+   * (ADR-0012). It is the counterpart to Observe: Observe
    * is the agent's only write, WorldView its only read.
    *
    * The slice is projected by the daemon from the mission record it created —
@@ -7350,8 +7349,8 @@ export const HarnessCallbackService: GenService<{
    * See zerocool-plugins ADR-0006 and docs/adr/0001-callback-knowledge-reads.md.
    *
    * Read-only by construction. The write half is NOT mirrored: the projector
-   * is the sole graph writer (ADR-0012), and sdk#451 already removed the
-   * generic graph-write RPC from ComponentService.
+   * is the sole graph writer (ADR-0012), and ComponentService no longer
+   * has a generic graph-write RPC.
    *
    * @generated from rpc gibson.harness.v1.HarnessCallbackService.QueryNodes
    */
@@ -7403,7 +7402,7 @@ export const HarnessCallbackService: GenService<{
   /**
    * ApplicationFindings answers the one lifecycle question the reads above
    * cannot: for this Application, what is still open, and does anything
-   * actually run the code it is in (gibson#1669).
+   * actually run the code it is in.
    *
    * The reads above are hybrid vector-and-graph SEARCH — text or embedding, a
    * node-type filter, top-k. Reachability is a TRAVERSAL: is this Package

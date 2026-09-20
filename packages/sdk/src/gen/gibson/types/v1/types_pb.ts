@@ -53,8 +53,8 @@ export type Task = Message<"gibson.types.v1.Task"> & {
   metadata: { [key: string]: TypedValue };
 
   /**
-   * job names the typed resources this task needs and how it is judged
-   * (gibson#1706). It is set when the task opens or continues a job on a
+   * job names the typed resources this task needs and how it is judged.
+   * It is set when the task opens or continues a job on a
    * bank member. goal stays the goal; the spec's own goal is ignored on a
    * dispatched task. Absent on a task that needs no repository, no
    * credential and no acceptance step.

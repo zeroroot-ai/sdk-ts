@@ -13,13 +13,17 @@ function inboxHarness(script: {
   fail?: number[]
   sent?: { jobId: string; message: string; kind: InputKind }[]
   states?: { jobId: string; state: JobState }[]
+  /** The `context` of every request, in order: subscribe, send, report. */
+  contexts?: unknown[]
+  context?: TaskHarness["context"]
 }): TaskHarness {
   let attempt = -1
   let nextId = 0
   return {
     transport: {} as never,
     client: {
-      subscribeInput: () => {
+      subscribeInput: (req: { context?: unknown }) => {
+        script.contexts?.push(req.context)
         attempt += 1
         const round = attempt
         return (async function* () {
@@ -28,18 +32,20 @@ function inboxHarness(script: {
           for (const input of script.streams[round] ?? []) yield { input: { ...input, sender: { kind: 1, id: "1" } } }
         })()
       },
-      sendInput: async (req: { jobId: string; message: string; kind: InputKind }) => {
+      sendInput: async (req: { context?: unknown; jobId: string; message: string; kind: InputKind }) => {
+        script.contexts?.push(req.context)
         script.sent?.push({ jobId: req.jobId, message: req.message, kind: req.kind })
         nextId += 1
         return { input: { id: `sent-${nextId}`, jobId: req.jobId, message: req.message, kind: req.kind } }
       },
-      reportJobState: async (req: { jobId: string; state: JobState }) => {
+      reportJobState: async (req: { context?: unknown; jobId: string; state: JobState }) => {
+        script.contexts?.push(req.context)
         script.states?.push({ jobId: req.jobId, state: req.state })
         return {}
       },
     } as never,
     endpoint: "daemon:50001",
-    context: { missionId: "m-1", taskId: "t-1", agentName: "claude" },
+    context: script.context ?? { missionId: "m-1", taskId: "t-1", agentName: "claude" },
     token: () => "base",
     expiresAt: () => 0,
     stop: () => {},
@@ -170,4 +176,15 @@ test("a cancelled question stops waiting rather than hanging the job", async () 
   const pending = answers.next("j-1", controller.signal)
   controller.abort()
   await assert.rejects(pending, /cancelled/)
+})
+
+test("every inbox request carries the harness context whole, mission run included", async () => {
+  const context = { missionId: "m-1", taskId: "t-1", agentName: "claude", missionRunId: "mr-1" }
+  const contexts: unknown[] = []
+  const inbox = openInbox({ harness: inboxHarness({ streams: [[input("j-1", "go")]], contexts, context }) })
+  for await (const _ of inbox.messages()) break
+  await inbox.send("j-1", "hello", InputKind.TURN)
+  await inbox.reportState("j-1", JobState.WAITING)
+  inbox.stop()
+  assert.deepEqual(contexts, [context, context, context])
 })

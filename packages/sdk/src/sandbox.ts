@@ -88,7 +88,10 @@ export function readSandboxDispatch(env: NodeJS.ProcessEnv): SandboxDispatch {
   }
 }
 
-/** The task harness for a sandboxed run: the grant from the launch, nothing else. */
-export function sandboxHarness(d: SandboxDispatch, opts: Omit<OpenTaskHarnessOptions, "endpoint" | "token"> = {}): TaskHarness {
-  return openTaskHarness({ ...opts, endpoint: d.callbackEndpoint, token: d.grant })
+/**
+ * The task harness for a sandboxed run: the grant and the mission run from
+ * the launch, nothing else.
+ */
+export function sandboxHarness(d: SandboxDispatch, opts: Omit<OpenTaskHarnessOptions, "endpoint" | "token" | "missionRunId"> = {}): TaskHarness {
+  return openTaskHarness({ ...opts, endpoint: d.callbackEndpoint, token: d.grant, ...(d.missionRunId ? { missionRunId: d.missionRunId } : {}) })
 }

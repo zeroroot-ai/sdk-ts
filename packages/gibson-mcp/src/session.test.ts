@@ -4,7 +4,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { createRouterTransport } from "@connectrpc/connect"
-import type { GibsonSession, LiveMission, TaskHarness } from "@zeroroot-ai/sdk"
+import type { GibsonSession, LiveMission, OpenTaskHarnessOptions, TaskHarness } from "@zeroroot-ai/sdk"
 import type { Settings } from "./config.js"
 import { openGibson } from "./session.js"
 
@@ -64,6 +64,7 @@ function fakeLive(): LiveMission & { ended: unknown[] } {
 test("the dispatched grant wins over an enrolled host key, and nothing is dialed for a check-in", async () => {
   let dialed = false
   const harness = fakeHarness("claude")
+  const opened: OpenTaskHarnessOptions[] = []
   const g = await openGibson({
     settings: settings({ platformURL: "https://p", targetId: "tgt" }),
     log: quiet,
@@ -72,7 +73,10 @@ test("the dispatched grant wins over an enrolled host key, and nothing is dialed
       dialed = true
       throw new Error("must not check in")
     },
-    harness: () => harness,
+    harness: (o) => {
+      opened.push(o)
+      return harness
+    },
     hostKeyExists: () => true,
   })
   assert.equal(g.source, "dispatched")
@@ -80,6 +84,7 @@ test("the dispatched grant wins over an enrolled host key, and nothing is dialed
   assert.equal(dialed, false)
   assert.equal(g.live?.missionId, "m-1")
   assert.equal(g.runId, "run-9")
+  assert.deepEqual(opened, [{ endpoint: "d:50001", token: "jwt", insecure: false, missionRunId: "run-9" }], "the launch's run reaches the harness, so every callback carries it")
   assert.equal(g.agentName, "claude", "the agent name comes off the grant, not the settings")
   await g.close()
   assert.equal(harness.stopped, 1)

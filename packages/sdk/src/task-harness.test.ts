@@ -3,9 +3,11 @@
 
 import assert from "node:assert/strict"
 import test from "node:test"
+import { create, toJson } from "@bufbuild/protobuf"
 import { createRouterTransport } from "@connectrpc/connect"
 
 import { DaemonService } from "./gen/gibson/daemon/v1/daemon_pb.js"
+import { ContextInfoSchema } from "./gen/gibson/harness/v1/harness_callback_pb.js"
 import {
   CAPABILITY_GRANT_HEADER,
   contextFromGrant,
@@ -161,4 +163,28 @@ test("a grant with a far-future exp renews at Node's timer ceiling, not at once"
   assert.equal(timers.pending.length, 1)
   assert.equal(timers.pending[0]!.delay, 2_147_483_647, "delay above 2^31-1 would fire immediately")
   h.stop()
+})
+
+test("the mission run from the launch rides in ContextInfo, and only when the launch named one", () => {
+  const open = (missionRunId?: string) =>
+    openTaskHarness({
+      endpoint: "d:443",
+      token: fakeJwt(CLAIMS),
+      transport: createRouterTransport(() => {}),
+      renew: false,
+      ...(missionRunId ? { missionRunId } : {}),
+    })
+
+  const withRun = open("mr-7")
+  assert.deepEqual(withRun.context, { missionId: "m-1", taskId: "run-1", agentName: "zerocool", missionRunId: "mr-7" })
+  const onWire = create(ContextInfoSchema, withRun.context)
+  assert.equal(onWire.missionRunId, "mr-7", "the daemon identifies the calling member by mission_run_id")
+
+  const withoutRun = open()
+  assert.deepEqual(withoutRun.context, { missionId: "m-1", taskId: "run-1", agentName: "zerocool" })
+  const bare = create(ContextInfoSchema, withoutRun.context)
+  assert.equal(bare.missionRunId, "", "no run named, the field stays empty")
+  const bareJson = { missionId: "m-1", taskId: "run-1", agentName: "zerocool" }
+  assert.deepEqual(toJson(ContextInfoSchema, bare), bareJson)
+  assert.deepEqual(toJson(ContextInfoSchema, onWire), { ...bareJson, missionRunId: "mr-7" }, "nothing else on the wire changes")
 })

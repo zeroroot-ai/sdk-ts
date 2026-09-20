@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.2.1...gibson-mcp-v0.3.0) (2026-09-20)
+
+
+### Features
+
+* **sdk:** carry the mission run id in ContextInfo ([#36](https://github.com/zeroroot-ai/sdk-ts/issues/36)) ([187a538](https://github.com/zeroroot-ai/sdk-ts/commit/187a538147f9b213a3587567993dcee1cbe5618e))
+
 ## [0.2.1](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.2.0...gibson-mcp-v0.2.1) (2026-09-18)
 
 

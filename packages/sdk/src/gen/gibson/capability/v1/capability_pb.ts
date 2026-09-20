@@ -22,7 +22,7 @@
 // Spec: two-surface platform contract (ADR-0001, forthcoming);
 //       component-bootstrap-e2e Requirement 10 (read side);
 //       secrets-tenant-lifecycle Requirement 8.1 (write side, moved
-//       to platform-sdk under slice #108).
+//       to platform-sdk).
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";

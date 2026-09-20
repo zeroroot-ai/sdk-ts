@@ -319,7 +319,7 @@ export type ExecuteRequest = Message<"gibson.agent.v1.ExecuteRequest"> & {
   runNumber: number;
 
   /**
-   * job_id names the job this execution serves (gibson#1706). A one-shot
+   * job_id names the job this execution serves. A one-shot
    * dispatch and a bank job then share one result path. Empty for a
    * dispatch that opens no job.
    *
@@ -351,7 +351,7 @@ export type ExecuteResponse = Message<"gibson.agent.v1.ExecuteResponse"> & {
 
   /**
    * deliverables lists what left the sandbox for this execution: a pushed
-   * branch, an opened merge request (gibson#1706). Empty when nothing left.
+   * branch, an opened merge request. Empty when nothing left.
    *
    * @generated from field: repeated gibson.job.v1.Deliverable deliverables = 3;
    */

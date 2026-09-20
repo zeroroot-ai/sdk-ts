@@ -226,7 +226,7 @@ export const MetadataSchema: GenMessage<Metadata> = /*@__PURE__*/
 /**
  * Principal names who acts: a person, the tenant, a component run, or a
  * platform service. Banks record their owner as a Principal. Jobs record who
- * opened them and who sent each input as a Principal (gibson#1706).
+ * opened them and who sent each input as a Principal.
  *
  * @generated from message gibson.common.v1.Principal
  */

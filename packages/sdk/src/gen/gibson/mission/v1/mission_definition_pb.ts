@@ -166,7 +166,7 @@ export type MissionDefinition = Message<"gibson.mission.v1.MissionDefinition"> &
    * dispatch-time overrides (dispatch wins on conflict).
    * Optional: absent means no constraints are baked into the definition.
    *
-   * Spec: sdk#47 (MissionConstraints proto promotion).
+   * Spec: MissionConstraints proto promotion.
    *
    * @generated from field: optional gibson.mission.v1.MissionConstraints constraints = 16;
    */
@@ -174,8 +174,8 @@ export type MissionDefinition = Message<"gibson.mission.v1.MissionDefinition"> &
 
   /**
    * DeciderSlot names the mission-level LLM the brain's Decider runs on — the
-   * orchestration decision-maker, distinct from per-node agent slots
-   * (gibson#850). Only the provider+model are used (the slot name is implicitly
+   * orchestration decision-maker, distinct from per-node agent slots.
+   * Only the provider+model are used (the slot name is implicitly
    * "decider"). Absent means the brain uses the tenant's dashboard-default
    * provider/model, so missions need not set it.
    *
@@ -203,7 +203,7 @@ export const MissionDefinitionSchema: GenMessage<MissionDefinition> = /*@__PURE_
  *   - max_cost      : 0.0         → no cost ceiling
  *   - max_findings  : 0           → no finding count limit
  *
- * Spec: sdk#47 (MissionConstraints proto promotion).
+ * Spec: MissionConstraints proto promotion.
  *
  * @generated from message gibson.mission.v1.MissionConstraints
  */
@@ -322,7 +322,7 @@ export type MissionConstraints = Message<"gibson.mission.v1.MissionConstraints">
    * individual LLM call.
    *
    * 0 means unlimited at this level. Spec: mission-schema-canonicalization
-   * Requirement 5. Enforced by EffectivePerCallCap() (wired in M4, gibson#133).
+   * Requirement 5. Enforced by EffectivePerCallCap() (wired in M4).
    *
    * @generated from field: int32 max_tokens_per_call = 12;
    */
@@ -462,7 +462,7 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
     case: "joinConfig";
   } | {
     /**
-     * JobConfig for job nodes (gibson#1706). Field number 17 because
+     * JobConfig for job nodes. Field number 17 because
      * 16 is the sibling reuse_policy field.
      *
      * @generated from field: gibson.mission.v1.JobNodeConfig job_config = 17;
@@ -496,7 +496,7 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
    * DataPolicy defines data handling policy for this node.
    *
    * Deprecated: data reuse + scoping are no longer node-declared. Under the
-   * ECS brain (gibson#851, ADR-0008) reuse is implicit in the event-sourced
+   * ECS brain (ADR-0008) reuse is implicit in the event-sourced
    * World and scoping flows from scope-relative identity (ADR-0002) +
    * ambient projection. The field is retained wire-compatibly for old
    * definitions but is ignored by the engine.
@@ -517,7 +517,7 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
    * ReusePolicy declares how this node's I/O is scoped +
    * reused across mission runs.
    *
-   * Deprecated: superseded by the ECS brain (gibson#851, ADR-0008). Reuse is
+   * Deprecated: superseded by the ECS brain (ADR-0008). Reuse is
    * implicit in the World; scoping is via scope-relative identity (ADR-0002)
    * + ambient projection. Retained wire-compatibly but ignored by the engine.
    *
@@ -571,7 +571,7 @@ export type AgentNodeConfig = Message<"gibson.mission.v1.AgentNodeConfig"> & {
    * MissionConstraints.max_tokens_per_call applies instead.
    *
    * 0 = inherit from mission-level (when this field is absent).
-   * Spec: mission-schema-canonicalization Requirement 5; gibson#133.
+   * Spec: mission-schema-canonicalization Requirement 5.
    *
    * @generated from field: optional int32 max_tokens_per_call = 3;
    */
@@ -591,7 +591,7 @@ export type AgentNodeConfig = Message<"gibson.mission.v1.AgentNodeConfig"> & {
    * Precedence at resolution per slot: explicit binding in llm_slots >
    * tenant default > constraint search over the tenant's permitted providers.
    *
-   * Spec: sdk#260 (multi-slot LLM binding contract); consumer: gibson#524.
+   * Spec: multi-slot LLM binding contract.
    *
    * @generated from field: repeated gibson.mission.v1.LLMSlotConfig llm_slots = 5;
    */
@@ -673,7 +673,7 @@ export type ToolNodeConfig = Message<"gibson.mission.v1.ToolNodeConfig"> & {
    * Follows the same semantics as AgentNodeConfig.max_tokens_per_call:
    * present and non-zero caps the call; present and 0 disables the cap for
    * this node; absent means fall through to the mission-level constraint.
-   * Spec: mission-schema-canonicalization Requirement 5; gibson#133.
+   * Spec: mission-schema-canonicalization Requirement 5.
    *
    * @generated from field: optional int32 max_tokens_per_call = 3;
    */
@@ -724,7 +724,7 @@ export type PluginNodeConfig = Message<"gibson.mission.v1.PluginNodeConfig"> & {
    * Follows the same semantics as AgentNodeConfig.max_tokens_per_call:
    * present and non-zero caps the call; present and 0 disables the cap for
    * this node; absent means fall through to the mission-level constraint.
-   * Spec: mission-schema-canonicalization Requirement 5; gibson#133.
+   * Spec: mission-schema-canonicalization Requirement 5.
    *
    * @generated from field: optional int32 max_tokens_per_call = 4;
    */
@@ -1014,7 +1014,7 @@ export const WorkspaceSettingsSchema: GenMessage<WorkspaceSettings> = /*@__PURE_
  * ReusePolicy declares how a node's I/O is scoped + reused
  * across mission runs.
  *
- * Deprecated: superseded by the ECS brain (gibson#851, ADR-0008). Reuse is
+ * Deprecated: superseded by the ECS brain (ADR-0008). Reuse is
  * implicit in the event-sourced World and scoping flows from scope-relative
  * identity (ADR-0002) + ambient projection, so node-declared reuse/scoping no
  * longer has meaning. Retained wire-compatibly; ignored by the engine.
@@ -1059,8 +1059,8 @@ export const ReusePolicySchema: GenMessage<ReusePolicy> = /*@__PURE__*/
 /**
  * RetryPolicy defines the retry behavior for a mission node
  * JobNodeConfig contains configuration for job nodes.
- * JOB = a unit of work driven on a bank of always-on coding agents
- * (gibson#1706). The executor opens a job on the bank, then runs the verify
+ * JOB = a unit of work driven on a bank of always-on coding agents.
+ * The executor opens a job on the bank, then runs the verify
  * loop: it dispatches the acceptance step to the declared verifier
  * component, and on failure sends the verifier's report as the next input
  * to the SAME job, so the agent keeps its conversation and its worktrees.
@@ -1156,7 +1156,7 @@ export const RetryPolicySchema: GenMessage<RetryPolicy> = /*@__PURE__*/
 /**
  * DataPolicy defines how data is handled for a node.
  *
- * Deprecated: superseded by the ECS brain (gibson#851, ADR-0008). Data
+ * Deprecated: superseded by the ECS brain (ADR-0008). Data
  * handling (reuse + scoping) is now implicit in the event-sourced World and
  * scope-relative identity (ADR-0002) + ambient projection. Retained
  * wire-compatibly; ignored by the engine.
@@ -1214,7 +1214,7 @@ export const DataPolicySchema: GenMessage<DataPolicy> = /*@__PURE__*/
  *
  * The graph is acyclic. A loop is never an edge. Work that repeats until it
  * passes an acceptance step loops INSIDE one node: a job node runs its
- * verify loop against the same job (gibson#1706), and a node's RetryPolicy
+ * verify loop against the same job, and a node's RetryPolicy
  * retries the node itself.
  *
  * @generated from message gibson.mission.v1.MissionEdge
@@ -1312,7 +1312,7 @@ export enum NodeType {
   JOIN = 6,
 
   /**
-   * Job node drives a job on a bank of always-on agents (gibson#1706).
+   * Job node drives a job on a bank of always-on agents.
    * Its executor opens the job, runs the verify loop against the
    * acceptance the spec declares, and closes the job with a verdict.
    *

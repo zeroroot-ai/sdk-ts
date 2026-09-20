@@ -93,8 +93,8 @@ export type CreateAgentIdentityRequest = Message<"gibson.agentidentity.v1.Create
    * capability_ceiling names the session capabilities the enrolling admin
    * grants this identity, minted into its bootstrap credential's ceiling
    * (ADR-0045). Only the reserved names are accepted: "mission:originate"
-   * (start a mission of its own, the interactive coding-agent case,
-   * gibson#1593 decision 9) and "mission:delegate". Empty means neither.
+   * (start a mission of its own, the interactive coding-agent case) and
+   * "mission:delegate". Empty means neither.
    *
    * @generated from field: repeated string capability_ceiling = 5;
    */

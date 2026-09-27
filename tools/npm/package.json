@@ -3,6 +3,6 @@
   "private": true,
   "description": "npm, hash pinned. The npm that Node 22 bundles is npm 10, which is too old for trusted publishing (npm >= 11.5.1). release-please.yml installs this one with npm ci and puts it first on PATH, so the publish job runs on the Node version in .tool-versions like every other job.",
   "dependencies": {
-    "npm": "11.19.1"
+    "npm": "12.0.2"
   }
 }

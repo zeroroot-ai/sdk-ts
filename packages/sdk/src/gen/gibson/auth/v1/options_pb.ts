@@ -25,11 +25,15 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/auth/v1/options.proto.
  */
 export const file_gibson_auth_v1_options: GenFile = /*@__PURE__*/
-  fileDesc("ChxnaWJzb24vYXV0aC92MS9vcHRpb25zLnByb3RvEg5naWJzb24uYXV0aC52MSKPAQoLQXV0aE9wdGlvbnMSEAoIcmVsYXRpb24YASABKAkSEwoLb2JqZWN0X3R5cGUYAiABKAkSFgoOb2JqZWN0X2Rlcml2ZXIYAyABKAkSGgoSYWxsb3dlZF9pZGVudGl0aWVzGAQgASgFEhcKD3VuYXV0aGVudGljYXRlZBgFIAEoCBIMCgRzZWxmGAYgASgIKqgBCg1JZGVudGl0eUNsYXNzEh4KGklERU5USVRZX0NMQVNTX1VOU1BFQ0lGSUVEEAASFwoTSURFTlRJVFlfQ0xBU1NfVVNFUhABEhoKFklERU5USVRZX0NMQVNTX1NFUlZJQ0UQAhIcChhJREVOVElUWV9DTEFTU19DT01QT05FTlQQBBIkCiBJREVOVElUWV9DTEFTU19QTEFURk9STV9PUEVSQVRPUhAIOlMKBWF1dGh6Eh4uZ29vZ2xlLnByb3RvYnVmLk1ldGhvZE9wdGlvbnMY0YYDIAEoCzIbLmdpYnNvbi5hdXRoLnYxLkF1dGhPcHRpb25zUgVhdXRoekI6WjhnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9hdXRoL3YxO2F1dGh2MWIGcHJvdG8z", [file_google_protobuf_descriptor]);
+  fileDesc("ChxnaWJzb24vYXV0aC92MS9vcHRpb25zLnByb3RvEg5naWJzb24uYXV0aC52MSKiAQoLQXV0aE9wdGlvbnMSEAoIcmVsYXRpb24YASABKAkSEwoLb2JqZWN0X3R5cGUYAiABKAkSFgoOb2JqZWN0X2Rlcml2ZXIYAyABKAkSGgoSYWxsb3dlZF9pZGVudGl0aWVzGAQgASgFEhcKD3VuYXV0aGVudGljYXRlZBgFIAEoCBIMCgRzZWxmGAYgASgIEhEKCW93bl9zdGF0ZRgHIAEoCCqoAQoNSWRlbnRpdHlDbGFzcxIeChpJREVOVElUWV9DTEFTU19VTlNQRUNJRklFRBAAEhcKE0lERU5USVRZX0NMQVNTX1VTRVIQARIaChZJREVOVElUWV9DTEFTU19TRVJWSUNFEAISHAoYSURFTlRJVFlfQ0xBU1NfQ09NUE9ORU5UEAQSJAogSURFTlRJVFlfQ0xBU1NfUExBVEZPUk1fT1BFUkFUT1IQCDpTCgVhdXRoehIeLmdvb2dsZS5wcm90b2J1Zi5NZXRob2RPcHRpb25zGNGGAyABKAsyGy5naWJzb24uYXV0aC52MS5BdXRoT3B0aW9uc1IFYXV0aHpCOlo4Z2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vYXV0aC92MTthdXRodjFiBnByb3RvMw", [file_google_protobuf_descriptor]);
 
 /**
  * AuthOptions is the per-method authorization annotation. It is attached to
  * every RPC via the (gibson.auth.v1.authz) extension.
+ *
+ * Every rule-form RPC a Viewer may call is a read, or is marked own_state
+ * (see that field). A changing verb at relation "member" without it fails
+ * codegen, in this repo and in every consumer that regenerates its registry.
  *
  * Three mutually-exclusive forms (at most one may be set per RPC):
  *   1) unauthenticated = true: the RPC is callable without identity (Ping,
@@ -130,6 +134,30 @@ export type AuthOptions = Message<"gibson.auth.v1.AuthOptions"> & {
    * @generated from field: bool self = 6;
    */
   self: boolean;
+
+  /**
+   * own_state, when true, declares that the RPC changes only the calling
+   * person's own records: their layout, alerts, conversations, profile,
+   * sessions, uploads, onboarding progress, or their own place in the
+   * tenant. Nothing another tenant user can see changes. A Viewer may call
+   * it, so the rule form stays relation "member" on the tenant.
+   *
+   * This is the ONE way a Viewer-callable RPC may carry a changing verb.
+   * The four tenant roles (ADR-0093 decision 2: Owner, Admin, Editor,
+   * Viewer; FGA owner, admin, writer, member) promise that a Viewer reads
+   * and never changes tenant state. authz-registry-gen enforces it: an RPC
+   * callable by IDENTITY_CLASS_USER, on object_type "tenant", with relation
+   * "member", whose name does not start with a reading verb (Get, List,
+   * Watch, Query, Export, Validate, ...) must either require "writer" or
+   * above, or set own_state: true. own_state is refused on any other
+   * relation, object type or caller class, so it cannot widen anything.
+   *
+   * The daemon handler owns the promise: it scopes the write to the caller's
+   * subject and refuses any target that is not the caller.
+   *
+   * @generated from field: bool own_state = 7;
+   */
+  ownState: boolean;
 };
 
 /**

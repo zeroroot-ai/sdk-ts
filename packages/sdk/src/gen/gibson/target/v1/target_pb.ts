@@ -26,7 +26,7 @@ import type { JsonObject, Message } from "@bufbuild/protobuf";
  * Describes the file gibson/target/v1/target.proto.
  */
 export const file_gibson_target_v1_target: GenFile = /*@__PURE__*/
-  fileDesc("Ch1naWJzb24vdGFyZ2V0L3YxL3RhcmdldC5wcm90bxIQZ2lic29uLnRhcmdldC52MSKABAoGVGFyZ2V0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSDAoEdHlwZRgDIAEoCRIQCghwcm92aWRlchgEIAEoCRIrCgpjb25uZWN0aW9uGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdBINCgVtb2RlbBgGIAEoCRInCgZjb25maWcYByABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0EhQKDGNhcGFiaWxpdGllcxgIIAMoCRIRCglhdXRoX3R5cGUYCSABKAkSFQoNY3JlZGVudGlhbF9pZBgKIAEoCRIOCgZzdGF0dXMYCyABKAkSEwoLZGVzY3JpcHRpb24YDCABKAkSDAoEdGFncxgNIAMoCRIPCgd0aW1lb3V0GA4gASgFEi4KCmNyZWF0ZWRfYXQYDyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCnVwZGF0ZWRfYXQYECABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEgsKA3VybBgRIAEoCRI2CgdoZWFkZXJzGBIgAygLMiUuZ2lic29uLnRhcmdldC52MS5UYXJnZXQuSGVhZGVyc0VudHJ5Gi4KDEhlYWRlcnNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBImsKDFRhcmdldEZpbHRlchIQCghwcm92aWRlchgBIAEoCRIMCgR0eXBlGAIgASgJEg4KBnN0YXR1cxgDIAEoCRIMCgR0YWdzGAQgAygJEg0KBWxpbWl0GAUgASgFEg4KBm9mZnNldBgGIAEoBUJQUAFaPGdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL3RhcmdldC92MTt0YXJnZXRwYqoCDUdpYnNvbi5UYXJnZXRiBnByb3RvMw", [file_google_protobuf_struct, file_google_protobuf_timestamp]);
+  fileDesc("Ch1naWJzb24vdGFyZ2V0L3YxL3RhcmdldC5wcm90bxIQZ2lic29uLnRhcmdldC52MSKTBAoGVGFyZ2V0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSDAoEdHlwZRgDIAEoCRIQCghwcm92aWRlchgEIAEoCRIrCgpjb25uZWN0aW9uGAUgASgLMhcuZ29vZ2xlLnByb3RvYnVmLlN0cnVjdBINCgVtb2RlbBgGIAEoCRInCgZjb25maWcYByABKAsyFy5nb29nbGUucHJvdG9idWYuU3RydWN0EhQKDGNhcGFiaWxpdGllcxgIIAMoCRIRCglhdXRoX3R5cGUYCSABKAkSDgoGc3RhdHVzGAsgASgJEhMKC2Rlc2NyaXB0aW9uGAwgASgJEgwKBHRhZ3MYDSADKAkSDwoHdGltZW91dBgOIAEoBRIuCgpjcmVhdGVkX2F0GA8gASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIuCgp1cGRhdGVkX2F0GBAgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBILCgN1cmwYESABKAkSNgoHaGVhZGVycxgSIAMoCzIlLmdpYnNvbi50YXJnZXQudjEuVGFyZ2V0LkhlYWRlcnNFbnRyeRITCgtzZWNyZXRfbmFtZRgTIAEoCRouCgxIZWFkZXJzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUoECAoQC1INY3JlZGVudGlhbF9pZCJrCgxUYXJnZXRGaWx0ZXISEAoIcHJvdmlkZXIYASABKAkSDAoEdHlwZRgCIAEoCRIOCgZzdGF0dXMYAyABKAkSDAoEdGFncxgEIAMoCRINCgVsaW1pdBgFIAEoBRIOCgZvZmZzZXQYBiABKAVCUFABWjxnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi90YXJnZXQvdjE7dGFyZ2V0cGKqAg1HaWJzb24uVGFyZ2V0YgZwcm90bzM", [file_google_protobuf_struct, file_google_protobuf_timestamp]);
 
 /**
  * Target represents a system to be assessed by a mission.
@@ -96,18 +96,14 @@ export type Target = Message<"gibson.target.v1.Target"> & {
   capabilities: string[];
 
   /**
-   * auth_type is the authentication scheme for the target.
+   * auth_type tells the consumer what shape the resolved secret has, so a
+   * tool can refuse the wrong kind instead of mis-parsing it. Examples are
+   * "bearer", "basic" and "kubeconfig". It is meaningful only when
+   * secret_name is set. Empty means the target needs no secret.
    *
    * @generated from field: string auth_type = 9;
    */
   authType: string;
-
-  /**
-   * credential_id references a stored credential. Empty when none.
-   *
-   * @generated from field: string credential_id = 10;
-   */
-  credentialId: string;
 
   /**
    * status is the target lifecycle status.
@@ -164,6 +160,18 @@ export type Target = Message<"gibson.target.v1.Target"> & {
    * @generated from field: map<string, string> headers = 18;
    */
   headers: { [key: string]: string };
+
+  /**
+   * secret_name is the name of the tenant secret this target authenticates
+   * with. It is a name only and never carries a secret value. The daemon
+   * resolves it server-side through the secrets broker, under the same FGA
+   * check that GetCredential makes. Empty means the target has no secret.
+   * A target that names a secret that does not exist must fail loudly.
+   * Never drop the name silently. auth_type states the shape of the secret.
+   *
+   * @generated from field: string secret_name = 19;
+   */
+  secretName: string;
 };
 
 /**

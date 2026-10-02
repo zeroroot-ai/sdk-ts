@@ -72,7 +72,7 @@ test("representative queries land on the right RPC, so ranking cannot silently r
 test("an empty query lists the services with a count each, because an agent orienting itself has not failed a search", async () => {
   const res = await tool("gibson_api_search").handler({ query: "   " }, {})
   const out = JSON.parse(body(res)) as { services: { service: string; tools: number; example: string }[]; rpcs: number }
-  assert.equal(out.services.length, 12)
+  assert.equal(out.services.length, GENERATED_SERVICES.length, "one entry per service in the generated table")
   assert.equal(out.rpcs, catalog().length)
   assert.equal(
     out.services.reduce((n, s) => n + s.tools, 0),
@@ -115,7 +115,7 @@ test("a search that matches nothing says what to do next instead of answering wi
   const res = await tool("gibson_api_search").handler({ query: "zzzzqqqq" }, {})
   const out = JSON.parse(body(res)) as { matches: unknown[]; services: string[]; next: string }
   assert.deepEqual(out.matches, [])
-  assert.equal(out.services.length, 12)
+  assert.equal(out.services.length, GENERATED_SERVICES.length, "one entry per service in the generated table")
   assert.match(out.next, /empty query/)
 })
 

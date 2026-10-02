@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { create, fromJson, toJson, type DescMessage, type DescMethod, type DescService, type JsonValue } from "@bufbuild/protobuf"
+import { fromJson, toJson, type DescMessage, type DescMethod, type DescService, type JsonValue } from "@bufbuild/protobuf"
 import { createClient, type Transport } from "@connectrpc/connect"
 import type { TaskHarness } from "@zeroroot-ai/sdk"
 import { GENERATED_SERVICES } from "./generated/tools.js"
@@ -230,11 +230,6 @@ async function decode(
   }
   const { messages: out, truncated } = await collect(call(source, options) as AsyncIterable<unknown>, method.output, opts.streamLimit)
   return json({ messages: out, truncated })
-}
-
-/** An empty request message, for a test that needs one. */
-export function emptyRequest(method: DescMethod): unknown {
-  return create(method.input)
 }
 
 /** What the generated table says about one service. */

@@ -36,7 +36,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/mission/v1/mission_definition.proto.
  */
 export const file_gibson_mission_v1_mission_definition: GenFile = /*@__PURE__*/
-  fileDesc("CipnaWJzb24vbWlzc2lvbi92MS9taXNzaW9uX2RlZmluaXRpb24ucHJvdG8SEWdpYnNvbi5taXNzaW9uLnYxIswGChFNaXNzaW9uRGVmaW5pdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEgoKdGFyZ2V0X3JlZhgFIAEoCRI+CgVub2RlcxgGIAMoCzIvLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZWZpbml0aW9uLk5vZGVzRW50cnkSLQoFZWRnZXMYByADKAsyHi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZRIUCgxlbnRyeV9wb2ludHMYCCADKAkSEwoLZXhpdF9wb2ludHMYCSADKAkSRAoIbWV0YWRhdGEYCiADKAsyMi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRGVmaW5pdGlvbi5NZXRhZGF0YUVudHJ5EjwKDGRlcGVuZGVuY2llcxgLIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZXBlbmRlbmNpZXMSDgoGc291cmNlGAwgASgJEjAKDGluc3RhbGxlZF9hdBgNIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoKY3JlYXRlZF9hdBgOIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASNQoJd29ya3NwYWNlGA8gASgLMiIuZ2lic29uLm1pc3Npb24udjEuV29ya3NwYWNlQ29uZmlnEj8KC2NvbnN0cmFpbnRzGBAgASgLMiUuZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbkNvbnN0cmFpbnRzSACIAQESOwoMZGVjaWRlcl9zbG90GBEgASgLMiAuZ2lic29uLm1pc3Npb24udjEuTExNU2xvdENvbmZpZ0gBiAEBGkwKCk5vZGVzRW50cnkSCwoDa2V5GAEgASgJEi0KBXZhbHVlGAIgASgLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGU6AjgBGi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfY29uc3RyYWludHNCDwoNX2RlY2lkZXJfc2xvdCKNAwoSTWlzc2lvbkNvbnN0cmFpbnRzEi8KDG1heF9kdXJhdGlvbhgBIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhIbCgptYXhfdG9rZW5zGAIgASgDQge6SAQiAigAEiAKCG1heF9jb3N0GAMgASgBQg66SAsSCSkAAAAAAAAAABIdCgxtYXhfZmluZGluZ3MYBCABKAVCB7pIBBoCKAASGgoSc2V2ZXJpdHlfdGhyZXNob2xkGAUgASgJEhgKEHJlcXVpcmVfZXZpZGVuY2UYBiABKAgSFQoNYmxvY2tlZF90b29scxgHIAMoCRIXCg9ibG9ja2VkX2RvbWFpbnMYCCADKAkSJAoTbWF4X3R1cm5zX3Blcl9hZ2VudBgJIAEoBUIHukgEGgIoABIaChJhbGxvd2VkX3RlY2huaXF1ZXMYCiADKAkSGgoSYmxvY2tlZF90ZWNobmlxdWVzGAsgAygJEiQKE21heF90b2tlbnNfcGVyX2NhbGwYDCABKAVCB7pIBBoCKAAiRQoTTWlzc2lvbkRlcGVuZGVuY2llcxIOCgZhZ2VudHMYASADKAkSDQoFdG9vbHMYAiADKAkSDwoHcGx1Z2lucxgDIAMoCSL4BgoLTWlzc2lvbk5vZGUSCgoCaWQYASABKAkSKQoEdHlwZRgCIAEoDjIbLmdpYnNvbi5taXNzaW9uLnYxLk5vZGVUeXBlEgwKBG5hbWUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSOgoMYWdlbnRfY29uZmlnGAUgASgLMiIuZ2lic29uLm1pc3Npb24udjEuQWdlbnROb2RlQ29uZmlnSAASOAoLdG9vbF9jb25maWcYBiABKAsyIS5naWJzb24ubWlzc2lvbi52MS5Ub29sTm9kZUNvbmZpZ0gAEjwKDXBsdWdpbl9jb25maWcYByABKAsyIy5naWJzb24ubWlzc2lvbi52MS5QbHVnaW5Ob2RlQ29uZmlnSAASQgoQY29uZGl0aW9uX2NvbmZpZxgIIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLkNvbmRpdGlvbk5vZGVDb25maWdIABJACg9wYXJhbGxlbF9jb25maWcYCSABKAsyJS5naWJzb24ubWlzc2lvbi52MS5QYXJhbGxlbE5vZGVDb25maWdIABI4Cgtqb2luX2NvbmZpZxgPIAEoCzIhLmdpYnNvbi5taXNzaW9uLnYxLkpvaW5Ob2RlQ29uZmlnSAASNgoKam9iX2NvbmZpZxgRIAEoCzIgLmdpYnNvbi5taXNzaW9uLnYxLkpvYk5vZGVDb25maWdIABIUCgxkZXBlbmRlbmNpZXMYCiADKAkSKgoHdGltZW91dBgLIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhI0CgxyZXRyeV9wb2xpY3kYDCABKAsyHi5naWJzb24ubWlzc2lvbi52MS5SZXRyeVBvbGljeRI2CgtkYXRhX3BvbGljeRgNIAEoCzIdLmdpYnNvbi5taXNzaW9uLnYxLkRhdGFQb2xpY3lCAhgBEj4KCG1ldGFkYXRhGA4gAygLMiwuZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGUuTWV0YWRhdGFFbnRyeRI4CgxyZXVzZV9wb2xpY3kYECABKAsyHi5naWJzb24ubWlzc2lvbi52MS5SZXVzZVBvbGljeUICGAEaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBQggKBmNvbmZpZyLNAQoPQWdlbnROb2RlQ29uZmlnEhIKCmFnZW50X25hbWUYASABKAkSIwoEdGFzaxgCIAEoCzIVLmdpYnNvbi50eXBlcy52MS5UYXNrEikKE21heF90b2tlbnNfcGVyX2NhbGwYAyABKAVCB7pIBBoCKABIAIgBARIzCglsbG1fc2xvdHMYBSADKAsyIC5naWJzb24ubWlzc2lvbi52MS5MTE1TbG90Q29uZmlnQhYKFF9tYXhfdG9rZW5zX3Blcl9jYWxsSgQIBBAFUgNsbG0iPgoNTExNU2xvdENvbmZpZxIMCgRzbG90GAEgASgJEhAKCHByb3ZpZGVyGAIgASgJEg0KBW1vZGVsGAMgASgJItEBCg5Ub29sTm9kZUNvbmZpZxIRCgl0b29sX25hbWUYASABKAkSOwoFaW5wdXQYAiADKAsyLC5naWJzb24ubWlzc2lvbi52MS5Ub29sTm9kZUNvbmZpZy5JbnB1dEVudHJ5EikKE21heF90b2tlbnNfcGVyX2NhbGwYAyABKAVCB7pIBBoCKABIAIgBARosCgpJbnB1dEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCFgoUX21heF90b2tlbnNfcGVyX2NhbGwi6gEKEFBsdWdpbk5vZGVDb25maWcSEwoLcGx1Z2luX25hbWUYASABKAkSDgoGbWV0aG9kGAIgASgJEj8KBnBhcmFtcxgDIAMoCzIvLmdpYnNvbi5taXNzaW9uLnYxLlBsdWdpbk5vZGVDb25maWcuUGFyYW1zRW50cnkSKQoTbWF4X3Rva2Vuc19wZXJfY2FsbBgEIAEoBUIHukgEGgIoAEgAiAEBGi0KC1BhcmFtc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCFgoUX21heF90b2tlbnNfcGVyX2NhbGwigwEKE0NvbmRpdGlvbk5vZGVDb25maWcSEgoKZXhwcmVzc2lvbhgBIAEoCRITCgt0cnVlX2JyYW5jaBgCIAMoCRIUCgxmYWxzZV9icmFuY2gYAyADKAkSLQoIbGFuZ3VhZ2UYBCABKA4yGy5naWJzb24ubWlzc2lvbi52MS5MYW5ndWFnZSJgChJQYXJhbGxlbE5vZGVDb25maWcSMQoJc3ViX25vZGVzGAEgAygLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGUSFwoPbWF4X2NvbmN1cnJlbmN5GAIgASgFInQKDkpvaW5Ob2RlQ29uZmlnEhoKCHdhaXRfZm9yGAEgAygJQgi6SAWSAQIIARIyCghzdHJhdGVneRgCIAEoDjIgLmdpYnNvbi5taXNzaW9uLnYxLk1lcmdlU3RyYXRlZ3kSEgoKYWdncmVnYXRvchgDIAEoCSKEAQoPV29ya3NwYWNlQ29uZmlnEjkKDHJlcG9zaXRvcmllcxgBIAMoCzIjLmdpYnNvbi5taXNzaW9uLnYxLlJlcG9zaXRvcnlDb25maWcSNgoIc2V0dGluZ3MYAiABKAsyJC5naWJzb24ubWlzc2lvbi52MS5Xb3Jrc3BhY2VTZXR0aW5ncyJ7ChBSZXBvc2l0b3J5Q29uZmlnEgwKBG5hbWUYASABKAkSCwoDdXJsGAIgASgJEg4KBmJyYW5jaBgDIAEoCRIXCg9jcmVkZW50aWFsX25hbWUYBCABKAkSDwoHc2hhbGxvdxgFIAEoCBISCgpkZXBlbmRzX29uGAYgAygJIqQBChFXb3Jrc3BhY2VTZXR0aW5ncxIbChNjbGVhbnVwX29uX2NvbXBsZXRlGAEgASgIEhUKDXVzZV93b3JrdHJlZXMYAiABKAgSEwoLbHNwX2VuYWJsZWQYAyABKAgSLgoLbHNwX3RpbWVvdXQYBCABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SFgoOYmFzZV9kaXJlY3RvcnkYBSABKAkiSwoLUmV1c2VQb2xpY3kSFAoMb3V0cHV0X3Njb3BlGAEgASgJEhMKC2lucHV0X3Njb3BlGAIgASgJEg0KBXJldXNlGAMgASgJOgIYASKPAQoNSm9iTm9kZUNvbmZpZxIZCghiYW5rX3JlZhgBIAEoCUIHukgEcgIQARIsCgRzcGVjGAIgASgLMhYuZ2lic29uLmpvYi52MS5Kb2JTcGVjQga6SAPIAQESNQoLY29uc3RyYWludHMYAyABKAsyIC5naWJzb24udHlwZXMudjEuVGFza0NvbnN0cmFpbnRzItQBCgtSZXRyeVBvbGljeRITCgttYXhfcmV0cmllcxgBIAEoBRI8ChBiYWNrb2ZmX3N0cmF0ZWd5GAIgASgOMiIuZ2lic29uLm1pc3Npb24udjEuQmFja29mZlN0cmF0ZWd5EjAKDWluaXRpYWxfZGVsYXkYAyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SLAoJbWF4X2RlbGF5GAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEhIKCm11bHRpcGxpZXIYBSABKAEilQEKCkRhdGFQb2xpY3kSEwoLc3RvcmVfaW5wdXQYASABKAgSFAoMc3RvcmVfb3V0cHV0GAIgASgIEiwKCXJldGVudGlvbhgDIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhISCgplbmNyeXB0aW9uGAQgASgIEhYKDmFjY2Vzc19jb250cm9sGAUgAygJOgIYASKrAQoLTWlzc2lvbkVkZ2USDAoEZnJvbRgBIAEoCRIKCgJ0bxgCIAEoCRIRCgljb25kaXRpb24YAyABKAkSPgoIbWV0YWRhdGEYBCADKAsyLC5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZS5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASq8AQoITm9kZVR5cGUSGQoVTk9ERV9UWVBFX1VOU1BFQ0lGSUVEEAASEwoPTk9ERV9UWVBFX0FHRU5UEAESEgoOTk9ERV9UWVBFX1RPT0wQAhIUChBOT0RFX1RZUEVfUExVR0lOEAMSFwoTTk9ERV9UWVBFX0NPTkRJVElPThAEEhYKEk5PREVfVFlQRV9QQVJBTExFTBAFEhIKDk5PREVfVFlQRV9KT0lOEAYSEQoNTk9ERV9UWVBFX0pPQhAHKjYKCExhbmd1YWdlEhgKFExBTkdVQUdFX1VOU1BFQ0lGSUVEEAASEAoMTEFOR1VBR0VfQ0VMEAEqswEKDU1lcmdlU3RyYXRlZ3kSHgoaTUVSR0VfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIZChVNRVJHRV9TVFJBVEVHWV9DT05DQVQQARIZChVNRVJHRV9TVFJBVEVHWV9SRURVQ0UQAhIYChRNRVJHRV9TVFJBVEVHWV9GSVJTVBADEhcKE01FUkdFX1NUUkFURUdZX0xBU1QQBBIZChVNRVJHRV9TVFJBVEVHWV9DVVNUT00QBSqRAQoPQmFja29mZlN0cmF0ZWd5EiAKHEJBQ0tPRkZfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIdChlCQUNLT0ZGX1NUUkFURUdZX0NPTlNUQU5UEAESGwoXQkFDS09GRl9TVFJBVEVHWV9MSU5FQVIQAhIgChxCQUNLT0ZGX1NUUkFURUdZX0VYUE9ORU5USUFMEANCU1ABWj5naXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9taXNzaW9uL3YxO21pc3Npb25wYqoCDkdpYnNvbi5NaXNzaW9uYgZwcm90bzM", [file_google_protobuf_duration, file_google_protobuf_timestamp, file_gibson_job_v1_job, file_gibson_types_v1_types, file_buf_validate_validate]);
+  fileDesc("CipnaWJzb24vbWlzc2lvbi92MS9taXNzaW9uX2RlZmluaXRpb24ucHJvdG8SEWdpYnNvbi5taXNzaW9uLnYxIswGChFNaXNzaW9uRGVmaW5pdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEgoKdGFyZ2V0X3JlZhgFIAEoCRI+CgVub2RlcxgGIAMoCzIvLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZWZpbml0aW9uLk5vZGVzRW50cnkSLQoFZWRnZXMYByADKAsyHi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZRIUCgxlbnRyeV9wb2ludHMYCCADKAkSEwoLZXhpdF9wb2ludHMYCSADKAkSRAoIbWV0YWRhdGEYCiADKAsyMi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRGVmaW5pdGlvbi5NZXRhZGF0YUVudHJ5EjwKDGRlcGVuZGVuY2llcxgLIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZXBlbmRlbmNpZXMSDgoGc291cmNlGAwgASgJEjAKDGluc3RhbGxlZF9hdBgNIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoKY3JlYXRlZF9hdBgOIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASNQoJd29ya3NwYWNlGA8gASgLMiIuZ2lic29uLm1pc3Npb24udjEuV29ya3NwYWNlQ29uZmlnEj8KC2NvbnN0cmFpbnRzGBAgASgLMiUuZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbkNvbnN0cmFpbnRzSACIAQESOwoMZGVjaWRlcl9zbG90GBEgASgLMiAuZ2lic29uLm1pc3Npb24udjEuTExNU2xvdENvbmZpZ0gBiAEBGkwKCk5vZGVzRW50cnkSCwoDa2V5GAEgASgJEi0KBXZhbHVlGAIgASgLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGU6AjgBGi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfY29uc3RyYWludHNCDwoNX2RlY2lkZXJfc2xvdCKNAwoSTWlzc2lvbkNvbnN0cmFpbnRzEi8KDG1heF9kdXJhdGlvbhgBIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhIbCgptYXhfdG9rZW5zGAIgASgDQge6SAQiAigAEiAKCG1heF9jb3N0GAMgASgBQg66SAsSCSkAAAAAAAAAABIdCgxtYXhfZmluZGluZ3MYBCABKAVCB7pIBBoCKAASGgoSc2V2ZXJpdHlfdGhyZXNob2xkGAUgASgJEhgKEHJlcXVpcmVfZXZpZGVuY2UYBiABKAgSFQoNYmxvY2tlZF90b29scxgHIAMoCRIXCg9ibG9ja2VkX2RvbWFpbnMYCCADKAkSJAoTbWF4X3R1cm5zX3Blcl9hZ2VudBgJIAEoBUIHukgEGgIoABIaChJhbGxvd2VkX3RlY2huaXF1ZXMYCiADKAkSGgoSYmxvY2tlZF90ZWNobmlxdWVzGAsgAygJEiQKE21heF90b2tlbnNfcGVyX2NhbGwYDCABKAVCB7pIBBoCKAAiRQoTTWlzc2lvbkRlcGVuZGVuY2llcxIOCgZhZ2VudHMYASADKAkSDQoFdG9vbHMYAiADKAkSDwoHcGx1Z2lucxgDIAMoCSK5BwoLTWlzc2lvbk5vZGUSCgoCaWQYASABKAkSKQoEdHlwZRgCIAEoDjIbLmdpYnNvbi5taXNzaW9uLnYxLk5vZGVUeXBlEgwKBG5hbWUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSOgoMYWdlbnRfY29uZmlnGAUgASgLMiIuZ2lic29uLm1pc3Npb24udjEuQWdlbnROb2RlQ29uZmlnSAASOAoLdG9vbF9jb25maWcYBiABKAsyIS5naWJzb24ubWlzc2lvbi52MS5Ub29sTm9kZUNvbmZpZ0gAEjwKDXBsdWdpbl9jb25maWcYByABKAsyIy5naWJzb24ubWlzc2lvbi52MS5QbHVnaW5Ob2RlQ29uZmlnSAASQgoQY29uZGl0aW9uX2NvbmZpZxgIIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLkNvbmRpdGlvbk5vZGVDb25maWdIABJACg9wYXJhbGxlbF9jb25maWcYCSABKAsyJS5naWJzb24ubWlzc2lvbi52MS5QYXJhbGxlbE5vZGVDb25maWdIABI4Cgtqb2luX2NvbmZpZxgPIAEoCzIhLmdpYnNvbi5taXNzaW9uLnYxLkpvaW5Ob2RlQ29uZmlnSAASNgoKam9iX2NvbmZpZxgRIAEoCzIgLmdpYnNvbi5taXNzaW9uLnYxLkpvYk5vZGVDb25maWdIABI/Cg9mb3JfZWFjaF9jb25maWcYEiABKAsyJC5naWJzb24ubWlzc2lvbi52MS5Gb3JFYWNoTm9kZUNvbmZpZ0gAEhQKDGRlcGVuZGVuY2llcxgKIAMoCRIqCgd0aW1lb3V0GAsgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEjQKDHJldHJ5X3BvbGljeRgMIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlJldHJ5UG9saWN5EjYKC2RhdGFfcG9saWN5GA0gASgLMh0uZ2lic29uLm1pc3Npb24udjEuRGF0YVBvbGljeUICGAESPgoIbWV0YWRhdGEYDiADKAsyLC5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uTm9kZS5NZXRhZGF0YUVudHJ5EjgKDHJldXNlX3BvbGljeRgQIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlJldXNlUG9saWN5QgIYARovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCCAoGY29uZmlnIs0BCg9BZ2VudE5vZGVDb25maWcSEgoKYWdlbnRfbmFtZRgBIAEoCRIjCgR0YXNrGAIgASgLMhUuZ2lic29uLnR5cGVzLnYxLlRhc2sSKQoTbWF4X3Rva2Vuc19wZXJfY2FsbBgDIAEoBUIHukgEGgIoAEgAiAEBEjMKCWxsbV9zbG90cxgFIAMoCzIgLmdpYnNvbi5taXNzaW9uLnYxLkxMTVNsb3RDb25maWdCFgoUX21heF90b2tlbnNfcGVyX2NhbGxKBAgEEAVSA2xsbSI+Cg1MTE1TbG90Q29uZmlnEgwKBHNsb3QYASABKAkSEAoIcHJvdmlkZXIYAiABKAkSDQoFbW9kZWwYAyABKAki0QEKDlRvb2xOb2RlQ29uZmlnEhEKCXRvb2xfbmFtZRgBIAEoCRI7CgVpbnB1dBgCIAMoCzIsLmdpYnNvbi5taXNzaW9uLnYxLlRvb2xOb2RlQ29uZmlnLklucHV0RW50cnkSKQoTbWF4X3Rva2Vuc19wZXJfY2FsbBgDIAEoBUIHukgEGgIoAEgAiAEBGiwKCklucHV0RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIWChRfbWF4X3Rva2Vuc19wZXJfY2FsbCLqAQoQUGx1Z2luTm9kZUNvbmZpZxITCgtwbHVnaW5fbmFtZRgBIAEoCRIOCgZtZXRob2QYAiABKAkSPwoGcGFyYW1zGAMgAygLMi8uZ2lic29uLm1pc3Npb24udjEuUGx1Z2luTm9kZUNvbmZpZy5QYXJhbXNFbnRyeRIpChNtYXhfdG9rZW5zX3Blcl9jYWxsGAQgASgFQge6SAQaAigASACIAQEaLQoLUGFyYW1zRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIWChRfbWF4X3Rva2Vuc19wZXJfY2FsbCKDAQoTQ29uZGl0aW9uTm9kZUNvbmZpZxISCgpleHByZXNzaW9uGAEgASgJEhMKC3RydWVfYnJhbmNoGAIgAygJEhQKDGZhbHNlX2JyYW5jaBgDIAMoCRItCghsYW5ndWFnZRgEIAEoDjIbLmdpYnNvbi5taXNzaW9uLnYxLkxhbmd1YWdlImAKElBhcmFsbGVsTm9kZUNvbmZpZxIxCglzdWJfbm9kZXMYASADKAsyHi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uTm9kZRIXCg9tYXhfY29uY3VycmVuY3kYAiABKAUi8QEKEUZvckVhY2hOb2RlQ29uZmlnEjgKCHRlbXBsYXRlGAEgASgLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGVCBrpIA8gBARJHCgZzb3VyY2UYAiABKA4yKy5naWJzb24ubWlzc2lvbi52MS5Gb3JFYWNoTm9kZUNvbmZpZy5Tb3VyY2VCCrpIB4IBBBABIAASIAoPbWF4X2NvbmN1cnJlbmN5GAMgASgFQge6SAQaAigAIjcKBlNvdXJjZRIWChJTT1VSQ0VfVU5TUEVDSUZJRUQQABIVChFTT1VSQ0VfVEFSR0VUX1NFVBABInQKDkpvaW5Ob2RlQ29uZmlnEhoKCHdhaXRfZm9yGAEgAygJQgi6SAWSAQIIARIyCghzdHJhdGVneRgCIAEoDjIgLmdpYnNvbi5taXNzaW9uLnYxLk1lcmdlU3RyYXRlZ3kSEgoKYWdncmVnYXRvchgDIAEoCSKEAQoPV29ya3NwYWNlQ29uZmlnEjkKDHJlcG9zaXRvcmllcxgBIAMoCzIjLmdpYnNvbi5taXNzaW9uLnYxLlJlcG9zaXRvcnlDb25maWcSNgoIc2V0dGluZ3MYAiABKAsyJC5naWJzb24ubWlzc2lvbi52MS5Xb3Jrc3BhY2VTZXR0aW5ncyJ7ChBSZXBvc2l0b3J5Q29uZmlnEgwKBG5hbWUYASABKAkSCwoDdXJsGAIgASgJEg4KBmJyYW5jaBgDIAEoCRIXCg9jcmVkZW50aWFsX25hbWUYBCABKAkSDwoHc2hhbGxvdxgFIAEoCBISCgpkZXBlbmRzX29uGAYgAygJIqQBChFXb3Jrc3BhY2VTZXR0aW5ncxIbChNjbGVhbnVwX29uX2NvbXBsZXRlGAEgASgIEhUKDXVzZV93b3JrdHJlZXMYAiABKAgSEwoLbHNwX2VuYWJsZWQYAyABKAgSLgoLbHNwX3RpbWVvdXQYBCABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SFgoOYmFzZV9kaXJlY3RvcnkYBSABKAkiSwoLUmV1c2VQb2xpY3kSFAoMb3V0cHV0X3Njb3BlGAEgASgJEhMKC2lucHV0X3Njb3BlGAIgASgJEg0KBXJldXNlGAMgASgJOgIYASKPAQoNSm9iTm9kZUNvbmZpZxIZCghiYW5rX3JlZhgBIAEoCUIHukgEcgIQARIsCgRzcGVjGAIgASgLMhYuZ2lic29uLmpvYi52MS5Kb2JTcGVjQga6SAPIAQESNQoLY29uc3RyYWludHMYAyABKAsyIC5naWJzb24udHlwZXMudjEuVGFza0NvbnN0cmFpbnRzItQBCgtSZXRyeVBvbGljeRITCgttYXhfcmV0cmllcxgBIAEoBRI8ChBiYWNrb2ZmX3N0cmF0ZWd5GAIgASgOMiIuZ2lic29uLm1pc3Npb24udjEuQmFja29mZlN0cmF0ZWd5EjAKDWluaXRpYWxfZGVsYXkYAyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SLAoJbWF4X2RlbGF5GAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEhIKCm11bHRpcGxpZXIYBSABKAEilQEKCkRhdGFQb2xpY3kSEwoLc3RvcmVfaW5wdXQYASABKAgSFAoMc3RvcmVfb3V0cHV0GAIgASgIEiwKCXJldGVudGlvbhgDIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhISCgplbmNyeXB0aW9uGAQgASgIEhYKDmFjY2Vzc19jb250cm9sGAUgAygJOgIYASKrAQoLTWlzc2lvbkVkZ2USDAoEZnJvbRgBIAEoCRIKCgJ0bxgCIAEoCRIRCgljb25kaXRpb24YAyABKAkSPgoIbWV0YWRhdGEYBCADKAsyLC5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZS5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASrUAQoITm9kZVR5cGUSGQoVTk9ERV9UWVBFX1VOU1BFQ0lGSUVEEAASEwoPTk9ERV9UWVBFX0FHRU5UEAESEgoOTk9ERV9UWVBFX1RPT0wQAhIUChBOT0RFX1RZUEVfUExVR0lOEAMSFwoTTk9ERV9UWVBFX0NPTkRJVElPThAEEhYKEk5PREVfVFlQRV9QQVJBTExFTBAFEhIKDk5PREVfVFlQRV9KT0lOEAYSEQoNTk9ERV9UWVBFX0pPQhAHEhYKEk5PREVfVFlQRV9GT1JfRUFDSBAIKjYKCExhbmd1YWdlEhgKFExBTkdVQUdFX1VOU1BFQ0lGSUVEEAASEAoMTEFOR1VBR0VfQ0VMEAEqswEKDU1lcmdlU3RyYXRlZ3kSHgoaTUVSR0VfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIZChVNRVJHRV9TVFJBVEVHWV9DT05DQVQQARIZChVNRVJHRV9TVFJBVEVHWV9SRURVQ0UQAhIYChRNRVJHRV9TVFJBVEVHWV9GSVJTVBADEhcKE01FUkdFX1NUUkFURUdZX0xBU1QQBBIZChVNRVJHRV9TVFJBVEVHWV9DVVNUT00QBSqRAQoPQmFja29mZlN0cmF0ZWd5EiAKHEJBQ0tPRkZfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIdChlCQUNLT0ZGX1NUUkFURUdZX0NPTlNUQU5UEAESGwoXQkFDS09GRl9TVFJBVEVHWV9MSU5FQVIQAhIgChxCQUNLT0ZGX1NUUkFURUdZX0VYUE9ORU5USUFMEANCU1ABWj5naXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9taXNzaW9uL3YxO21pc3Npb25wYqoCDkdpYnNvbi5NaXNzaW9uYgZwcm90bzM", [file_google_protobuf_duration, file_google_protobuf_timestamp, file_gibson_job_v1_job, file_gibson_types_v1_types, file_buf_validate_validate]);
 
 /**
  * MissionDefinition represents a mission template/definition.
@@ -469,6 +469,17 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
      */
     value: JobNodeConfig;
     case: "jobConfig";
+  } | {
+    /**
+     * ForEachConfig for for_each nodes. Field number 18 as the next free
+     * tag; 13 is NOT free despite looking it, because data_policy is
+     * `= 13 [deprecated = true]` and a field-number scan that expects a
+     * trailing semicolon misses it.
+     *
+     * @generated from field: gibson.mission.v1.ForEachNodeConfig for_each_config = 18;
+     */
+    value: ForEachNodeConfig;
+    case: "forEachConfig";
   } | { case: undefined; value?: undefined };
 
   /**
@@ -815,6 +826,82 @@ export const ParallelNodeConfigSchema: GenMessage<ParallelNodeConfig> = /*@__PUR
   messageDesc(file_gibson_mission_v1_mission_definition, 9);
 
 /**
+ * ForEachNodeConfig configures a for_each node: ONE template node, run once
+ * per item in a source set.
+ *
+ * The distinction from ParallelNodeConfig is the point. Parallel runs N
+ * DIFFERENT declared sub_nodes concurrently. ForEach runs ONE declared node N
+ * times, where N is discovered from the source rather than written down. A
+ * mission that fans a scan across every target in its target set declares the
+ * scan once.
+ *
+ * @generated from message gibson.mission.v1.ForEachNodeConfig
+ */
+export type ForEachNodeConfig = Message<"gibson.mission.v1.ForEachNodeConfig"> & {
+  /**
+   * template is the node run once per item.
+   *
+   * It must not itself be a for_each node. That is a submit-time check in
+   * the daemon rather than a protovalidate rule, because protovalidate
+   * cannot express "this nested MissionNode's config is not this variant".
+   *
+   * @generated from field: gibson.mission.v1.MissionNode template = 1;
+   */
+  template?: MissionNode | undefined;
+
+  /**
+   * source is required and must be a named value. Omission is NOT taken to
+   * mean the target set: an unset source is a mission that did not say what
+   * it iterates, and a future second source would silently change what the
+   * omission meant.
+   *
+   * @generated from field: gibson.mission.v1.ForEachNodeConfig.Source source = 2;
+   */
+  source: ForEachNodeConfig_Source;
+
+  /**
+   * max_concurrency limits instances in flight (0 = unlimited), the same
+   * semantics as ParallelNodeConfig.max_concurrency.
+   *
+   * @generated from field: int32 max_concurrency = 3;
+   */
+  maxConcurrency: number;
+};
+
+/**
+ * Describes the message gibson.mission.v1.ForEachNodeConfig.
+ * Use `create(ForEachNodeConfigSchema)` to create a new message.
+ */
+export const ForEachNodeConfigSchema: GenMessage<ForEachNodeConfig> = /*@__PURE__*/
+  messageDesc(file_gibson_mission_v1_mission_definition, 10);
+
+/**
+ * Source selects what is iterated.
+ *
+ * @generated from enum gibson.mission.v1.ForEachNodeConfig.Source
+ */
+export enum ForEachNodeConfig_Source {
+  /**
+   * @generated from enum value: SOURCE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * TARGET_SET is the mission's resolved target set, primary first, in
+   * the order TargetSet() returns.
+   *
+   * @generated from enum value: SOURCE_TARGET_SET = 1;
+   */
+  TARGET_SET = 1,
+}
+
+/**
+ * Describes the enum gibson.mission.v1.ForEachNodeConfig.Source.
+ */
+export const ForEachNodeConfig_SourceSchema: GenEnum<ForEachNodeConfig_Source> = /*@__PURE__*/
+  enumDesc(file_gibson_mission_v1_mission_definition, 10, 0);
+
+/**
  * JoinNodeConfig blocks until every node ID in `wait_for` has
  * completed (success or final failure), then merges their results
  * per `strategy`. JOIN is a first-class noun separable from
@@ -857,7 +944,7 @@ export type JoinNodeConfig = Message<"gibson.mission.v1.JoinNodeConfig"> & {
  * Use `create(JoinNodeConfigSchema)` to create a new message.
  */
 export const JoinNodeConfigSchema: GenMessage<JoinNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 10);
+  messageDesc(file_gibson_mission_v1_mission_definition, 11);
 
 /**
  * WorkspaceConfig configures repository cloning + workspace
@@ -893,7 +980,7 @@ export type WorkspaceConfig = Message<"gibson.mission.v1.WorkspaceConfig"> & {
  * Use `create(WorkspaceConfigSchema)` to create a new message.
  */
 export const WorkspaceConfigSchema: GenMessage<WorkspaceConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 11);
+  messageDesc(file_gibson_mission_v1_mission_definition, 12);
 
 /**
  * RepositoryConfig defines a single repository to clone. Maps
@@ -954,7 +1041,7 @@ export type RepositoryConfig = Message<"gibson.mission.v1.RepositoryConfig"> & {
  * Use `create(RepositoryConfigSchema)` to create a new message.
  */
 export const RepositoryConfigSchema: GenMessage<RepositoryConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 12);
+  messageDesc(file_gibson_mission_v1_mission_definition, 13);
 
 /**
  * WorkspaceSettings carries workspace-wide options.
@@ -1008,7 +1095,7 @@ export type WorkspaceSettings = Message<"gibson.mission.v1.WorkspaceSettings"> &
  * Use `create(WorkspaceSettingsSchema)` to create a new message.
  */
 export const WorkspaceSettingsSchema: GenMessage<WorkspaceSettings> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 13);
+  messageDesc(file_gibson_mission_v1_mission_definition, 14);
 
 /**
  * ReusePolicy declares how a node's I/O is scoped + reused
@@ -1054,7 +1141,7 @@ export type ReusePolicy = Message<"gibson.mission.v1.ReusePolicy"> & {
  * @deprecated
  */
 export const ReusePolicySchema: GenMessage<ReusePolicy> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 14);
+  messageDesc(file_gibson_mission_v1_mission_definition, 15);
 
 /**
  * RetryPolicy defines the retry behavior for a mission node
@@ -1104,7 +1191,7 @@ export type JobNodeConfig = Message<"gibson.mission.v1.JobNodeConfig"> & {
  * Use `create(JobNodeConfigSchema)` to create a new message.
  */
 export const JobNodeConfigSchema: GenMessage<JobNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 15);
+  messageDesc(file_gibson_mission_v1_mission_definition, 16);
 
 /**
  * @generated from message gibson.mission.v1.RetryPolicy
@@ -1151,7 +1238,7 @@ export type RetryPolicy = Message<"gibson.mission.v1.RetryPolicy"> & {
  * Use `create(RetryPolicySchema)` to create a new message.
  */
 export const RetryPolicySchema: GenMessage<RetryPolicy> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 16);
+  messageDesc(file_gibson_mission_v1_mission_definition, 17);
 
 /**
  * DataPolicy defines how data is handled for a node.
@@ -1207,7 +1294,7 @@ export type DataPolicy = Message<"gibson.mission.v1.DataPolicy"> & {
  * @deprecated
  */
 export const DataPolicySchema: GenMessage<DataPolicy> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 17);
+  messageDesc(file_gibson_mission_v1_mission_definition, 18);
 
 /**
  * MissionEdge represents a directed edge in the mission DAG.
@@ -1254,7 +1341,7 @@ export type MissionEdge = Message<"gibson.mission.v1.MissionEdge"> & {
  * Use `create(MissionEdgeSchema)` to create a new message.
  */
 export const MissionEdgeSchema: GenMessage<MissionEdge> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 18);
+  messageDesc(file_gibson_mission_v1_mission_definition, 19);
 
 /**
  * NodeType defines the type of mission node
@@ -1319,6 +1406,17 @@ export enum NodeType {
    * @generated from enum value: NODE_TYPE_JOB = 7;
    */
   JOB = 7,
+
+  /**
+   * ForEach node runs ONE template node once per item in a source set.
+   * It is a CONTAINER, so one graph node remains one execution unit and
+   * JoinNodeConfig.wait_for keeps meaning "this node", not "one of its
+   * instances". A boolean on MissionNode would have made every consumer
+   * of a node 1:N and made wait_for ambiguous between one instance and all.
+   *
+   * @generated from enum value: NODE_TYPE_FOR_EACH = 8;
+   */
+  FOR_EACH = 8,
 }
 
 /**

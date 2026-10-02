@@ -7,7 +7,7 @@ import { buildComponentManifest, enrollComponent, enrollmentSupported, validateC
 import { z } from "zod"
 import type { ToolDefinition } from "../registry.js"
 import { defineTool } from "../tool.js"
-import { failure, json, text } from "../tools/result.js"
+import { failure, text } from "../tools/result.js"
 import type { HelperContext } from "./context.js"
 
 /** Componentize and enroll: produced artifacts join the fleet. */
@@ -123,9 +123,4 @@ export function componentizeTools(ctx: HelperContext): ToolDefinition[] {
     )
   }
   return out
-}
-
-/** Kept exported so a caller can inspect the manifest a spec would produce. */
-export function manifestOf(args: SpecArgs): unknown {
-  return json(buildComponentManifest(toSpec(args)))
 }

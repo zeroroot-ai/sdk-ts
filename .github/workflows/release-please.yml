@@ -60,9 +60,11 @@ jobs:
   # its identity to npm with a short-lived GitHub OIDC token, and npm accepts
   # it because the package's trusted publisher names this repo and this
   # workflow file. Provenance is attached by default. Requires npm >= 11.5.1.
-  # Node 22 (.tool-versions) ships npm 10, and `npm install -g npm@11` is an
-  # unpinned download (Scorecard PinnedDependenciesID), so this job runs on
-  # Node 24, which ships npm 11. The build is the same pnpm + tsc as CI.
+  # Node 24 (.tool-versions) bundles npm 11.19, so the job uses the npm that
+  # setup-node installs. `npm install -g npm@11` would be an unpinned download
+  # (Scorecard PinnedDependenciesID), and a hash-pinned npm under tools/npm
+  # carried npm's own bundled CVEs into this repo (sdk-ts#43). The build is
+  # the same pnpm + tsc as CI.
   # Docs: https://docs.npmjs.com/trusted-publishers
   publish:
     name: publish to npm
@@ -86,17 +88,13 @@ jobs:
           node-version-file: .tool-versions
           registry-url: https://registry.npmjs.org
 
-      # tools/npm/package-lock.json pins npm 11 by hash. Node 22 bundles
-      # npm 10, which trusted publishing rejects. Dependabot bumps it.
-      - name: Use npm 11 (trusted publishing needs 11.5.1 or later)
-        run: |
-          npm ci --prefix tools/npm --no-audit --no-fund
-          echo "$PWD/tools/npm/node_modules/.bin" >> "$GITHUB_PATH"
-
+      # The npm that setup-node installs is the one Node bundles. A Node pin
+      # below 24 in .tool-versions brings back npm 10, so this step fails
+      # before the publish does.
       - name: Trusted publishing needs npm 11.5.1 or later
         run: |
           set -euo pipefail
-          have="$(tools/npm/node_modules/.bin/npm --version)"
+          have="$(npm --version)"
           echo "npm ${have}"
           if [ "$(printf '%s\n' 11.5.1 "${have}" | sort -V | head -n1)" != 11.5.1 ]; then
             echo "::error::npm ${have} is older than 11.5.1; trusted publishing needs 11.5.1 or later"

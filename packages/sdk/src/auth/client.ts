@@ -65,7 +65,7 @@ export function normalizePlatformURL(raw: string): string {
 
 /**
  * Client side of the Gibson Capability Grant Protocol (port of
- * sdk/capabilitygrant; ADR-0045/0036). Discover -> register a persistent host
+ * sdk/capabilitygrant; ADR-0045). Discover -> register a persistent host
  * key with the bootstrap API key -> mint short-lived agent+jwt per RPC.
  */
 export class CapabilityGrantClient {

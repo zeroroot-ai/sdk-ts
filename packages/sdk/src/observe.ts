@@ -18,7 +18,7 @@ import { WorldEntityKind } from "./gen/gibson/harness/v1/harness_callback_pb.js"
 export { WorldEntityKind }
 
 /**
- * Observe — the agent's one write into the World (gibson ADR-0012).
+ * Observe — the agent's one write into the World (ADR-0112).
  *
  * An observation is a raw sighting. The brain resolves identity and topology,
  * the projector writes the graph, and scope and tenant come from the mission

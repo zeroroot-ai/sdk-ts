@@ -12,7 +12,7 @@ host/agent keys, `agent+jwt` interceptor), component lifecycle
 (`RegisterComponent` + heartbeat, `connectGibson()`), and a local
 OpenAI-compatible LLM shim proxying to `ComponentService.Complete`.
 `packages/gibson-mcp` → `@zeroroot-ai/gibson-mcp` — the Gibson MCP server, the
-one tool surface every coding agent host loads (ADR-0008). It is
+one tool surface every coding agent host loads (ADR-0158). It is
 built from the same generated descriptors and rides the SDK release train.
 Hosts are thin adapters in `zerocool-plugins` and hold no tools of their own.
 

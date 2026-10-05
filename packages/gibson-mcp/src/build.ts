@@ -26,7 +26,7 @@ import { statusTool } from "./tools/status.js"
 /**
  * @zeroroot-ai/gibson-mcp: the one MCP server every coding agent host loads
  * (gibson#1706, decisions 1 to 4). It exposes what the SDK produces and adds
- * Gibson to the session: one live mission per session (ADR-0007 decision 3),
+ * Gibson to the session: one live mission per session (ADR-0157),
  * memory and knowledge, findings, tools, delegation. It never routes LLM
  * traffic and never reads a model provider key.
  *

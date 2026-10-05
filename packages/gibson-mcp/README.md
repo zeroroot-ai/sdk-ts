@@ -30,7 +30,7 @@ This is the canonical block. It is the same for every host that reads the
 | Gemini CLI | `~/.gemini/settings.json`, under `mcpServers` |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json`, under `mcpServers` |
 
-A host is an adapter and holds no tools of its own (ADR-0008). The per-host
+A host is an adapter and holds no tools of its own (ADR-0158). The per-host
 snippets and their smoke tests live in
 [`zerocool-plugins`](https://github.com/zeroroot-ai/zerocool-plugins).
 

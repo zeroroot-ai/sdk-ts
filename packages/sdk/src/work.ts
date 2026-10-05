@@ -23,7 +23,7 @@ import { ResultSchema, ResultStatus, type Task } from "./gen/gibson/types/v1/typ
  *
  * WHICH KINDS GET WORK. All three: `tool` (work_type `execute_proto`), `plugin`
  * (`plugin_invoke`) and `agent` (`agent_execute`). Agent dispatch was added in
- * gibson#1197 / ADR-0011 — before that an agent node resolved only against an
+ * gibson#1197 / ADR-0111 — before that an agent node resolved only against an
  * in-process registry, and a component registered as kind=agent polled forever.
  *
  * Each kind carries its own payload contract, so each gets its own codec and

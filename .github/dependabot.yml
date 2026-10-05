@@ -1,24 +1,49 @@
+# Dependabot config. It follows templates/dependabot.yml of zeroroot-ai/.github.
+# A patch or minor update is in one group and merges alone on a green merge
+# gate. A major update opens alone and waits for a person (D44).
+
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: /
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: weekly
-      day: tuesday
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
     open-pull-requests-limit: 5
-    labels:
-      - dependencies
     groups:
-      patch-and-minor:
+      npm-deps:
+        patterns:
+          - "*"
         update-types:
-          - minor
-          - patch
-  - package-ecosystem: github-actions
-    directory: /
+          - "minor"
+          - "patch"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: weekly
-      day: tuesday
-    open-pull-requests-limit: 3
-    labels:
-      - dependencies
-      - github-actions
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    groups:
+      # The sub-actions of codeql-action must move together, also for a major
+      # update.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
+      actions-deps:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "github/codeql-action*"
+        update-types:
+          - "minor"
+          - "patch"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+

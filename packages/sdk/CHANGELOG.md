@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.14.0...v0.15.0) (2026-10-06)
+
+
+### Features
+
+* **sdk:** parkAfterResult ends a forkable run ([#76](https://github.com/zeroroot-ai/sdk-ts/issues/76)) ([9873f87](https://github.com/zeroroot-ai/sdk-ts/commit/9873f875674d0884839f0db376cd72c6bb7c5b2f))
+* **sdk:** the runtime fork contract ([#74](https://github.com/zeroroot-ai/sdk-ts/issues/74)) ([7c86bc4](https://github.com/zeroroot-ai/sdk-ts/commit/7c86bc49b0bde3038bc913c5ca161521c1f8ab77))
+
 ## [0.14.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.13.0...v0.14.0) (2026-10-06)
 
 

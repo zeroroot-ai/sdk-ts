@@ -26,7 +26,7 @@
 //
 // Spec: llm-user-attribution-governance (Requirement 3, READ-side
 //       wire contract); two-surface platform contract
-//       (ADR-0025 / ADR-0030).
+//       (ADR-0058).
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";

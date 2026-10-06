@@ -36,7 +36,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/mission/v1/mission_definition.proto.
  */
 export const file_gibson_mission_v1_mission_definition: GenFile = /*@__PURE__*/
-  fileDesc("CipnaWJzb24vbWlzc2lvbi92MS9taXNzaW9uX2RlZmluaXRpb24ucHJvdG8SEWdpYnNvbi5taXNzaW9uLnYxIswGChFNaXNzaW9uRGVmaW5pdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEgoKdGFyZ2V0X3JlZhgFIAEoCRI+CgVub2RlcxgGIAMoCzIvLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZWZpbml0aW9uLk5vZGVzRW50cnkSLQoFZWRnZXMYByADKAsyHi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZRIUCgxlbnRyeV9wb2ludHMYCCADKAkSEwoLZXhpdF9wb2ludHMYCSADKAkSRAoIbWV0YWRhdGEYCiADKAsyMi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRGVmaW5pdGlvbi5NZXRhZGF0YUVudHJ5EjwKDGRlcGVuZGVuY2llcxgLIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZXBlbmRlbmNpZXMSDgoGc291cmNlGAwgASgJEjAKDGluc3RhbGxlZF9hdBgNIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoKY3JlYXRlZF9hdBgOIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASNQoJd29ya3NwYWNlGA8gASgLMiIuZ2lic29uLm1pc3Npb24udjEuV29ya3NwYWNlQ29uZmlnEj8KC2NvbnN0cmFpbnRzGBAgASgLMiUuZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbkNvbnN0cmFpbnRzSACIAQESOwoMZGVjaWRlcl9zbG90GBEgASgLMiAuZ2lic29uLm1pc3Npb24udjEuTExNU2xvdENvbmZpZ0gBiAEBGkwKCk5vZGVzRW50cnkSCwoDa2V5GAEgASgJEi0KBXZhbHVlGAIgASgLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGU6AjgBGi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfY29uc3RyYWludHNCDwoNX2RlY2lkZXJfc2xvdCKNAwoSTWlzc2lvbkNvbnN0cmFpbnRzEi8KDG1heF9kdXJhdGlvbhgBIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhIbCgptYXhfdG9rZW5zGAIgASgDQge6SAQiAigAEiAKCG1heF9jb3N0GAMgASgBQg66SAsSCSkAAAAAAAAAABIdCgxtYXhfZmluZGluZ3MYBCABKAVCB7pIBBoCKAASGgoSc2V2ZXJpdHlfdGhyZXNob2xkGAUgASgJEhgKEHJlcXVpcmVfZXZpZGVuY2UYBiABKAgSFQoNYmxvY2tlZF90b29scxgHIAMoCRIXCg9ibG9ja2VkX2RvbWFpbnMYCCADKAkSJAoTbWF4X3R1cm5zX3Blcl9hZ2VudBgJIAEoBUIHukgEGgIoABIaChJhbGxvd2VkX3RlY2huaXF1ZXMYCiADKAkSGgoSYmxvY2tlZF90ZWNobmlxdWVzGAsgAygJEiQKE21heF90b2tlbnNfcGVyX2NhbGwYDCABKAVCB7pIBBoCKAAiRQoTTWlzc2lvbkRlcGVuZGVuY2llcxIOCgZhZ2VudHMYASADKAkSDQoFdG9vbHMYAiADKAkSDwoHcGx1Z2lucxgDIAMoCSK5BwoLTWlzc2lvbk5vZGUSCgoCaWQYASABKAkSKQoEdHlwZRgCIAEoDjIbLmdpYnNvbi5taXNzaW9uLnYxLk5vZGVUeXBlEgwKBG5hbWUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSOgoMYWdlbnRfY29uZmlnGAUgASgLMiIuZ2lic29uLm1pc3Npb24udjEuQWdlbnROb2RlQ29uZmlnSAASOAoLdG9vbF9jb25maWcYBiABKAsyIS5naWJzb24ubWlzc2lvbi52MS5Ub29sTm9kZUNvbmZpZ0gAEjwKDXBsdWdpbl9jb25maWcYByABKAsyIy5naWJzb24ubWlzc2lvbi52MS5QbHVnaW5Ob2RlQ29uZmlnSAASQgoQY29uZGl0aW9uX2NvbmZpZxgIIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLkNvbmRpdGlvbk5vZGVDb25maWdIABJACg9wYXJhbGxlbF9jb25maWcYCSABKAsyJS5naWJzb24ubWlzc2lvbi52MS5QYXJhbGxlbE5vZGVDb25maWdIABI4Cgtqb2luX2NvbmZpZxgPIAEoCzIhLmdpYnNvbi5taXNzaW9uLnYxLkpvaW5Ob2RlQ29uZmlnSAASNgoKam9iX2NvbmZpZxgRIAEoCzIgLmdpYnNvbi5taXNzaW9uLnYxLkpvYk5vZGVDb25maWdIABI/Cg9mb3JfZWFjaF9jb25maWcYEiABKAsyJC5naWJzb24ubWlzc2lvbi52MS5Gb3JFYWNoTm9kZUNvbmZpZ0gAEhQKDGRlcGVuZGVuY2llcxgKIAMoCRIqCgd0aW1lb3V0GAsgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEjQKDHJldHJ5X3BvbGljeRgMIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlJldHJ5UG9saWN5EjYKC2RhdGFfcG9saWN5GA0gASgLMh0uZ2lic29uLm1pc3Npb24udjEuRGF0YVBvbGljeUICGAESPgoIbWV0YWRhdGEYDiADKAsyLC5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uTm9kZS5NZXRhZGF0YUVudHJ5EjgKDHJldXNlX3BvbGljeRgQIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlJldXNlUG9saWN5QgIYARovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCCAoGY29uZmlnIs0BCg9BZ2VudE5vZGVDb25maWcSEgoKYWdlbnRfbmFtZRgBIAEoCRIjCgR0YXNrGAIgASgLMhUuZ2lic29uLnR5cGVzLnYxLlRhc2sSKQoTbWF4X3Rva2Vuc19wZXJfY2FsbBgDIAEoBUIHukgEGgIoAEgAiAEBEjMKCWxsbV9zbG90cxgFIAMoCzIgLmdpYnNvbi5taXNzaW9uLnYxLkxMTVNsb3RDb25maWdCFgoUX21heF90b2tlbnNfcGVyX2NhbGxKBAgEEAVSA2xsbSI+Cg1MTE1TbG90Q29uZmlnEgwKBHNsb3QYASABKAkSEAoIcHJvdmlkZXIYAiABKAkSDQoFbW9kZWwYAyABKAki0QEKDlRvb2xOb2RlQ29uZmlnEhEKCXRvb2xfbmFtZRgBIAEoCRI7CgVpbnB1dBgCIAMoCzIsLmdpYnNvbi5taXNzaW9uLnYxLlRvb2xOb2RlQ29uZmlnLklucHV0RW50cnkSKQoTbWF4X3Rva2Vuc19wZXJfY2FsbBgDIAEoBUIHukgEGgIoAEgAiAEBGiwKCklucHV0RW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIWChRfbWF4X3Rva2Vuc19wZXJfY2FsbCLqAQoQUGx1Z2luTm9kZUNvbmZpZxITCgtwbHVnaW5fbmFtZRgBIAEoCRIOCgZtZXRob2QYAiABKAkSPwoGcGFyYW1zGAMgAygLMi8uZ2lic29uLm1pc3Npb24udjEuUGx1Z2luTm9kZUNvbmZpZy5QYXJhbXNFbnRyeRIpChNtYXhfdG9rZW5zX3Blcl9jYWxsGAQgASgFQge6SAQaAigASACIAQEaLQoLUGFyYW1zRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIWChRfbWF4X3Rva2Vuc19wZXJfY2FsbCKDAQoTQ29uZGl0aW9uTm9kZUNvbmZpZxISCgpleHByZXNzaW9uGAEgASgJEhMKC3RydWVfYnJhbmNoGAIgAygJEhQKDGZhbHNlX2JyYW5jaBgDIAMoCRItCghsYW5ndWFnZRgEIAEoDjIbLmdpYnNvbi5taXNzaW9uLnYxLkxhbmd1YWdlImAKElBhcmFsbGVsTm9kZUNvbmZpZxIxCglzdWJfbm9kZXMYASADKAsyHi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uTm9kZRIXCg9tYXhfY29uY3VycmVuY3kYAiABKAUi8QEKEUZvckVhY2hOb2RlQ29uZmlnEjgKCHRlbXBsYXRlGAEgASgLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGVCBrpIA8gBARJHCgZzb3VyY2UYAiABKA4yKy5naWJzb24ubWlzc2lvbi52MS5Gb3JFYWNoTm9kZUNvbmZpZy5Tb3VyY2VCCrpIB4IBBBABIAASIAoPbWF4X2NvbmN1cnJlbmN5GAMgASgFQge6SAQaAigAIjcKBlNvdXJjZRIWChJTT1VSQ0VfVU5TUEVDSUZJRUQQABIVChFTT1VSQ0VfVEFSR0VUX1NFVBABInQKDkpvaW5Ob2RlQ29uZmlnEhoKCHdhaXRfZm9yGAEgAygJQgi6SAWSAQIIARIyCghzdHJhdGVneRgCIAEoDjIgLmdpYnNvbi5taXNzaW9uLnYxLk1lcmdlU3RyYXRlZ3kSEgoKYWdncmVnYXRvchgDIAEoCSKEAQoPV29ya3NwYWNlQ29uZmlnEjkKDHJlcG9zaXRvcmllcxgBIAMoCzIjLmdpYnNvbi5taXNzaW9uLnYxLlJlcG9zaXRvcnlDb25maWcSNgoIc2V0dGluZ3MYAiABKAsyJC5naWJzb24ubWlzc2lvbi52MS5Xb3Jrc3BhY2VTZXR0aW5ncyJ7ChBSZXBvc2l0b3J5Q29uZmlnEgwKBG5hbWUYASABKAkSCwoDdXJsGAIgASgJEg4KBmJyYW5jaBgDIAEoCRIXCg9jcmVkZW50aWFsX25hbWUYBCABKAkSDwoHc2hhbGxvdxgFIAEoCBISCgpkZXBlbmRzX29uGAYgAygJIqQBChFXb3Jrc3BhY2VTZXR0aW5ncxIbChNjbGVhbnVwX29uX2NvbXBsZXRlGAEgASgIEhUKDXVzZV93b3JrdHJlZXMYAiABKAgSEwoLbHNwX2VuYWJsZWQYAyABKAgSLgoLbHNwX3RpbWVvdXQYBCABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SFgoOYmFzZV9kaXJlY3RvcnkYBSABKAkiSwoLUmV1c2VQb2xpY3kSFAoMb3V0cHV0X3Njb3BlGAEgASgJEhMKC2lucHV0X3Njb3BlGAIgASgJEg0KBXJldXNlGAMgASgJOgIYASKPAQoNSm9iTm9kZUNvbmZpZxIZCghiYW5rX3JlZhgBIAEoCUIHukgEcgIQARIsCgRzcGVjGAIgASgLMhYuZ2lic29uLmpvYi52MS5Kb2JTcGVjQga6SAPIAQESNQoLY29uc3RyYWludHMYAyABKAsyIC5naWJzb24udHlwZXMudjEuVGFza0NvbnN0cmFpbnRzItQBCgtSZXRyeVBvbGljeRITCgttYXhfcmV0cmllcxgBIAEoBRI8ChBiYWNrb2ZmX3N0cmF0ZWd5GAIgASgOMiIuZ2lic29uLm1pc3Npb24udjEuQmFja29mZlN0cmF0ZWd5EjAKDWluaXRpYWxfZGVsYXkYAyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SLAoJbWF4X2RlbGF5GAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEhIKCm11bHRpcGxpZXIYBSABKAEilQEKCkRhdGFQb2xpY3kSEwoLc3RvcmVfaW5wdXQYASABKAgSFAoMc3RvcmVfb3V0cHV0GAIgASgIEiwKCXJldGVudGlvbhgDIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhISCgplbmNyeXB0aW9uGAQgASgIEhYKDmFjY2Vzc19jb250cm9sGAUgAygJOgIYASKrAQoLTWlzc2lvbkVkZ2USDAoEZnJvbRgBIAEoCRIKCgJ0bxgCIAEoCRIRCgljb25kaXRpb24YAyABKAkSPgoIbWV0YWRhdGEYBCADKAsyLC5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZS5NZXRhZGF0YUVudHJ5Gi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASrUAQoITm9kZVR5cGUSGQoVTk9ERV9UWVBFX1VOU1BFQ0lGSUVEEAASEwoPTk9ERV9UWVBFX0FHRU5UEAESEgoOTk9ERV9UWVBFX1RPT0wQAhIUChBOT0RFX1RZUEVfUExVR0lOEAMSFwoTTk9ERV9UWVBFX0NPTkRJVElPThAEEhYKEk5PREVfVFlQRV9QQVJBTExFTBAFEhIKDk5PREVfVFlQRV9KT0lOEAYSEQoNTk9ERV9UWVBFX0pPQhAHEhYKEk5PREVfVFlQRV9GT1JfRUFDSBAIKjYKCExhbmd1YWdlEhgKFExBTkdVQUdFX1VOU1BFQ0lGSUVEEAASEAoMTEFOR1VBR0VfQ0VMEAEqswEKDU1lcmdlU3RyYXRlZ3kSHgoaTUVSR0VfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIZChVNRVJHRV9TVFJBVEVHWV9DT05DQVQQARIZChVNRVJHRV9TVFJBVEVHWV9SRURVQ0UQAhIYChRNRVJHRV9TVFJBVEVHWV9GSVJTVBADEhcKE01FUkdFX1NUUkFURUdZX0xBU1QQBBIZChVNRVJHRV9TVFJBVEVHWV9DVVNUT00QBSqRAQoPQmFja29mZlN0cmF0ZWd5EiAKHEJBQ0tPRkZfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIdChlCQUNLT0ZGX1NUUkFURUdZX0NPTlNUQU5UEAESGwoXQkFDS09GRl9TVFJBVEVHWV9MSU5FQVIQAhIgChxCQUNLT0ZGX1NUUkFURUdZX0VYUE9ORU5USUFMEANCU1ABWj5naXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9taXNzaW9uL3YxO21pc3Npb25wYqoCDkdpYnNvbi5NaXNzaW9uYgZwcm90bzM", [file_google_protobuf_duration, file_google_protobuf_timestamp, file_gibson_job_v1_job, file_gibson_types_v1_types, file_buf_validate_validate]);
+  fileDesc("CipnaWJzb24vbWlzc2lvbi92MS9taXNzaW9uX2RlZmluaXRpb24ucHJvdG8SEWdpYnNvbi5taXNzaW9uLnYxItMHChFNaXNzaW9uRGVmaW5pdGlvbhIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEgoKdGFyZ2V0X3JlZhgFIAEoCRI+CgVub2RlcxgGIAMoCzIvLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZWZpbml0aW9uLk5vZGVzRW50cnkSLQoFZWRnZXMYByADKAsyHi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRWRnZRIUCgxlbnRyeV9wb2ludHMYCCADKAkSEwoLZXhpdF9wb2ludHMYCSADKAkSRAoIbWV0YWRhdGEYCiADKAsyMi5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uRGVmaW5pdGlvbi5NZXRhZGF0YUVudHJ5EjwKDGRlcGVuZGVuY2llcxgLIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25EZXBlbmRlbmNpZXMSDgoGc291cmNlGAwgASgJEjAKDGluc3RhbGxlZF9hdBgNIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoKY3JlYXRlZF9hdBgOIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASNQoJd29ya3NwYWNlGA8gASgLMiIuZ2lic29uLm1pc3Npb24udjEuV29ya3NwYWNlQ29uZmlnEj8KC2NvbnN0cmFpbnRzGBAgASgLMiUuZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbkNvbnN0cmFpbnRzSACIAQESOwoMZGVjaWRlcl9zbG90GBEgASgLMiAuZ2lic29uLm1pc3Npb24udjEuTExNU2xvdENvbmZpZ0gBiAEBEjcKB3NlY3JldHMYEiABKAsyIS5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uU2VjcmV0c0gCiAEBEkAKC2NoZWNrcG9pbnRzGBMgASgOMiEuZ2lic29uLm1pc3Npb24udjEuQ2hlY2twb2ludE1vZGVCCLpIBYIBAhABGkwKCk5vZGVzRW50cnkSCwoDa2V5GAEgASgJEi0KBXZhbHVlGAIgASgLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGU6AjgBGi8KDU1ldGFkYXRhRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfY29uc3RyYWludHNCDwoNX2RlY2lkZXJfc2xvdEIKCghfc2VjcmV0cyLyAwoOTWlzc2lvblNlY3JldHMSDwoHbWlzc2lvbhgBIAMoCRIOCgZhZ2VudHMYAiADKAkSDQoFdG9vbHMYAyADKAkSDwoHcGx1Z2lucxgEIAMoCRI7CgVhZ2VudBgFIAMoCzIsLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25TZWNyZXRzLkFnZW50RW50cnkSOQoEdG9vbBgGIAMoCzIrLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25TZWNyZXRzLlRvb2xFbnRyeRI9CgZwbHVnaW4YByADKAsyLS5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uU2VjcmV0cy5QbHVnaW5FbnRyeRpMCgpBZ2VudEVudHJ5EgsKA2tleRgBIAEoCRItCgV2YWx1ZRgCIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlNlY3JldE5hbWVzOgI4ARpLCglUb29sRW50cnkSCwoDa2V5GAEgASgJEi0KBXZhbHVlGAIgASgLMh4uZ2lic29uLm1pc3Npb24udjEuU2VjcmV0TmFtZXM6AjgBGk0KC1BsdWdpbkVudHJ5EgsKA2tleRgBIAEoCRItCgV2YWx1ZRgCIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlNlY3JldE5hbWVzOgI4ASIcCgtTZWNyZXROYW1lcxINCgVuYW1lcxgBIAMoCSKNAwoSTWlzc2lvbkNvbnN0cmFpbnRzEi8KDG1heF9kdXJhdGlvbhgBIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhIbCgptYXhfdG9rZW5zGAIgASgDQge6SAQiAigAEiAKCG1heF9jb3N0GAMgASgBQg66SAsSCSkAAAAAAAAAABIdCgxtYXhfZmluZGluZ3MYBCABKAVCB7pIBBoCKAASGgoSc2V2ZXJpdHlfdGhyZXNob2xkGAUgASgJEhgKEHJlcXVpcmVfZXZpZGVuY2UYBiABKAgSFQoNYmxvY2tlZF90b29scxgHIAMoCRIXCg9ibG9ja2VkX2RvbWFpbnMYCCADKAkSJAoTbWF4X3R1cm5zX3Blcl9hZ2VudBgJIAEoBUIHukgEGgIoABIaChJhbGxvd2VkX3RlY2huaXF1ZXMYCiADKAkSGgoSYmxvY2tlZF90ZWNobmlxdWVzGAsgAygJEiQKE21heF90b2tlbnNfcGVyX2NhbGwYDCABKAVCB7pIBBoCKAAiRQoTTWlzc2lvbkRlcGVuZGVuY2llcxIOCgZhZ2VudHMYASADKAkSDQoFdG9vbHMYAiADKAkSDwoHcGx1Z2lucxgDIAMoCSLqBwoLTWlzc2lvbk5vZGUSCgoCaWQYASABKAkSKQoEdHlwZRgCIAEoDjIbLmdpYnNvbi5taXNzaW9uLnYxLk5vZGVUeXBlEgwKBG5hbWUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSOgoMYWdlbnRfY29uZmlnGAUgASgLMiIuZ2lic29uLm1pc3Npb24udjEuQWdlbnROb2RlQ29uZmlnSAASOAoLdG9vbF9jb25maWcYBiABKAsyIS5naWJzb24ubWlzc2lvbi52MS5Ub29sTm9kZUNvbmZpZ0gAEjwKDXBsdWdpbl9jb25maWcYByABKAsyIy5naWJzb24ubWlzc2lvbi52MS5QbHVnaW5Ob2RlQ29uZmlnSAASQgoQY29uZGl0aW9uX2NvbmZpZxgIIAEoCzImLmdpYnNvbi5taXNzaW9uLnYxLkNvbmRpdGlvbk5vZGVDb25maWdIABJACg9wYXJhbGxlbF9jb25maWcYCSABKAsyJS5naWJzb24ubWlzc2lvbi52MS5QYXJhbGxlbE5vZGVDb25maWdIABI4Cgtqb2luX2NvbmZpZxgPIAEoCzIhLmdpYnNvbi5taXNzaW9uLnYxLkpvaW5Ob2RlQ29uZmlnSAASNgoKam9iX2NvbmZpZxgRIAEoCzIgLmdpYnNvbi5taXNzaW9uLnYxLkpvYk5vZGVDb25maWdIABI/Cg9mb3JfZWFjaF9jb25maWcYEiABKAsyJC5naWJzb24ubWlzc2lvbi52MS5Gb3JFYWNoTm9kZUNvbmZpZ0gAEhQKDGRlcGVuZGVuY2llcxgKIAMoCRIqCgd0aW1lb3V0GAsgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEjQKDHJldHJ5X3BvbGljeRgMIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlJldHJ5UG9saWN5EjYKC2RhdGFfcG9saWN5GA0gASgLMh0uZ2lic29uLm1pc3Npb24udjEuRGF0YVBvbGljeUICGAESPgoIbWV0YWRhdGEYDiADKAsyLC5naWJzb24ubWlzc2lvbi52MS5NaXNzaW9uTm9kZS5NZXRhZGF0YUVudHJ5EjgKDHJldXNlX3BvbGljeRgQIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLlJldXNlUG9saWN5QgIYARIQCghyZXNlYXJjaBgTIAEoCBIdCgtzdGFydHNfZnJvbRgUIAEoCUIIukgFcgMYgAIaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBQggKBmNvbmZpZyLNAQoPQWdlbnROb2RlQ29uZmlnEhIKCmFnZW50X25hbWUYASABKAkSIwoEdGFzaxgCIAEoCzIVLmdpYnNvbi50eXBlcy52MS5UYXNrEikKE21heF90b2tlbnNfcGVyX2NhbGwYAyABKAVCB7pIBBoCKABIAIgBARIzCglsbG1fc2xvdHMYBSADKAsyIC5naWJzb24ubWlzc2lvbi52MS5MTE1TbG90Q29uZmlnQhYKFF9tYXhfdG9rZW5zX3Blcl9jYWxsSgQIBBAFUgNsbG0iPgoNTExNU2xvdENvbmZpZxIMCgRzbG90GAEgASgJEhAKCHByb3ZpZGVyGAIgASgJEg0KBW1vZGVsGAMgASgJItEBCg5Ub29sTm9kZUNvbmZpZxIRCgl0b29sX25hbWUYASABKAkSOwoFaW5wdXQYAiADKAsyLC5naWJzb24ubWlzc2lvbi52MS5Ub29sTm9kZUNvbmZpZy5JbnB1dEVudHJ5EikKE21heF90b2tlbnNfcGVyX2NhbGwYAyABKAVCB7pIBBoCKABIAIgBARosCgpJbnB1dEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCFgoUX21heF90b2tlbnNfcGVyX2NhbGwi6gEKEFBsdWdpbk5vZGVDb25maWcSEwoLcGx1Z2luX25hbWUYASABKAkSDgoGbWV0aG9kGAIgASgJEj8KBnBhcmFtcxgDIAMoCzIvLmdpYnNvbi5taXNzaW9uLnYxLlBsdWdpbk5vZGVDb25maWcuUGFyYW1zRW50cnkSKQoTbWF4X3Rva2Vuc19wZXJfY2FsbBgEIAEoBUIHukgEGgIoAEgAiAEBGi0KC1BhcmFtc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFCFgoUX21heF90b2tlbnNfcGVyX2NhbGwigwEKE0NvbmRpdGlvbk5vZGVDb25maWcSEgoKZXhwcmVzc2lvbhgBIAEoCRITCgt0cnVlX2JyYW5jaBgCIAMoCRIUCgxmYWxzZV9icmFuY2gYAyADKAkSLQoIbGFuZ3VhZ2UYBCABKA4yGy5naWJzb24ubWlzc2lvbi52MS5MYW5ndWFnZSJgChJQYXJhbGxlbE5vZGVDb25maWcSMQoJc3ViX25vZGVzGAEgAygLMh4uZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbk5vZGUSFwoPbWF4X2NvbmN1cnJlbmN5GAIgASgFIvEBChFGb3JFYWNoTm9kZUNvbmZpZxI4Cgh0ZW1wbGF0ZRgBIAEoCzIeLmdpYnNvbi5taXNzaW9uLnYxLk1pc3Npb25Ob2RlQga6SAPIAQESRwoGc291cmNlGAIgASgOMisuZ2lic29uLm1pc3Npb24udjEuRm9yRWFjaE5vZGVDb25maWcuU291cmNlQgq6SAeCAQQQASAAEiAKD21heF9jb25jdXJyZW5jeRgDIAEoBUIHukgEGgIoACI3CgZTb3VyY2USFgoSU09VUkNFX1VOU1BFQ0lGSUVEEAASFQoRU09VUkNFX1RBUkdFVF9TRVQQASJ0Cg5Kb2luTm9kZUNvbmZpZxIaCgh3YWl0X2ZvchgBIAMoCUIIukgFkgECCAESMgoIc3RyYXRlZ3kYAiABKA4yIC5naWJzb24ubWlzc2lvbi52MS5NZXJnZVN0cmF0ZWd5EhIKCmFnZ3JlZ2F0b3IYAyABKAkihAEKD1dvcmtzcGFjZUNvbmZpZxI5CgxyZXBvc2l0b3JpZXMYASADKAsyIy5naWJzb24ubWlzc2lvbi52MS5SZXBvc2l0b3J5Q29uZmlnEjYKCHNldHRpbmdzGAIgASgLMiQuZ2lic29uLm1pc3Npb24udjEuV29ya3NwYWNlU2V0dGluZ3MiewoQUmVwb3NpdG9yeUNvbmZpZxIMCgRuYW1lGAEgASgJEgsKA3VybBgCIAEoCRIOCgZicmFuY2gYAyABKAkSFwoPY3JlZGVudGlhbF9uYW1lGAQgASgJEg8KB3NoYWxsb3cYBSABKAgSEgoKZGVwZW5kc19vbhgGIAMoCSKkAQoRV29ya3NwYWNlU2V0dGluZ3MSGwoTY2xlYW51cF9vbl9jb21wbGV0ZRgBIAEoCBIVCg11c2Vfd29ya3RyZWVzGAIgASgIEhMKC2xzcF9lbmFibGVkGAMgASgIEi4KC2xzcF90aW1lb3V0GAQgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEhYKDmJhc2VfZGlyZWN0b3J5GAUgASgJIksKC1JldXNlUG9saWN5EhQKDG91dHB1dF9zY29wZRgBIAEoCRITCgtpbnB1dF9zY29wZRgCIAEoCRINCgVyZXVzZRgDIAEoCToCGAEijwEKDUpvYk5vZGVDb25maWcSGQoIYmFua19yZWYYASABKAlCB7pIBHICEAESLAoEc3BlYxgCIAEoCzIWLmdpYnNvbi5qb2IudjEuSm9iU3BlY0IGukgDyAEBEjUKC2NvbnN0cmFpbnRzGAMgASgLMiAuZ2lic29uLnR5cGVzLnYxLlRhc2tDb25zdHJhaW50cyLUAQoLUmV0cnlQb2xpY3kSEwoLbWF4X3JldHJpZXMYASABKAUSPAoQYmFja29mZl9zdHJhdGVneRgCIAEoDjIiLmdpYnNvbi5taXNzaW9uLnYxLkJhY2tvZmZTdHJhdGVneRIwCg1pbml0aWFsX2RlbGF5GAMgASgLMhkuZ29vZ2xlLnByb3RvYnVmLkR1cmF0aW9uEiwKCW1heF9kZWxheRgEIAEoCzIZLmdvb2dsZS5wcm90b2J1Zi5EdXJhdGlvbhISCgptdWx0aXBsaWVyGAUgASgBIpUBCgpEYXRhUG9saWN5EhMKC3N0b3JlX2lucHV0GAEgASgIEhQKDHN0b3JlX291dHB1dBgCIAEoCBIsCglyZXRlbnRpb24YAyABKAsyGS5nb29nbGUucHJvdG9idWYuRHVyYXRpb24SEgoKZW5jcnlwdGlvbhgEIAEoCBIWCg5hY2Nlc3NfY29udHJvbBgFIAMoCToCGAEiqwEKC01pc3Npb25FZGdlEgwKBGZyb20YASABKAkSCgoCdG8YAiABKAkSEQoJY29uZGl0aW9uGAMgASgJEj4KCG1ldGFkYXRhGAQgAygLMiwuZ2lic29uLm1pc3Npb24udjEuTWlzc2lvbkVkZ2UuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEqaQoOQ2hlY2twb2ludE1vZGUSHwobQ0hFQ0tQT0lOVF9NT0RFX1VOU1BFQ0lGSUVEEAASGQoVQ0hFQ0tQT0lOVF9NT0RFX1NUQVRFEAESGwoXQ0hFQ0tQT0lOVF9NT0RFX1NBTkRCT1gQAirUAQoITm9kZVR5cGUSGQoVTk9ERV9UWVBFX1VOU1BFQ0lGSUVEEAASEwoPTk9ERV9UWVBFX0FHRU5UEAESEgoOTk9ERV9UWVBFX1RPT0wQAhIUChBOT0RFX1RZUEVfUExVR0lOEAMSFwoTTk9ERV9UWVBFX0NPTkRJVElPThAEEhYKEk5PREVfVFlQRV9QQVJBTExFTBAFEhIKDk5PREVfVFlQRV9KT0lOEAYSEQoNTk9ERV9UWVBFX0pPQhAHEhYKEk5PREVfVFlQRV9GT1JfRUFDSBAIKjYKCExhbmd1YWdlEhgKFExBTkdVQUdFX1VOU1BFQ0lGSUVEEAASEAoMTEFOR1VBR0VfQ0VMEAEqswEKDU1lcmdlU3RyYXRlZ3kSHgoaTUVSR0VfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIZChVNRVJHRV9TVFJBVEVHWV9DT05DQVQQARIZChVNRVJHRV9TVFJBVEVHWV9SRURVQ0UQAhIYChRNRVJHRV9TVFJBVEVHWV9GSVJTVBADEhcKE01FUkdFX1NUUkFURUdZX0xBU1QQBBIZChVNRVJHRV9TVFJBVEVHWV9DVVNUT00QBSqRAQoPQmFja29mZlN0cmF0ZWd5EiAKHEJBQ0tPRkZfU1RSQVRFR1lfVU5TUEVDSUZJRUQQABIdChlCQUNLT0ZGX1NUUkFURUdZX0NPTlNUQU5UEAESGwoXQkFDS09GRl9TVFJBVEVHWV9MSU5FQVIQAhIgChxCQUNLT0ZGX1NUUkFURUdZX0VYUE9ORU5USUFMEANCU1ABWj5naXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9taXNzaW9uL3YxO21pc3Npb25wYqoCDkdpYnNvbi5NaXNzaW9uYgZwcm90bzM", [file_google_protobuf_duration, file_google_protobuf_timestamp, file_gibson_job_v1_job, file_gibson_types_v1_types, file_buf_validate_validate]);
 
 /**
  * MissionDefinition represents a mission template/definition.
@@ -182,6 +182,26 @@ export type MissionDefinition = Message<"gibson.mission.v1.MissionDefinition"> &
    * @generated from field: optional gibson.mission.v1.LLMSlotConfig decider_slot = 17;
    */
   deciderSlot?: LLMSlotConfig | undefined;
+
+  /**
+   * Secrets declares which named tenant secrets this mission's components may
+   * be handed at dispatch. Names only; a value never appears here.
+   *
+   * @generated from field: optional gibson.mission.v1.MissionSecrets secrets = 18;
+   */
+  secrets?: MissionSecrets | undefined;
+
+  /**
+   * Checkpoints selects what the end of a node keeps (ADR-0170). A
+   * checkpoint is the end of a node in a mission run, and a rewind starts
+   * a new run at a checkpoint.
+   *
+   * CHECKPOINT_MODE_UNSPECIFIED means CHECKPOINT_MODE_STATE, so a mission
+   * that does not set the field keeps no sandbox snapshot.
+   *
+   * @generated from field: gibson.mission.v1.CheckpointMode checkpoints = 19;
+   */
+  checkpoints: CheckpointMode;
 };
 
 /**
@@ -190,6 +210,106 @@ export type MissionDefinition = Message<"gibson.mission.v1.MissionDefinition"> &
  */
 export const MissionDefinitionSchema: GenMessage<MissionDefinition> = /*@__PURE__*/
   messageDesc(file_gibson_mission_v1_mission_definition, 0);
+
+/**
+ * MissionSecrets declares which named tenant secrets the components of a
+ * mission may be handed, and to which of them.
+ *
+ * NAMES ONLY. A secret's value is resolved server-side at dispatch by the
+ * daemon, which holds the KEK and the broker, and is handed to the component as
+ * environment. A value never appears in a mission definition, which is stored,
+ * listed, rendered, validated and displayed. A component never names a secret
+ * itself: the same property ScopeID has, where an agent-supplied value would
+ * make the decision attacker-influenceable.
+ *
+ * This does NOT widen FGA. `secret.can_resolve` admits only plugin_principal,
+ * and the non-plugin-secret-isolation spec asserts an agent and a tool are each
+ * denied (gibson tests/e2e/secrets/non_plugin_deny_test.go). That property is
+ * preserved exactly: a component still cannot ask for a secret. This declares
+ * what the daemon may hand it, and the daemon resolves as itself.
+ *
+ * The wide lists and the per-name maps UNION. A tool named T in a mission whose
+ * definition sets `mission`, `tools` and `tool[T]` may be handed any name in any
+ * of the three. An absent block means no component is handed anything, which is
+ * the behavior before this field existed.
+ *
+ * @generated from message gibson.mission.v1.MissionSecrets
+ */
+export type MissionSecrets = Message<"gibson.mission.v1.MissionSecrets"> & {
+  /**
+   * Mission is handed to every component in the run, whatever its kind.
+   *
+   * @generated from field: repeated string mission = 1;
+   */
+  mission: string[];
+
+  /**
+   * Agents, Tools and Plugins are handed to every component of that kind.
+   *
+   * @generated from field: repeated string agents = 2;
+   */
+  agents: string[];
+
+  /**
+   * @generated from field: repeated string tools = 3;
+   */
+  tools: string[];
+
+  /**
+   * @generated from field: repeated string plugins = 4;
+   */
+  plugins: string[];
+
+  /**
+   * Agent, Tool and Plugin are handed to one NAMED component. The key is the
+   * component name as the catalog and the mission node spell it.
+   *
+   * Three explicit maps rather than one keyed by a ComponentKind enum: no
+   * such enum exists in this module, adding one to express three cases is a
+   * permanent API surface for no gain, and a map per kind is what the file
+   * already does for nodes (`map<string, MissionNode> nodes = 6`).
+   *
+   * @generated from field: map<string, gibson.mission.v1.SecretNames> agent = 5;
+   */
+  agent: { [key: string]: SecretNames };
+
+  /**
+   * @generated from field: map<string, gibson.mission.v1.SecretNames> tool = 6;
+   */
+  tool: { [key: string]: SecretNames };
+
+  /**
+   * @generated from field: map<string, gibson.mission.v1.SecretNames> plugin = 7;
+   */
+  plugin: { [key: string]: SecretNames };
+};
+
+/**
+ * Describes the message gibson.mission.v1.MissionSecrets.
+ * Use `create(MissionSecretsSchema)` to create a new message.
+ */
+export const MissionSecretsSchema: GenMessage<MissionSecrets> = /*@__PURE__*/
+  messageDesc(file_gibson_mission_v1_mission_definition, 1);
+
+/**
+ * SecretNames is a list of secret names, as the value of a per-component map.
+ * proto3 has no repeated map value, so the list needs a message.
+ *
+ * @generated from message gibson.mission.v1.SecretNames
+ */
+export type SecretNames = Message<"gibson.mission.v1.SecretNames"> & {
+  /**
+   * @generated from field: repeated string names = 1;
+   */
+  names: string[];
+};
+
+/**
+ * Describes the message gibson.mission.v1.SecretNames.
+ * Use `create(SecretNamesSchema)` to create a new message.
+ */
+export const SecretNamesSchema: GenMessage<SecretNames> = /*@__PURE__*/
+  messageDesc(file_gibson_mission_v1_mission_definition, 2);
 
 /**
  * MissionConstraints declares the operational limits baked into a mission
@@ -334,7 +454,7 @@ export type MissionConstraints = Message<"gibson.mission.v1.MissionConstraints">
  * Use `create(MissionConstraintsSchema)` to create a new message.
  */
 export const MissionConstraintsSchema: GenMessage<MissionConstraints> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 1);
+  messageDesc(file_gibson_mission_v1_mission_definition, 3);
 
 /**
  * MissionDependencies specifies required components for a mission
@@ -369,7 +489,7 @@ export type MissionDependencies = Message<"gibson.mission.v1.MissionDependencies
  * Use `create(MissionDependenciesSchema)` to create a new message.
  */
 export const MissionDependenciesSchema: GenMessage<MissionDependencies> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 2);
+  messageDesc(file_gibson_mission_v1_mission_definition, 4);
 
 /**
  * MissionNode represents a single node in a mission DAG
@@ -507,8 +627,8 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
    * DataPolicy defines data handling policy for this node.
    *
    * Deprecated: data reuse + scoping are no longer node-declared. Under the
-   * ECS brain (ADR-0008) reuse is implicit in the event-sourced
-   * World and scoping flows from scope-relative identity (ADR-0002) +
+   * ECS brain (ADR-0101) reuse is implicit in the event-sourced
+   * World and scoping flows from scope-relative identity (ADR-0102) +
    * ambient projection. The field is retained wire-compatibly for old
    * definitions but is ignored by the engine.
    *
@@ -528,14 +648,42 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
    * ReusePolicy declares how this node's I/O is scoped +
    * reused across mission runs.
    *
-   * Deprecated: superseded by the ECS brain (ADR-0008). Reuse is
-   * implicit in the World; scoping is via scope-relative identity (ADR-0002)
+   * Deprecated: superseded by the ECS brain (ADR-0101). Reuse is
+   * implicit in the World; scoping is via scope-relative identity (ADR-0102)
    * + ambient projection. Retained wire-compatibly but ignored by the engine.
    *
    * @generated from field: gibson.mission.v1.ReusePolicy reuse_policy = 16 [deprecated = true];
    * @deprecated
    */
   reusePolicy?: ReusePolicy | undefined;
+
+  /**
+   * Research marks a node that gathers information from outside the
+   * targets of the mission. A research node has unrestricted egress. Every
+   * other node reaches only the targets bound to it.
+   *
+   * @generated from field: bool research = 19;
+   */
+  research: boolean;
+
+  /**
+   * StartsFrom is the id of an earlier node of the same mission. The node
+   * starts from the state that the named node had when it ended, not from
+   * a fresh sandbox (ADR-0169). Empty means a fresh sandbox.
+   *
+   * The template node of a for_each node can carry it: each instance then
+   * starts from the same state, so one state becomes N branches.
+   *
+   * The node gets the network scope of its own node, never the scope of
+   * the node that it names.
+   *
+   * The daemon refuses at submit time an id that names no node, a later
+   * node, or the node itself. protovalidate cannot express a rule about a
+   * different node of the graph, so the rule here limits the length only.
+   *
+   * @generated from field: string starts_from = 20;
+   */
+  startsFrom: string;
 };
 
 /**
@@ -543,7 +691,7 @@ export type MissionNode = Message<"gibson.mission.v1.MissionNode"> & {
  * Use `create(MissionNodeSchema)` to create a new message.
  */
 export const MissionNodeSchema: GenMessage<MissionNode> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 3);
+  messageDesc(file_gibson_mission_v1_mission_definition, 5);
 
 /**
  * AgentNodeConfig contains configuration for agent nodes.
@@ -614,7 +762,7 @@ export type AgentNodeConfig = Message<"gibson.mission.v1.AgentNodeConfig"> & {
  * Use `create(AgentNodeConfigSchema)` to create a new message.
  */
 export const AgentNodeConfigSchema: GenMessage<AgentNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 4);
+  messageDesc(file_gibson_mission_v1_mission_definition, 6);
 
 /**
  * LLMSlotConfig pins the provider/model for an agent node's LLM slot. It is a
@@ -653,7 +801,7 @@ export type LLMSlotConfig = Message<"gibson.mission.v1.LLMSlotConfig"> & {
  * Use `create(LLMSlotConfigSchema)` to create a new message.
  */
 export const LLMSlotConfigSchema: GenMessage<LLMSlotConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 5);
+  messageDesc(file_gibson_mission_v1_mission_definition, 7);
 
 /**
  * ToolNodeConfig contains configuration for tool nodes.
@@ -696,7 +844,7 @@ export type ToolNodeConfig = Message<"gibson.mission.v1.ToolNodeConfig"> & {
  * Use `create(ToolNodeConfigSchema)` to create a new message.
  */
 export const ToolNodeConfigSchema: GenMessage<ToolNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 6);
+  messageDesc(file_gibson_mission_v1_mission_definition, 8);
 
 /**
  * PluginNodeConfig contains configuration for plugin nodes.
@@ -747,7 +895,7 @@ export type PluginNodeConfig = Message<"gibson.mission.v1.PluginNodeConfig"> & {
  * Use `create(PluginNodeConfigSchema)` to create a new message.
  */
 export const PluginNodeConfigSchema: GenMessage<PluginNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 7);
+  messageDesc(file_gibson_mission_v1_mission_definition, 9);
 
 /**
  * ConditionNodeConfig contains configuration for condition nodes
@@ -791,7 +939,7 @@ export type ConditionNodeConfig = Message<"gibson.mission.v1.ConditionNodeConfig
  * Use `create(ConditionNodeConfigSchema)` to create a new message.
  */
 export const ConditionNodeConfigSchema: GenMessage<ConditionNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 8);
+  messageDesc(file_gibson_mission_v1_mission_definition, 10);
 
 /**
  * ParallelNodeConfig contains configuration for parallel nodes.
@@ -823,7 +971,7 @@ export type ParallelNodeConfig = Message<"gibson.mission.v1.ParallelNodeConfig">
  * Use `create(ParallelNodeConfigSchema)` to create a new message.
  */
 export const ParallelNodeConfigSchema: GenMessage<ParallelNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 9);
+  messageDesc(file_gibson_mission_v1_mission_definition, 11);
 
 /**
  * ForEachNodeConfig configures a for_each node: ONE template node, run once
@@ -873,7 +1021,7 @@ export type ForEachNodeConfig = Message<"gibson.mission.v1.ForEachNodeConfig"> &
  * Use `create(ForEachNodeConfigSchema)` to create a new message.
  */
 export const ForEachNodeConfigSchema: GenMessage<ForEachNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 10);
+  messageDesc(file_gibson_mission_v1_mission_definition, 12);
 
 /**
  * Source selects what is iterated.
@@ -899,7 +1047,7 @@ export enum ForEachNodeConfig_Source {
  * Describes the enum gibson.mission.v1.ForEachNodeConfig.Source.
  */
 export const ForEachNodeConfig_SourceSchema: GenEnum<ForEachNodeConfig_Source> = /*@__PURE__*/
-  enumDesc(file_gibson_mission_v1_mission_definition, 10, 0);
+  enumDesc(file_gibson_mission_v1_mission_definition, 12, 0);
 
 /**
  * JoinNodeConfig blocks until every node ID in `wait_for` has
@@ -944,7 +1092,7 @@ export type JoinNodeConfig = Message<"gibson.mission.v1.JoinNodeConfig"> & {
  * Use `create(JoinNodeConfigSchema)` to create a new message.
  */
 export const JoinNodeConfigSchema: GenMessage<JoinNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 11);
+  messageDesc(file_gibson_mission_v1_mission_definition, 13);
 
 /**
  * WorkspaceConfig configures repository cloning + workspace
@@ -980,7 +1128,7 @@ export type WorkspaceConfig = Message<"gibson.mission.v1.WorkspaceConfig"> & {
  * Use `create(WorkspaceConfigSchema)` to create a new message.
  */
 export const WorkspaceConfigSchema: GenMessage<WorkspaceConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 12);
+  messageDesc(file_gibson_mission_v1_mission_definition, 14);
 
 /**
  * RepositoryConfig defines a single repository to clone. Maps
@@ -1041,7 +1189,7 @@ export type RepositoryConfig = Message<"gibson.mission.v1.RepositoryConfig"> & {
  * Use `create(RepositoryConfigSchema)` to create a new message.
  */
 export const RepositoryConfigSchema: GenMessage<RepositoryConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 13);
+  messageDesc(file_gibson_mission_v1_mission_definition, 15);
 
 /**
  * WorkspaceSettings carries workspace-wide options.
@@ -1095,15 +1243,15 @@ export type WorkspaceSettings = Message<"gibson.mission.v1.WorkspaceSettings"> &
  * Use `create(WorkspaceSettingsSchema)` to create a new message.
  */
 export const WorkspaceSettingsSchema: GenMessage<WorkspaceSettings> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 14);
+  messageDesc(file_gibson_mission_v1_mission_definition, 16);
 
 /**
  * ReusePolicy declares how a node's I/O is scoped + reused
  * across mission runs.
  *
- * Deprecated: superseded by the ECS brain (ADR-0008). Reuse is
+ * Deprecated: superseded by the ECS brain (ADR-0101). Reuse is
  * implicit in the event-sourced World and scoping flows from scope-relative
- * identity (ADR-0002) + ambient projection, so node-declared reuse/scoping no
+ * identity (ADR-0102) + ambient projection, so node-declared reuse/scoping no
  * longer has meaning. Retained wire-compatibly; ignored by the engine.
  *
  * @generated from message gibson.mission.v1.ReusePolicy
@@ -1141,7 +1289,7 @@ export type ReusePolicy = Message<"gibson.mission.v1.ReusePolicy"> & {
  * @deprecated
  */
 export const ReusePolicySchema: GenMessage<ReusePolicy> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 15);
+  messageDesc(file_gibson_mission_v1_mission_definition, 17);
 
 /**
  * RetryPolicy defines the retry behavior for a mission node
@@ -1191,7 +1339,7 @@ export type JobNodeConfig = Message<"gibson.mission.v1.JobNodeConfig"> & {
  * Use `create(JobNodeConfigSchema)` to create a new message.
  */
 export const JobNodeConfigSchema: GenMessage<JobNodeConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 16);
+  messageDesc(file_gibson_mission_v1_mission_definition, 18);
 
 /**
  * @generated from message gibson.mission.v1.RetryPolicy
@@ -1238,14 +1386,14 @@ export type RetryPolicy = Message<"gibson.mission.v1.RetryPolicy"> & {
  * Use `create(RetryPolicySchema)` to create a new message.
  */
 export const RetryPolicySchema: GenMessage<RetryPolicy> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 17);
+  messageDesc(file_gibson_mission_v1_mission_definition, 19);
 
 /**
  * DataPolicy defines how data is handled for a node.
  *
- * Deprecated: superseded by the ECS brain (ADR-0008). Data
+ * Deprecated: superseded by the ECS brain (ADR-0101). Data
  * handling (reuse + scoping) is now implicit in the event-sourced World and
- * scope-relative identity (ADR-0002) + ambient projection. Retained
+ * scope-relative identity (ADR-0102) + ambient projection. Retained
  * wire-compatibly; ignored by the engine.
  *
  * @generated from message gibson.mission.v1.DataPolicy
@@ -1294,7 +1442,7 @@ export type DataPolicy = Message<"gibson.mission.v1.DataPolicy"> & {
  * @deprecated
  */
 export const DataPolicySchema: GenMessage<DataPolicy> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 18);
+  messageDesc(file_gibson_mission_v1_mission_definition, 20);
 
 /**
  * MissionEdge represents a directed edge in the mission DAG.
@@ -1341,7 +1489,46 @@ export type MissionEdge = Message<"gibson.mission.v1.MissionEdge"> & {
  * Use `create(MissionEdgeSchema)` to create a new message.
  */
 export const MissionEdgeSchema: GenMessage<MissionEdge> = /*@__PURE__*/
-  messageDesc(file_gibson_mission_v1_mission_definition, 19);
+  messageDesc(file_gibson_mission_v1_mission_definition, 21);
+
+/**
+ * CheckpointMode states what the end of a node keeps for a later rewind
+ * (ADR-0170).
+ *
+ * @generated from enum gibson.mission.v1.CheckpointMode
+ */
+export enum CheckpointMode {
+  /**
+   * Sentinel value. The daemon treats it as CHECKPOINT_MODE_STATE.
+   *
+   * @generated from enum value: CHECKPOINT_MODE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * State keeps the mission state at the end of each node and no sandbox
+   * snapshot. A rewind starts the node in a fresh sandbox with the files
+   * of the workspace. The default.
+   *
+   * @generated from enum value: CHECKPOINT_MODE_STATE = 1;
+   */
+  STATE = 1,
+
+  /**
+   * Sandbox also keeps a diff snapshot of the sandbox at the end of each
+   * agent node. A rewind starts the node from that snapshot. A sandbox
+   * snapshot lives 7 days after the run ends.
+   *
+   * @generated from enum value: CHECKPOINT_MODE_SANDBOX = 2;
+   */
+  SANDBOX = 2,
+}
+
+/**
+ * Describes the enum gibson.mission.v1.CheckpointMode.
+ */
+export const CheckpointModeSchema: GenEnum<CheckpointMode> = /*@__PURE__*/
+  enumDesc(file_gibson_mission_v1_mission_definition, 0);
 
 /**
  * NodeType defines the type of mission node
@@ -1423,7 +1610,7 @@ export enum NodeType {
  * Describes the enum gibson.mission.v1.NodeType.
  */
 export const NodeTypeSchema: GenEnum<NodeType> = /*@__PURE__*/
-  enumDesc(file_gibson_mission_v1_mission_definition, 0);
+  enumDesc(file_gibson_mission_v1_mission_definition, 1);
 
 /**
  * Language declares the expression language used by mission constructs
@@ -1456,7 +1643,7 @@ export enum Language {
  * Describes the enum gibson.mission.v1.Language.
  */
 export const LanguageSchema: GenEnum<Language> = /*@__PURE__*/
-  enumDesc(file_gibson_mission_v1_mission_definition, 1);
+  enumDesc(file_gibson_mission_v1_mission_definition, 2);
 
 /**
  * MergeStrategy declares how a JoinNodeConfig combines results
@@ -1516,7 +1703,7 @@ export enum MergeStrategy {
  * Describes the enum gibson.mission.v1.MergeStrategy.
  */
 export const MergeStrategySchema: GenEnum<MergeStrategy> = /*@__PURE__*/
-  enumDesc(file_gibson_mission_v1_mission_definition, 2);
+  enumDesc(file_gibson_mission_v1_mission_definition, 3);
 
 /**
  * BackoffStrategy defines the strategy for calculating retry delays
@@ -1557,5 +1744,5 @@ export enum BackoffStrategy {
  * Describes the enum gibson.mission.v1.BackoffStrategy.
  */
 export const BackoffStrategySchema: GenEnum<BackoffStrategy> = /*@__PURE__*/
-  enumDesc(file_gibson_mission_v1_mission_definition, 3);
+  enumDesc(file_gibson_mission_v1_mission_definition, 4);
 

@@ -11,7 +11,7 @@
     "lint": "oxlint packages/sdk/src packages/gibson-mcp/src packages/gibson-mcp/scripts --ignore-pattern 'packages/sdk/src/gen/**' --ignore-pattern 'packages/gibson-mcp/src/generated/**' --deny-warnings"
   },
   "devDependencies": {
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.4",
     "oxlint": "^1.86.0",
     "typescript": "^7.0.2"
   }

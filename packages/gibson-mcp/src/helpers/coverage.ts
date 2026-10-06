@@ -89,6 +89,7 @@ export const NOT_A_TOOL: Record<string, string> = {
   point: "checks for a fork after a call",
   sandboxId: "reads the hostname of the sandbox",
   dispatchEnvFromClaim: "the launch of a fork, read at start",
+  parkAfterResult: "the end of a forkable run; this server is never one",
   sessionHarness: "the component-grant harness, chosen at start",
   readSandboxDispatch: "reads the dispatch contract off the environment at start",
   taskFromB64: "decodes the dispatched task at start",

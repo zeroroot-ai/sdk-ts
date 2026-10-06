@@ -2,7 +2,7 @@
 // Copyright 2026 Zero Root AI
 
 import { fromJsonString, toJsonString } from "@bufbuild/protobuf"
-import { FORKABLE_ENV, type Claim } from "./fork.js"
+import { FORKABLE_ENV, forkable, park, parkTimeout, Watcher, type Claim, type Claimer } from "./fork.js"
 import { TaskSchema, type Task } from "./gen/gibson/types/v1/types_pb.js"
 import { openTaskHarness, type ForkableHarness, type OpenTaskHarnessOptions } from "./task-harness.js"
 
@@ -117,5 +117,40 @@ export function dispatchEnvFromClaim(env: NodeJS.ProcessEnv, claim: Claim): Node
     [SANDBOX_ENV.agentRunId]: claim.agentRunId,
     [SANDBOX_ENV.model]: claim.model,
     [SANDBOX_ENV.taskB64]: Buffer.from(toJsonString(TaskSchema, claim.task), "utf8").toString("base64"),
+  }
+}
+
+/** Options of {@link parkAfterResult}. */
+export interface ParkAfterResultOptions {
+  /** Dial the callback listener without TLS. */
+  insecure?: boolean
+  /** Test seams. */
+  claimer?: Claimer
+  pollIntervalMs?: number
+  signal?: AbortSignal
+}
+
+/**
+ * The end of a forkable run (D74). Call it after the result line. A process
+ * that is not a fork source gets `undefined` at once. A fork source parks
+ * until a fork happens or {@link parkTimeout} ends. The parent gets
+ * `undefined` and exits with status 0. A fork claims its dispatch once and
+ * gets the launch environment of its own task, to run it the same way.
+ *
+ * Make the watcher at process start, before a fork can happen.
+ */
+export async function parkAfterResult(env: NodeJS.ProcessEnv, watcher: Watcher, opts: ParkAfterResultOptions = {}): Promise<NodeJS.ProcessEnv | undefined> {
+  if (!forkable(env)) return undefined
+  const timeoutMs = parkTimeout(env)
+  const harness = opts.claimer ? undefined : sandboxHarness(readSandboxDispatch(env), { insecure: opts.insecure ?? false, renew: false })
+  try {
+    const claim = await park(watcher, opts.claimer ?? harness!, {
+      timeoutMs,
+      ...(opts.pollIntervalMs ? { pollIntervalMs: opts.pollIntervalMs } : {}),
+      ...(opts.signal ? { signal: opts.signal } : {}),
+    })
+    return claim ? dispatchEnvFromClaim(env, claim) : undefined
+  } finally {
+    harness?.stop()
   }
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.4.0...gibson-mcp-v0.5.0) (2026-10-06)
+
+
+### Features
+
+* **sdk:** parkAfterResult ends a forkable run ([#76](https://github.com/zeroroot-ai/sdk-ts/issues/76)) ([9873f87](https://github.com/zeroroot-ai/sdk-ts/commit/9873f875674d0884839f0db376cd72c6bb7c5b2f))
+
 ## [0.4.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.3.0...gibson-mcp-v0.4.0) (2026-10-06)
 
 

@@ -19,7 +19,7 @@
 // agent runtime parses CapabilityGrantInfo to render "what can I do
 // right now" UI without needing the admin service descriptor.
 //
-// Spec: two-surface platform contract (ADR-0001, forthcoming);
+// Spec: two-surface platform contract (ADR-0058);
 //       component-bootstrap-e2e Requirement 10 (read side);
 //       secrets-tenant-lifecycle Requirement 8.1 (write side, moved
 //       to platform-sdk).
@@ -120,7 +120,7 @@ export type CapabilityGrantInfo = Message<"gibson.capability.v1.CapabilityGrantI
 
   /**
    * isolation is where this grant's untrusted-execution boundary lives
-   * (ADR-0010). UNSPECIFIED is treated as HOSTED_SANDBOX by the daemon's
+   * (ADR-0110). UNSPECIFIED is treated as HOSTED_SANDBOX by the daemon's
    * dispatch-policy gate. Consumed together with the deployment shape:
    * setec-only permits only HOSTED_SANDBOX (fail-closed otherwise).
    *
@@ -181,7 +181,7 @@ export const RecipientClassSchema: GenEnum<RecipientClass> = /*@__PURE__*/
 
 /**
  * IsolationMode is where the untrusted-execution isolation boundary lives for
- * a capability grant (ADR-0010). It is consumed by the daemon's dispatch-policy
+ * a capability grant (ADR-0110). It is consumed by the daemon's dispatch-policy
  * gate together with the deployment shape (GIBSON_UNTRUSTED_EXEC): under the
  * hosted SaaS shape (setec-only) only ISOLATION_MODE_HOSTED_SANDBOX is
  * permitted; any other value is rejected fail-closed. Under a customer-operated

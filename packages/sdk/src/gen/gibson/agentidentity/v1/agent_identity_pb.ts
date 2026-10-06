@@ -4,7 +4,7 @@
 
 // Package gibson.agentidentity.v1 — AgentIdentityService: customer-callable
 // machine-identity provisioning surface and the developer enrollment dev-loop
-// (`gibson component register` / `gibson agent`). Re-homed out of
+// (`gibson agent`). Re-homed out of
 // gibson.tenant.v1 into its own wire package so it can stay in the OSS SDK
 // while the nine tenant-administration services move to the gibson platform
 // protos under the unchanged gibson.tenant.v1 package — keeping both in one
@@ -13,6 +13,7 @@
 
 import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import { file_buf_validate_validate } from "../../../buf/validate/validate_pb.js";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import { file_gibson_auth_v1_options } from "../../auth/v1/options_pb.js";
@@ -22,7 +23,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/agentidentity/v1/agent_identity.proto.
  */
 export const file_gibson_agentidentity_v1_agent_identity: GenFile = /*@__PURE__*/
-  fileDesc("CixnaWJzb24vYWdlbnRpZGVudGl0eS92MS9hZ2VudF9pZGVudGl0eS5wcm90bxIXZ2lic29uLmFnZW50aWRlbnRpdHkudjEiOQoOQ29tcG9uZW50R3JhbnQSFQoNY29tcG9uZW50X3JlZhgBIAEoCRIQCghyZWxhdGlvbhgCIAEoCSLUAQoaQ3JlYXRlQWdlbnRJZGVudGl0eVJlcXVlc3QSDAoEbmFtZRgBIAEoCRI0CgRraW5kGAIgASgOMiYuZ2lic29uLmFnZW50aWRlbnRpdHkudjEuUHJpbmNpcGFsS2luZBITCgtkZXNjcmlwdGlvbhgDIAEoCRJBChBjb21wb25lbnRfZ3JhbnRzGAQgAygLMicuZ2lic29uLmFnZW50aWRlbnRpdHkudjEuQ29tcG9uZW50R3JhbnQSGgoSY2FwYWJpbGl0eV9jZWlsaW5nGAUgAygJIuIBChtDcmVhdGVBZ2VudElkZW50aXR5UmVzcG9uc2USFAoMcHJpbmNpcGFsX2lkGAEgASgJEjQKBGtpbmQYAiABKA4yJi5naWJzb24uYWdlbnRpZGVudGl0eS52MS5QcmluY2lwYWxLaW5kEgwKBG5hbWUYAyABKAkSEgoKZ2lic29uX3VybBgGIAEoCRIWCg5lbnJvbGxfY29tbWFuZBgHIAEoCRIXCg9ib290c3RyYXBfdG9rZW4YCCABKAlKBAgEEAVKBAgFEAZSCWNsaWVudF9pZFINY2xpZW50X3NlY3JldCKAAQoaTGlzdEFnZW50SWRlbnRpdGllc1JlcXVlc3QSEQoJcGFnZV9zaXplGAEgASgFEhIKCnBhZ2VfdG9rZW4YAiABKAkSOwoLa2luZF9maWx0ZXIYAyABKA4yJi5naWJzb24uYWdlbnRpZGVudGl0eS52MS5QcmluY2lwYWxLaW5kIpYCCg1BZ2VudElkZW50aXR5EhQKDHByaW5jaXBhbF9pZBgBIAEoCRI0CgRraW5kGAIgASgOMiYuZ2lic29uLmFnZW50aWRlbnRpdHkudjEuUHJpbmNpcGFsS2luZBIMCgRuYW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEi4KCmNyZWF0ZWRfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjkKFWxhc3RfYXV0aGVudGljYXRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDwoHcmV2b2tlZBgHIAEoCBIaChJjcmVhdGVkX2J5X3N1YmplY3QYCCABKAkicgobTGlzdEFnZW50SWRlbnRpdGllc1Jlc3BvbnNlEjoKCmlkZW50aXRpZXMYASADKAsyJi5naWJzb24uYWdlbnRpZGVudGl0eS52MS5BZ2VudElkZW50aXR5EhcKD25leHRfcGFnZV90b2tlbhgCIAEoCSIyChpSZXZva2VBZ2VudElkZW50aXR5UmVxdWVzdBIUCgxwcmluY2lwYWxfaWQYASABKAkiHQobUmV2b2tlQWdlbnRJZGVudGl0eVJlc3BvbnNlKn0KDVByaW5jaXBhbEtpbmQSHgoaUFJJTkNJUEFMX0tJTkRfVU5TUEVDSUZJRUQQABIYChRQUklOQ0lQQUxfS0lORF9BR0VOVBABEhcKE1BSSU5DSVBBTF9LSU5EX1RPT0wQAhIZChVQUklOQ0lQQUxfS0lORF9QTFVHSU4QAzKpBAoUQWdlbnRJZGVudGl0eVNlcnZpY2USrgEKE0NyZWF0ZUFnZW50SWRlbnRpdHkSMy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5DcmVhdGVBZ2VudElkZW50aXR5UmVxdWVzdBo0LmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLkNyZWF0ZUFnZW50SWRlbnRpdHlSZXNwb25zZSIsirUYKAoGd3JpdGVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAMSrgEKE0xpc3RBZ2VudElkZW50aXRpZXMSMy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5MaXN0QWdlbnRJZGVudGl0aWVzUmVxdWVzdBo0LmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLkxpc3RBZ2VudElkZW50aXRpZXNSZXNwb25zZSIsirUYKAoGd3JpdGVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAMSrgEKE1Jldm9rZUFnZW50SWRlbnRpdHkSMy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5SZXZva2VBZ2VudElkZW50aXR5UmVxdWVzdBo0LmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLlJldm9rZUFnZW50SWRlbnRpdHlSZXNwb25zZSIsirUYKAoGd3JpdGVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IANCTFpKZ2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vYWdlbnRpZGVudGl0eS92MTthZ2VudGlkZW50aXR5djFiBnByb3RvMw", [file_google_protobuf_timestamp, file_gibson_auth_v1_options]);
+  fileDesc("CixnaWJzb24vYWdlbnRpZGVudGl0eS92MS9hZ2VudF9pZGVudGl0eS5wcm90bxIXZ2lic29uLmFnZW50aWRlbnRpdHkudjEiOQoOQ29tcG9uZW50R3JhbnQSFQoNY29tcG9uZW50X3JlZhgBIAEoCRIQCghyZWxhdGlvbhgCIAEoCSKXAgoaQ3JlYXRlQWdlbnRJZGVudGl0eVJlcXVlc3QSFgoEbmFtZRgBIAEoCUIIukgFcgMYgAgSPgoEa2luZBgCIAEoDjImLmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLlByaW5jaXBhbEtpbmRCCLpIBYIBAhABEh8KC2Rlc2NyaXB0aW9uGAMgASgJQgq6SAdyBRiAgIAIEkEKEGNvbXBvbmVudF9ncmFudHMYBCADKAsyJy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5Db21wb25lbnRHcmFudBIaChJjYXBhYmlsaXR5X2NlaWxpbmcYBSADKAkSIQoPaWRlbXBvdGVuY3lfa2V5GAYgASgJQgi6SAVyAxiAASLgAQobQ3JlYXRlQWdlbnRJZGVudGl0eVJlc3BvbnNlEhQKDHByaW5jaXBhbF9pZBgBIAEoCRI0CgRraW5kGAIgASgOMiYuZ2lic29uLmFnZW50aWRlbnRpdHkudjEuUHJpbmNpcGFsS2luZBIMCgRuYW1lGAMgASgJEhIKCmdpYnNvbl91cmwYBiABKAkSFwoPYm9vdHN0cmFwX3Rva2VuGAggASgJSgQIBBAFSgQIBRAGSgQIBxAIUgljbGllbnRfaWRSDWNsaWVudF9zZWNyZXRSDmVucm9sbF9jb21tYW5kIpYBChpMaXN0QWdlbnRJZGVudGl0aWVzUmVxdWVzdBIRCglwYWdlX3NpemUYASABKAUSHgoKcGFnZV90b2tlbhgCIAEoCUIKukgHcgUYgICACBJFCgtraW5kX2ZpbHRlchgDIAEoDjImLmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLlByaW5jaXBhbEtpbmRCCLpIBYIBAhABIpYCCg1BZ2VudElkZW50aXR5EhQKDHByaW5jaXBhbF9pZBgBIAEoCRI0CgRraW5kGAIgASgOMiYuZ2lic29uLmFnZW50aWRlbnRpdHkudjEuUHJpbmNpcGFsS2luZBIMCgRuYW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEi4KCmNyZWF0ZWRfYXQYBSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjkKFWxhc3RfYXV0aGVudGljYXRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDwoHcmV2b2tlZBgHIAEoCBIaChJjcmVhdGVkX2J5X3N1YmplY3QYCCABKAkicgobTGlzdEFnZW50SWRlbnRpdGllc1Jlc3BvbnNlEjoKCmlkZW50aXRpZXMYASADKAsyJi5naWJzb24uYWdlbnRpZGVudGl0eS52MS5BZ2VudElkZW50aXR5EhcKD25leHRfcGFnZV90b2tlbhgCIAEoCSI+ChpSZXZva2VBZ2VudElkZW50aXR5UmVxdWVzdBIgCgxwcmluY2lwYWxfaWQYASABKAlCCrpIB3IFEAEYgAgiHQobUmV2b2tlQWdlbnRJZGVudGl0eVJlc3BvbnNlKn0KDVByaW5jaXBhbEtpbmQSHgoaUFJJTkNJUEFMX0tJTkRfVU5TUEVDSUZJRUQQABIYChRQUklOQ0lQQUxfS0lORF9BR0VOVBABEhcKE1BSSU5DSVBBTF9LSU5EX1RPT0wQAhIZChVQUklOQ0lQQUxfS0lORF9QTFVHSU4QAzKpBAoUQWdlbnRJZGVudGl0eVNlcnZpY2USrgEKE0NyZWF0ZUFnZW50SWRlbnRpdHkSMy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5DcmVhdGVBZ2VudElkZW50aXR5UmVxdWVzdBo0LmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLkNyZWF0ZUFnZW50SWRlbnRpdHlSZXNwb25zZSIsirUYKAoGd3JpdGVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAMSrgEKE0xpc3RBZ2VudElkZW50aXRpZXMSMy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5MaXN0QWdlbnRJZGVudGl0aWVzUmVxdWVzdBo0LmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLkxpc3RBZ2VudElkZW50aXRpZXNSZXNwb25zZSIsirUYKAoGd3JpdGVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAMSrgEKE1Jldm9rZUFnZW50SWRlbnRpdHkSMy5naWJzb24uYWdlbnRpZGVudGl0eS52MS5SZXZva2VBZ2VudElkZW50aXR5UmVxdWVzdBo0LmdpYnNvbi5hZ2VudGlkZW50aXR5LnYxLlJldm9rZUFnZW50SWRlbnRpdHlSZXNwb25zZSIsirUYKAoGd3JpdGVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IANCTFpKZ2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vYWdlbnRpZGVudGl0eS92MTthZ2VudGlkZW50aXR5djFiBnByb3RvMw", [file_buf_validate_validate, file_google_protobuf_timestamp, file_gibson_auth_v1_options]);
 
 /**
  * ComponentGrant describes an optional FGA capability grant to apply at
@@ -99,6 +100,15 @@ export type CreateAgentIdentityRequest = Message<"gibson.agentidentity.v1.Create
    * @generated from field: repeated string capability_ceiling = 5;
    */
   capabilityCeiling: string[];
+
+  /**
+   * idempotency_key makes a retry safe (ADR-0028). A second request with the
+   * same key returns the result of the first request and does the work one
+   * time. An empty key turns the protection off for the call.
+   *
+   * @generated from field: string idempotency_key = 6;
+   */
+  idempotencyKey: string;
 };
 
 /**
@@ -133,27 +143,20 @@ export type CreateAgentIdentityResponse = Message<"gibson.agentidentity.v1.Creat
   name: string;
 
   /**
-   * gibson_url is the daemon's public Envoy URL for use in enroll_command.
+   * gibson_url is the public URL of the daemon. The component reads it from
+   * GIBSON_URL when it starts.
    *
    * @generated from field: string gibson_url = 6;
    */
   gibsonUrl: string;
 
   /**
-   * enroll_command is a complete copy-pasteable shell invocation for component
-   * enrollment: `gibson component register --kind <kind> --token -`.
-   *
-   * @generated from field: string enroll_command = 7;
-   */
-  enrollCommand: string;
-
-  /**
    * bootstrap_token is a one-time, daemon-signed Capability-Grant bootstrap
-   * credential the component presents to the CG register endpoint to complete
-   * its FIRST host registration (it carries no Capability Grant yet). Under the
-   * unified-identity model (ADR-0045) this is the SOLE credential `gibson
-   * component register` uses for every kind; the enroll_command pipes it via
-   * `--token -`. Store it immediately; it will not be shown again.
+   * credential. The component reads it from GIBSON_BOOTSTRAP_TOKEN when it
+   * starts and presents it to the CG register endpoint to complete its FIRST
+   * host registration (it carries no Capability Grant yet). Under the
+   * unified-identity model (ADR-0045) it is the sole enrollment credential for
+   * every kind. Store it immediately; it will not be shown again.
    *
    * @generated from field: string bootstrap_token = 8;
    */

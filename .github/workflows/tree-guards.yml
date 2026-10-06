@@ -38,3 +38,8 @@ jobs:
 
   link-check:
     uses: zeroroot-ai/.github/.github/workflows/link-check.yml@eaa991cb73a79080f5ce1223b2f5332c47e02c70 # v0.10.5
+
+  # Each ADR citation names a live ADR of the public index docs/adr-index.md,
+  # a copy of the file in zeroroot-ai/gibson (gibson#740, ADR-0068).
+  adr-citations:
+    uses: zeroroot-ai/.github/.github/workflows/adr-citations.yml@dc9d7ba3bbcbd9dfe9527b0043e1be6e15b03f28 # v0.17.1

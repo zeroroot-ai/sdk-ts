@@ -4,13 +4,14 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
+import { file_buf_validate_validate } from "../../../buf/validate/validate_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file gibson/common/v1/gibson_common.proto.
  */
 export const file_gibson_common_v1_gibson_common: GenFile = /*@__PURE__*/
-  fileDesc("CiRnaWJzb24vY29tbW9uL3YxL2dpYnNvbl9jb21tb24ucHJvdG8SEGdpYnNvbi5jb21tb24udjEiQwoMSGVhbHRoU3RhdHVzEg4KBnN0YXR1cxgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEhIKCmNoZWNrZWRfYXQYAyABKAMiGgoKSlNPTlNjaGVtYRIMCgRqc29uGAEgASgJIkoKBUVycm9yEgwKBGNvZGUYASABKAkSDwoHbWVzc2FnZRgCIAEoCRIPCgdkZXRhaWxzGAMgASgJEhEKCXJldHJ5YWJsZRgEIAEoCCKfAgoKVHlwZWRWYWx1ZRIxCgpudWxsX3ZhbHVlGAEgASgOMhsuZ2lic29uLmNvbW1vbi52MS5OdWxsVmFsdWVIABIWCgxzdHJpbmdfdmFsdWUYAiABKAlIABITCglpbnRfdmFsdWUYAyABKANIABIWCgxkb3VibGVfdmFsdWUYBCABKAFIABIUCgpib29sX3ZhbHVlGAUgASgISAASFQoLYnl0ZXNfdmFsdWUYBiABKAxIABIzCgthcnJheV92YWx1ZRgHIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRBcnJheUgAEi8KCW1hcF92YWx1ZRgIIAEoCzIaLmdpYnNvbi5jb21tb24udjEuVHlwZWRNYXBIAEIGCgRraW5kIjkKClR5cGVkQXJyYXkSKwoFaXRlbXMYASADKAsyHC5naWJzb24uY29tbW9uLnYxLlR5cGVkVmFsdWUikgEKCFR5cGVkTWFwEjgKB2VudHJpZXMYASADKAsyJy5naWJzb24uY29tbW9uLnYxLlR5cGVkTWFwLkVudHJpZXNFbnRyeRpMCgxFbnRyaWVzRW50cnkSCwoDa2V5GAEgASgJEisKBXZhbHVlGAIgASgLMhwuZ2lic29uLmNvbW1vbi52MS5UeXBlZFZhbHVlOgI4ASLnAQoITWV0YWRhdGESNgoGbGFiZWxzGAEgAygLMiYuZ2lic29uLmNvbW1vbi52MS5NZXRhZGF0YS5MYWJlbHNFbnRyeRJACgthbm5vdGF0aW9ucxgCIAMoCzIrLmdpYnNvbi5jb21tb24udjEuTWV0YWRhdGEuQW5ub3RhdGlvbnNFbnRyeRotCgtMYWJlbHNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBGjIKEEFubm90YXRpb25zRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKrAQoJUHJpbmNpcGFsEi4KBGtpbmQYASABKA4yIC5naWJzb24uY29tbW9uLnYxLlByaW5jaXBhbC5LaW5kEgoKAmlkGAIgASgJImIKBEtpbmQSFAoQS0lORF9VTlNQRUNJRklFRBAAEg0KCUtJTkRfVVNFUhABEg8KC0tJTkRfVEVOQU5UEAISEgoOS0lORF9DT01QT05FTlQQAxIQCgxLSU5EX1NFUlZJQ0UQBConCglOdWxsVmFsdWUSGgoWTlVMTF9WQUxVRV9VTlNQRUNJRklFRBAAKqoGCglFcnJvckNvZGUSGgoWRVJST1JfQ09ERV9VTlNQRUNJRklFRBAAEhcKE0VSUk9SX0NPREVfSU5URVJOQUwQARIfChtFUlJPUl9DT0RFX0lOVkFMSURfQVJHVU1FTlQQAhIYChRFUlJPUl9DT0RFX05PVF9GT1VORBADEhYKEkVSUk9SX0NPREVfVElNRU9VVBAEEhoKFkVSUk9SX0NPREVfVU5BVkFJTEFCTEUQBRIgChxFUlJPUl9DT0RFX1BFUk1JU1NJT05fREVOSUVEEAYSHQoZRVJST1JfQ09ERV9BTFJFQURZX0VYSVNUUxAHEiEKHUVSUk9SX0NPREVfUkVTT1VSQ0VfRVhIQVVTVEVEEAgSGAoURVJST1JfQ09ERV9DQU5DRUxMRUQQCRIcChhFUlJPUl9DT0RFX0FHRU5UX1RJTUVPVVQQChIaChZFUlJPUl9DT0RFX0FHRU5UX1BBTklDEAsSIAocRVJST1JfQ09ERV9BR0VOVF9JTklUX0ZBSUxFRBAMEh8KG0VSUk9SX0NPREVfTExNX1JBVEVfTElNSVRFRBANEiMKH0VSUk9SX0NPREVfTExNX0NPTlRFWFRfRVhDRUVERUQQDhIcChhFUlJPUl9DT0RFX0xMTV9BUElfRVJST1IQDxIeChpFUlJPUl9DT0RFX0xMTV9QQVJTRV9FUlJPUhAQEh0KGUVSUk9SX0NPREVfVE9PTF9OT1RfRk9VTkQQERIbChdFUlJPUl9DT0RFX1RPT0xfVElNRU9VVBASEh8KG0VSUk9SX0NPREVfVE9PTF9FWEVDX0ZBSUxFRBATEh4KGkVSUk9SX0NPREVfTkVUV09SS19USU1FT1VUEBQSIgoeRVJST1JfQ09ERV9ORVRXT1JLX1VOUkVBQ0hBQkxFEBUSGAoURVJST1JfQ09ERV9UTFNfRVJST1IQFhIgChxFUlJPUl9DT0RFX0RFTEVHQVRJT05fRkFJTEVEEBcSIQodRVJST1JfQ09ERV9DSElMRF9BR0VOVF9GQUlMRUQQGBIbChdFUlJPUl9DT0RFX0NPTkZJR19FUlJPUhAZKnwKC0hlYWx0aFN0YXRlEhwKGEhFQUxUSF9TVEFURV9VTlNQRUNJRklFRBAAEhgKFEhFQUxUSF9TVEFURV9IRUFMVEhZEAESGQoVSEVBTFRIX1NUQVRFX0RFR1JBREVEEAISGgoWSEVBTFRIX1NUQVRFX1VOSEVBTFRIWRADQlBQAVo8Z2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vY29tbW9uL3YxO2NvbW1vbnBiqgINR2lic29uLkNvbW1vbmIGcHJvdG8z");
+  fileDesc("CiRnaWJzb24vY29tbW9uL3YxL2dpYnNvbl9jb21tb24ucHJvdG8SEGdpYnNvbi5jb21tb24udjEiQwoMSGVhbHRoU3RhdHVzEg4KBnN0YXR1cxgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEhIKCmNoZWNrZWRfYXQYAyABKAMiGgoKSlNPTlNjaGVtYRIMCgRqc29uGAEgASgJIkoKBUVycm9yEgwKBGNvZGUYASABKAkSDwoHbWVzc2FnZRgCIAEoCRIPCgdkZXRhaWxzGAMgASgJEhEKCXJldHJ5YWJsZRgEIAEoCCKmAQoLRXJyb3JEZXRhaWwSMwoEY29kZRgBIAEoDjIbLmdpYnNvbi5jb21tb24udjEuRXJyb3JDb2RlQgi6SAWCAQIQARIuCgZyZWFzb24YAiABKAlCHrpIG3IZGIABMhReKFtBLVpdW0EtWjAtOV9dKik/JBIyCgxmaWVsZF9lcnJvcnMYAyADKAsyHC5naWJzb24uY29tbW9uLnYxLkZpZWxkRXJyb3IiWAoKRmllbGRFcnJvchIXCgVmaWVsZBgBIAEoCUIIukgFcgMYgAgSFgoEcnVsZRgCIAEoCUIIukgFcgMYgAISGQoHbWVzc2FnZRgDIAEoCUIIukgFcgMYgCAinwIKClR5cGVkVmFsdWUSMQoKbnVsbF92YWx1ZRgBIAEoDjIbLmdpYnNvbi5jb21tb24udjEuTnVsbFZhbHVlSAASFgoMc3RyaW5nX3ZhbHVlGAIgASgJSAASEwoJaW50X3ZhbHVlGAMgASgDSAASFgoMZG91YmxlX3ZhbHVlGAQgASgBSAASFAoKYm9vbF92YWx1ZRgFIAEoCEgAEhUKC2J5dGVzX3ZhbHVlGAYgASgMSAASMwoLYXJyYXlfdmFsdWUYByABKAsyHC5naWJzb24uY29tbW9uLnYxLlR5cGVkQXJyYXlIABIvCgltYXBfdmFsdWUYCCABKAsyGi5naWJzb24uY29tbW9uLnYxLlR5cGVkTWFwSABCBgoEa2luZCI5CgpUeXBlZEFycmF5EisKBWl0ZW1zGAEgAygLMhwuZ2lic29uLmNvbW1vbi52MS5UeXBlZFZhbHVlIpIBCghUeXBlZE1hcBI4CgdlbnRyaWVzGAEgAygLMicuZ2lic29uLmNvbW1vbi52MS5UeXBlZE1hcC5FbnRyaWVzRW50cnkaTAoMRW50cmllc0VudHJ5EgsKA2tleRgBIAEoCRIrCgV2YWx1ZRgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZToCOAEi5wEKCE1ldGFkYXRhEjYKBmxhYmVscxgBIAMoCzImLmdpYnNvbi5jb21tb24udjEuTWV0YWRhdGEuTGFiZWxzRW50cnkSQAoLYW5ub3RhdGlvbnMYAiADKAsyKy5naWJzb24uY29tbW9uLnYxLk1ldGFkYXRhLkFubm90YXRpb25zRW50cnkaLQoLTGFiZWxzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ARoyChBBbm5vdGF0aW9uc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiqwEKCVByaW5jaXBhbBIuCgRraW5kGAEgASgOMiAuZ2lic29uLmNvbW1vbi52MS5QcmluY2lwYWwuS2luZBIKCgJpZBgCIAEoCSJiCgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABINCglLSU5EX1VTRVIQARIPCgtLSU5EX1RFTkFOVBACEhIKDktJTkRfQ09NUE9ORU5UEAMSEAoMS0lORF9TRVJWSUNFEAQqJwoJTnVsbFZhbHVlEhoKFk5VTExfVkFMVUVfVU5TUEVDSUZJRUQQACqqBgoJRXJyb3JDb2RlEhoKFkVSUk9SX0NPREVfVU5TUEVDSUZJRUQQABIXChNFUlJPUl9DT0RFX0lOVEVSTkFMEAESHwobRVJST1JfQ09ERV9JTlZBTElEX0FSR1VNRU5UEAISGAoURVJST1JfQ09ERV9OT1RfRk9VTkQQAxIWChJFUlJPUl9DT0RFX1RJTUVPVVQQBBIaChZFUlJPUl9DT0RFX1VOQVZBSUxBQkxFEAUSIAocRVJST1JfQ09ERV9QRVJNSVNTSU9OX0RFTklFRBAGEh0KGUVSUk9SX0NPREVfQUxSRUFEWV9FWElTVFMQBxIhCh1FUlJPUl9DT0RFX1JFU09VUkNFX0VYSEFVU1RFRBAIEhgKFEVSUk9SX0NPREVfQ0FOQ0VMTEVEEAkSHAoYRVJST1JfQ09ERV9BR0VOVF9USU1FT1VUEAoSGgoWRVJST1JfQ09ERV9BR0VOVF9QQU5JQxALEiAKHEVSUk9SX0NPREVfQUdFTlRfSU5JVF9GQUlMRUQQDBIfChtFUlJPUl9DT0RFX0xMTV9SQVRFX0xJTUlURUQQDRIjCh9FUlJPUl9DT0RFX0xMTV9DT05URVhUX0VYQ0VFREVEEA4SHAoYRVJST1JfQ09ERV9MTE1fQVBJX0VSUk9SEA8SHgoaRVJST1JfQ09ERV9MTE1fUEFSU0VfRVJST1IQEBIdChlFUlJPUl9DT0RFX1RPT0xfTk9UX0ZPVU5EEBESGwoXRVJST1JfQ09ERV9UT09MX1RJTUVPVVQQEhIfChtFUlJPUl9DT0RFX1RPT0xfRVhFQ19GQUlMRUQQExIeChpFUlJPUl9DT0RFX05FVFdPUktfVElNRU9VVBAUEiIKHkVSUk9SX0NPREVfTkVUV09SS19VTlJFQUNIQUJMRRAVEhgKFEVSUk9SX0NPREVfVExTX0VSUk9SEBYSIAocRVJST1JfQ09ERV9ERUxFR0FUSU9OX0ZBSUxFRBAXEiEKHUVSUk9SX0NPREVfQ0hJTERfQUdFTlRfRkFJTEVEEBgSGwoXRVJST1JfQ09ERV9DT05GSUdfRVJST1IQGSp8CgtIZWFsdGhTdGF0ZRIcChhIRUFMVEhfU1RBVEVfVU5TUEVDSUZJRUQQABIYChRIRUFMVEhfU1RBVEVfSEVBTFRIWRABEhkKFUhFQUxUSF9TVEFURV9ERUdSQURFRBACEhoKFkhFQUxUSF9TVEFURV9VTkhFQUxUSFkQA0JQUAFaPGdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL2NvbW1vbi92MTtjb21tb25wYqoCDUdpYnNvbi5Db21tb25iBnByb3RvMw", [file_buf_validate_validate]);
 
 /**
  * @generated from message gibson.common.v1.HealthStatus
@@ -95,6 +96,84 @@ export const ErrorSchema: GenMessage<Error> = /*@__PURE__*/
   messageDesc(file_gibson_common_v1_gibson_common, 2);
 
 /**
+ * ErrorDetail is the one error-detail message of the API (ADR-0028, rule 4).
+ * The daemon attaches it to the details of each error status. A client reads
+ * it from the status details and needs no parser for each service.
+ *
+ * @generated from message gibson.common.v1.ErrorDetail
+ */
+export type ErrorDetail = Message<"gibson.common.v1.ErrorDetail"> & {
+  /**
+   * code is the standard error code.
+   *
+   * @generated from field: gibson.common.v1.ErrorCode code = 1;
+   */
+  code: ErrorCode;
+
+  /**
+   * reason is a stable name for the cause, in upper snake case, for example
+   * MISSION_NOT_FOUND. A client can branch on it. The text of the status
+   * message can change, and the reason does not.
+   *
+   * @generated from field: string reason = 2;
+   */
+  reason: string;
+
+  /**
+   * field_errors holds one entry for each field of the request that broke a
+   * rule. A protovalidate failure fills it. It is empty for an error that
+   * is not about the request.
+   *
+   * @generated from field: repeated gibson.common.v1.FieldError field_errors = 3;
+   */
+  fieldErrors: FieldError[];
+};
+
+/**
+ * Describes the message gibson.common.v1.ErrorDetail.
+ * Use `create(ErrorDetailSchema)` to create a new message.
+ */
+export const ErrorDetailSchema: GenMessage<ErrorDetail> = /*@__PURE__*/
+  messageDesc(file_gibson_common_v1_gibson_common, 3);
+
+/**
+ * FieldError describes one field of a request that broke one rule.
+ *
+ * @generated from message gibson.common.v1.FieldError
+ */
+export type FieldError = Message<"gibson.common.v1.FieldError"> & {
+  /**
+   * field is the path of the field in the request, for example
+   * definition.nodes["scan"].starts_from.
+   *
+   * @generated from field: string field = 1;
+   */
+  field: string;
+
+  /**
+   * rule is the id of the rule that the field broke, for example
+   * string.max_len. It is empty when the rule has no id.
+   *
+   * @generated from field: string rule = 2;
+   */
+  rule: string;
+
+  /**
+   * message tells a person what is wrong with the field.
+   *
+   * @generated from field: string message = 3;
+   */
+  message: string;
+};
+
+/**
+ * Describes the message gibson.common.v1.FieldError.
+ * Use `create(FieldErrorSchema)` to create a new message.
+ */
+export const FieldErrorSchema: GenMessage<FieldError> = /*@__PURE__*/
+  messageDesc(file_gibson_common_v1_gibson_common, 4);
+
+/**
  * TypedValue represents a dynamically typed value
  *
  * @generated from message gibson.common.v1.TypedValue
@@ -159,7 +238,7 @@ export type TypedValue = Message<"gibson.common.v1.TypedValue"> & {
  * Use `create(TypedValueSchema)` to create a new message.
  */
 export const TypedValueSchema: GenMessage<TypedValue> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 3);
+  messageDesc(file_gibson_common_v1_gibson_common, 5);
 
 /**
  * TypedArray represents an array of TypedValues
@@ -178,7 +257,7 @@ export type TypedArray = Message<"gibson.common.v1.TypedArray"> & {
  * Use `create(TypedArraySchema)` to create a new message.
  */
 export const TypedArraySchema: GenMessage<TypedArray> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 4);
+  messageDesc(file_gibson_common_v1_gibson_common, 6);
 
 /**
  * TypedMap represents a map of string keys to TypedValues
@@ -197,7 +276,7 @@ export type TypedMap = Message<"gibson.common.v1.TypedMap"> & {
  * Use `create(TypedMapSchema)` to create a new message.
  */
 export const TypedMapSchema: GenMessage<TypedMap> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 5);
+  messageDesc(file_gibson_common_v1_gibson_common, 7);
 
 /**
  * Metadata contains labels and annotations for resources
@@ -221,7 +300,7 @@ export type Metadata = Message<"gibson.common.v1.Metadata"> & {
  * Use `create(MetadataSchema)` to create a new message.
  */
 export const MetadataSchema: GenMessage<Metadata> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 6);
+  messageDesc(file_gibson_common_v1_gibson_common, 8);
 
 /**
  * Principal names who acts: a person, the tenant, a component run, or a
@@ -251,7 +330,7 @@ export type Principal = Message<"gibson.common.v1.Principal"> & {
  * Use `create(PrincipalSchema)` to create a new message.
  */
 export const PrincipalSchema: GenMessage<Principal> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 7);
+  messageDesc(file_gibson_common_v1_gibson_common, 9);
 
 /**
  * Kind is the class of principal. It decides how to read id.
@@ -298,7 +377,7 @@ export enum Principal_Kind {
  * Describes the enum gibson.common.v1.Principal.Kind.
  */
 export const Principal_KindSchema: GenEnum<Principal_Kind> = /*@__PURE__*/
-  enumDesc(file_gibson_common_v1_gibson_common, 7, 0);
+  enumDesc(file_gibson_common_v1_gibson_common, 9, 0);
 
 /**
  * NullValue represents a null value in TypedValue

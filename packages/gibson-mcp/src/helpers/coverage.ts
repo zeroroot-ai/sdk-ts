@@ -126,7 +126,6 @@ export const NOT_A_TOOL: Record<string, string> = {
   validateFinding: "submit_finding validates before it submits",
   newTask: "builds delegate's argument",
   buildCreateMissionRequest: "shapes the request create_task_mission sends",
-  enrollmentSupported: "a fixed explanation, printed in enroll_component's answer",
   isSeamUnavailable: "classifies a daemon error inside other helpers",
   seamReason: "reads the daemon's own explanation inside other helpers",
 }

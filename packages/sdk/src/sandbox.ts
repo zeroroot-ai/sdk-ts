@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { fromJsonString } from "@bufbuild/protobuf"
+import { fromJsonString, toJsonString } from "@bufbuild/protobuf"
+import { FORKABLE_ENV, type Claim } from "./fork.js"
 import { TaskSchema, type Task } from "./gen/gibson/types/v1/types_pb.js"
 import { openTaskHarness, type ForkableHarness, type OpenTaskHarnessOptions } from "./task-harness.js"
 
@@ -94,4 +95,27 @@ export function readSandboxDispatch(env: NodeJS.ProcessEnv): SandboxDispatch {
  */
 export function sandboxHarness(d: SandboxDispatch, opts: Omit<OpenTaskHarnessOptions, "endpoint" | "token" | "missionRunId"> = {}): ForkableHarness {
   return openTaskHarness({ ...opts, endpoint: d.callbackEndpoint, token: d.grant, ...(d.missionRunId ? { missionRunId: d.missionRunId } : {}) })
+}
+
+/**
+ * The launch environment of a fork, from its claim (D74). A fork runs its
+ * task through the same launch contract as a fresh sandbox, so a driver
+ * reads it with {@link readSandboxDispatch} and runs it the same way. The
+ * claim replaces the grant, the ids, the model and the task, and keeps the
+ * callback endpoint. A fork was not launched as a fork source, so the
+ * result has no {@link FORKABLE_ENV}.
+ */
+export function dispatchEnvFromClaim(env: NodeJS.ProcessEnv, claim: Claim): NodeJS.ProcessEnv {
+  if (!claim.grant) throw new Error("gibson-sdk: the claim has no grant")
+  if (!claim.task) throw new Error("gibson-sdk: the claim has no task")
+  const { [FORKABLE_ENV]: _forkable, ...rest } = env
+  return {
+    ...rest,
+    [SANDBOX_ENV.grant]: claim.grant,
+    [SANDBOX_ENV.missionId]: claim.missionId,
+    [SANDBOX_ENV.missionRunId]: claim.missionRunId,
+    [SANDBOX_ENV.agentRunId]: claim.agentRunId,
+    [SANDBOX_ENV.model]: claim.model,
+    [SANDBOX_ENV.taskB64]: Buffer.from(toJsonString(TaskSchema, claim.task), "utf8").toString("base64"),
+  }
 }

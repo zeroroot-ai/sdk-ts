@@ -32,7 +32,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/capability/v1/capability.proto.
  */
 export const file_gibson_capability_v1_capability: GenFile = /*@__PURE__*/
-  fileDesc("CiVnaWJzb24vY2FwYWJpbGl0eS92MS9jYXBhYmlsaXR5LnByb3RvEhRnaWJzb24uY2FwYWJpbGl0eS52MSLQAgoTQ2FwYWJpbGl0eUdyYW50SW5mbxILCgNqdGkYASABKAkSHAoUcmVjaXBpZW50X2luc3RhbGxfaWQYAiABKAkSPQoPcmVjaXBpZW50X2NsYXNzGAMgASgOMiQuZ2lic29uLmNhcGFiaWxpdHkudjEuUmVjaXBpZW50Q2xhc3MSFgoOcmVjaXBpZW50X25hbWUYBCABKAkSFAoMYWxsb3dlZF9ycGNzGAUgAygJEhIKCm1pc3Npb25faWQYBiABKAkSDwoHdGFza19pZBgHIAEoCRIWCg5pc3N1ZWRfYXRfdW5peBgIIAEoAxIXCg9leHBpcmVzX2F0X3VuaXgYCSABKAMSEwoLbmVhcl9leHBpcnkYCiABKAgSNgoJaXNvbGF0aW9uGAsgASgOMiMuZ2lic29uLmNhcGFiaWxpdHkudjEuSXNvbGF0aW9uTW9kZSqCAQoOUmVjaXBpZW50Q2xhc3MSHwobUkVDSVBJRU5UX0NMQVNTX1VOU1BFQ0lGSUVEEAASGQoVUkVDSVBJRU5UX0NMQVNTX0FHRU5UEAESGAoUUkVDSVBJRU5UX0NMQVNTX1RPT0wQAhIaChZSRUNJUElFTlRfQ0xBU1NfUExVR0lOEAMq1wEKDUlzb2xhdGlvbk1vZGUSHgoaSVNPTEFUSU9OX01PREVfVU5TUEVDSUZJRUQQABIhCh1JU09MQVRJT05fTU9ERV9IT1NURURfU0FOREJPWBABEiwKKElTT0xBVElPTl9NT0RFX0NVU1RPTUVSX0NMVVNURVJfQVRURVNURUQQAhIoCiRJU09MQVRJT05fTU9ERV9DVVNUT01FUl9TRUxGX1NBTkRCT1gQAxIrCidJU09MQVRJT05fTU9ERV9PTl9QUkVNX1NBTkRCT1hfRU5EUE9JTlQQBEJcUAFaRGdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL2NhcGFiaWxpdHkvdjE7Y2FwYWJpbGl0eXYxqgIRR2lic29uLkNhcGFiaWxpdHliBnByb3RvMw");
+  fileDesc("CiVnaWJzb24vY2FwYWJpbGl0eS92MS9jYXBhYmlsaXR5LnByb3RvEhRnaWJzb24uY2FwYWJpbGl0eS52MSKpAgoTQ2FwYWJpbGl0eUdyYW50SW5mbxILCgNqdGkYASABKAkSHAoUcmVjaXBpZW50X2luc3RhbGxfaWQYAiABKAkSPQoPcmVjaXBpZW50X2NsYXNzGAMgASgOMiQuZ2lic29uLmNhcGFiaWxpdHkudjEuUmVjaXBpZW50Q2xhc3MSFgoOcmVjaXBpZW50X25hbWUYBCABKAkSFAoMYWxsb3dlZF9ycGNzGAUgAygJEhIKCm1pc3Npb25faWQYBiABKAkSDwoHdGFza19pZBgHIAEoCRIWCg5pc3N1ZWRfYXRfdW5peBgIIAEoAxIXCg9leHBpcmVzX2F0X3VuaXgYCSABKAMSEwoLbmVhcl9leHBpcnkYCiABKAhKBAgLEAxSCWlzb2xhdGlvbiqCAQoOUmVjaXBpZW50Q2xhc3MSHwobUkVDSVBJRU5UX0NMQVNTX1VOU1BFQ0lGSUVEEAASGQoVUkVDSVBJRU5UX0NMQVNTX0FHRU5UEAESGAoUUkVDSVBJRU5UX0NMQVNTX1RPT0wQAhIaChZSRUNJUElFTlRfQ0xBU1NfUExVR0lOEANCXFABWkRnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9jYXBhYmlsaXR5L3YxO2NhcGFiaWxpdHl2MaoCEUdpYnNvbi5DYXBhYmlsaXR5YgZwcm90bzM");
 
 /**
  * CapabilityGrantInfo is the wire-shape for one active capability
@@ -117,16 +117,6 @@ export type CapabilityGrantInfo = Message<"gibson.capability.v1.CapabilityGrantI
    * @generated from field: bool near_expiry = 10;
    */
   nearExpiry: boolean;
-
-  /**
-   * isolation is where this grant's untrusted-execution boundary lives
-   * (ADR-0110). UNSPECIFIED is treated as HOSTED_SANDBOX by the daemon's
-   * dispatch-policy gate. Consumed together with the deployment shape:
-   * setec-only permits only HOSTED_SANDBOX (fail-closed otherwise).
-   *
-   * @generated from field: gibson.capability.v1.IsolationMode isolation = 11;
-   */
-  isolation: IsolationMode;
 };
 
 /**
@@ -178,71 +168,4 @@ export enum RecipientClass {
  */
 export const RecipientClassSchema: GenEnum<RecipientClass> = /*@__PURE__*/
   enumDesc(file_gibson_capability_v1_capability, 0);
-
-/**
- * IsolationMode is where the untrusted-execution isolation boundary lives for
- * a capability grant (ADR-0110). It is consumed by the daemon's dispatch-policy
- * gate together with the deployment shape (GIBSON_UNTRUSTED_EXEC): under the
- * hosted SaaS shape (setec-only) only ISOLATION_MODE_HOSTED_SANDBOX is
- * permitted; any other value is rejected fail-closed. Under a customer-operated
- * shape (customer-isolation) the customer modes are permitted, and
- * ISOLATION_MODE_ON_PREM_SANDBOX_ENDPOINT resolves the configured (customer-
- * pointed) setec SandboxService endpoint.
- *
- * The enum lives here (public OSS) because callers parsing a
- * CapabilityGrantInfo need to render the isolation posture without pulling the
- * admin/mint service descriptor — same rationale as RecipientClass.
- *
- * @generated from enum gibson.capability.v1.IsolationMode
- */
-export enum IsolationMode {
-  /**
-   * ISOLATION_MODE_UNSPECIFIED is treated as ISOLATION_MODE_HOSTED_SANDBOX by
-   * the gate (back-compat for grants minted before this field shipped), which
-   * is the fail-closed-safe default in the hosted shape.
-   *
-   * @generated from enum value: ISOLATION_MODE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * ISOLATION_MODE_HOSTED_SANDBOX: untrusted execution runs in the platform-
-   * operated setec sandbox fleet. The only mode permitted under setec-only.
-   *
-   * @generated from enum value: ISOLATION_MODE_HOSTED_SANDBOX = 1;
-   */
-  HOSTED_SANDBOX = 1,
-
-  /**
-   * ISOLATION_MODE_CUSTOMER_CLUSTER_ATTESTED: untrusted execution runs in a
-   * customer-operated cluster whose isolation the daemon verifies by
-   * attestation. Attestation mechanics are a separate follow-up.
-   *
-   * @generated from enum value: ISOLATION_MODE_CUSTOMER_CLUSTER_ATTESTED = 2;
-   */
-  CUSTOMER_CLUSTER_ATTESTED = 2,
-
-  /**
-   * ISOLATION_MODE_CUSTOMER_SELF_SANDBOX: the customer owns and operates the
-   * isolation boundary entirely. Attestation mechanics are a separate
-   * follow-up.
-   *
-   * @generated from enum value: ISOLATION_MODE_CUSTOMER_SELF_SANDBOX = 3;
-   */
-  CUSTOMER_SELF_SANDBOX = 3,
-
-  /**
-   * ISOLATION_MODE_ON_PREM_SANDBOX_ENDPOINT: untrusted execution dispatches to
-   * a customer-pointed setec SandboxService endpoint configured on the daemon.
-   *
-   * @generated from enum value: ISOLATION_MODE_ON_PREM_SANDBOX_ENDPOINT = 4;
-   */
-  ON_PREM_SANDBOX_ENDPOINT = 4,
-}
-
-/**
- * Describes the enum gibson.capability.v1.IsolationMode.
- */
-export const IsolationModeSchema: GenEnum<IsolationMode> = /*@__PURE__*/
-  enumDesc(file_gibson_capability_v1_capability, 1);
 

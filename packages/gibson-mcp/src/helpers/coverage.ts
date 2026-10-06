@@ -77,6 +77,18 @@ export const NOT_A_TOOL: Record<string, string> = {
   sandboxIdentityInterceptor: "puts a new setec identity token on every request",
   sandboxIdentityToken: "gets a new setec identity token for the interceptor",
   sandboxHarness: "opens a dispatched run's harness at start",
+
+  // The fork contract (D74). A forked process claims its own dispatch at
+  // start, before any tool runs. This server is never a fork source.
+  ForkedError: "the error a fork gets in place of the result of the call",
+  Watcher: "records the sandbox id at start to see a fork later",
+  forkable: "reads the launch at start",
+  isForkUnclaimed: "recognizes a refusal of the daemon",
+  park: "the wait of a fork source after its result",
+  parkTimeout: "reads the launch at start",
+  point: "checks for a fork after a call",
+  sandboxId: "reads the hostname of the sandbox",
+  dispatchEnvFromClaim: "the launch of a fork, read at start",
   sessionHarness: "the component-grant harness, chosen at start",
   readSandboxDispatch: "reads the dispatch contract off the environment at start",
   taskFromB64: "decodes the dispatched task at start",

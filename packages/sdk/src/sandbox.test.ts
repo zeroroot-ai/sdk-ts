@@ -6,7 +6,7 @@ import test from "node:test"
 import { create, toJsonString } from "@bufbuild/protobuf"
 import { createRouterTransport } from "@connectrpc/connect"
 import { TaskSchema } from "./gen/gibson/types/v1/types_pb.js"
-import { SANDBOX_ENV, readSandboxDispatch, sandboxHarness, taskFromB64 } from "./sandbox.js"
+import { dispatchEnvFromClaim, SANDBOX_ENV, readSandboxDispatch, sandboxHarness, taskFromB64 } from "./sandbox.js"
 
 const taskB64 = (goal: string) =>
   Buffer.from(toJsonString(TaskSchema, create(TaskSchema, { id: "t-1", goal }))).toString("base64")
@@ -71,4 +71,42 @@ test("sandboxHarness carries GIBSON_MISSION_RUN_ID into the context, and leaves 
   const unnamed = sandboxHarness(readSandboxDispatch(env), opts)
   assert.deepEqual(unnamed.context, { missionId: "m-1", taskId: "t-1", agentName: "zerocool" })
   unnamed.stop()
+})
+
+test("dispatchEnvFromClaim gives a fork the launch of its claim", () => {
+  const parent = {
+    GIBSON_CG_JWT: "parent-grant",
+    GIBSON_CALLBACK_ENDPOINT: "d:50001",
+    GIBSON_MISSION_ID: "parent-1",
+    GIBSON_MISSION_RUN_ID: "parent-run-1",
+    GIBSON_AGENT_RUN_ID: "parent-agent-run",
+    GIBSON_MODEL: "model-a",
+    GIBSON_AGENT_TASK_B64: Buffer.from(JSON.stringify({ id: "task-a", goal: "scan the first host" })).toString("base64"),
+    GIBSON_FORKABLE: "1",
+    PATH: "/usr/bin",
+  }
+  const claim = {
+    sandboxId: "sbx-fork-1",
+    grant: "fork-grant",
+    missionId: "child-1",
+    missionRunId: "child-run-1",
+    agentRunId: "fork-run-1",
+    nodeId: "node-b",
+    model: "model-b",
+    task: create(TaskSchema, { id: "task-b", goal: "scan the next host" }),
+  }
+  const env = dispatchEnvFromClaim(parent, claim)
+  assert.equal(env.GIBSON_FORKABLE, undefined, "a fork is not a fork source")
+  assert.equal(env.PATH, "/usr/bin")
+  const d = readSandboxDispatch(env)
+  assert.equal(d.grant, "fork-grant")
+  assert.equal(d.callbackEndpoint, "d:50001")
+  assert.equal(d.missionId, "child-1")
+  assert.equal(d.missionRunId, "child-run-1")
+  assert.equal(d.agentRunId, "fork-run-1")
+  assert.equal(d.model, "model-b")
+  assert.equal(d.task.id, "task-b")
+  assert.equal(d.goal, "scan the next host")
+  assert.throws(() => dispatchEnvFromClaim(parent, { ...claim, grant: "" }), /no grant/)
+  assert.throws(() => dispatchEnvFromClaim(parent, { ...claim, task: undefined }), /no task/)
 })

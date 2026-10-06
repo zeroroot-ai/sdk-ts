@@ -13,6 +13,8 @@ import {
   type KnowledgeSource,
   type LiveMission,
   type MissionOriginator,
+  type OpenTaskHarnessOptions,
+  type TaskHarness,
 } from "@zeroroot-ai/sdk"
 import { submitMission } from "./cli.js"
 import type { Settings } from "./config.js"
@@ -48,7 +50,7 @@ export interface OpenGibsonOptions {
   /** Test seams. */
   connect?: typeof connectGibson
   start?: typeof startLiveMission
-  harness?: typeof openTaskHarness
+  harness?: (opts: OpenTaskHarnessOptions) => TaskHarness
   originate?: MissionOriginator
   hostKeyExists?: (path: string) => boolean
   trust?: (path: string) => Promise<void>

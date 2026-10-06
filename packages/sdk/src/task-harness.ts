@@ -192,7 +192,7 @@ export class NoSandboxIdentityError extends Error {
 }
 
 /** The path of the setec identity socket, or `""` when the process has none. */
-export function identitySocket(env: NodeJS.ProcessEnv = process.env): string {
+function identitySocket(env: NodeJS.ProcessEnv = process.env): string {
   return (env[IDENTITY_SOCKET_ENV] ?? "").trim()
 }
 

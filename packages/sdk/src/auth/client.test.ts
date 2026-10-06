@@ -4,7 +4,7 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { mkdtemp, rm } from "node:fs/promises"
-import { existsSync } from "node:fs"
+import { chmodSync, existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { CapabilityGrantClient, normalizePlatformURL } from "./client.js"
@@ -71,6 +71,21 @@ test("a fresh host key reports first check-in; a loaded one does not", async () 
     const loaded = loadOrGenerateHostKey(path)
     assert.equal(loaded.firstCheckIn, false)
     assert.equal(loaded.id, fresh.id, "the host identity is stable across restarts")
+  })
+})
+
+test("a host key file that the group or other users can read is refused on reuse", async () => {
+  await withTempDir(async (dir) => {
+    const path = join(dir, "host.key")
+    loadOrGenerateHostKey(path)
+    for (const mode of [0o644, 0o640, 0o604, 0o660]) {
+      chmodSync(path, mode)
+      assert.throws(() => loadOrGenerateHostKey(path), /has mode 0\d{3}; only its owner may read it/, mode.toString(8))
+    }
+    chmodSync(path, 0o600)
+    assert.equal(loadOrGenerateHostKey(path).firstCheckIn, false, "mode 0600 is reused")
+    chmodSync(path, 0o400)
+    assert.equal(loadOrGenerateHostKey(path).firstCheckIn, false, "mode 0400 is reused")
   })
 })
 

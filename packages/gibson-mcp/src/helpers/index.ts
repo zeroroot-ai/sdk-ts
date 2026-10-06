@@ -11,7 +11,6 @@ import { knowledgeTools } from "./knowledge.js"
 import { platformToolHelpers } from "./tools.js"
 
 export * from "./context.js"
-export * from "./coverage.js"
 export { componentizeTools } from "./componentize.js"
 export { delegationTools } from "./delegate.js"
 export { findingTools, gibsonFindingsBackend, localFindingsBackend, taskFindingsBackend, type FindingsBackend } from "./findings.js"

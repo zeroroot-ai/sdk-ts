@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { mkdir, readFile, writeFile, rm } from "node:fs/promises"
+import { mkdir, writeFile, rm } from "node:fs/promises"
 import { homedir } from "node:os"
 import { join } from "node:path"
 import { createHash } from "node:crypto"
@@ -42,25 +42,9 @@ export async function writeAmbient(dir: string, cwd: string, block: string): Pro
   await writeFile(join(dir, `ambient-${keyFor(cwd)}.md`), block, { encoding: "utf8", mode: 0o600 })
 }
 
-export async function readAmbient(dir: string, cwd: string): Promise<string> {
-  try {
-    return await readFile(join(dir, `ambient-${keyFor(cwd)}.md`), "utf8")
-  } catch {
-    return ""
-  }
-}
-
 export async function writeLive(dir: string, cwd: string, state: LiveState): Promise<void> {
   await mkdir(dir, { recursive: true, mode: 0o700 })
   await writeFile(join(dir, `live-${keyFor(cwd)}.json`), JSON.stringify(state), { encoding: "utf8", mode: 0o600 })
-}
-
-export async function readLive(dir: string, cwd: string): Promise<LiveState | undefined> {
-  try {
-    return JSON.parse(await readFile(join(dir, `live-${keyFor(cwd)}.json`), "utf8")) as LiveState
-  } catch {
-    return undefined
-  }
 }
 
 export async function clearLive(dir: string, cwd: string): Promise<void> {

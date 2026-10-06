@@ -39,24 +39,6 @@ export async function registerComponentAs(
   }
 }
 
-/** RegisterComponent as kind="agent". */
-export async function registerAgent(
-  component: Client<typeof ComponentService>,
-  reg: AgentRegistration,
-): Promise<RegisteredComponent> {
-  const res = await component.registerComponent({
-    kind: "agent",
-    name: reg.name,
-    version: reg.version,
-    capabilities: reg.capabilities ?? [],
-    metadata: reg.metadata ?? {},
-  })
-  return {
-    instanceId: res.instanceId,
-    heartbeatIntervalMs: res.heartbeatIntervalMs > 0 ? res.heartbeatIntervalMs : 15_000,
-  }
-}
-
 /**
  * One process, one component instance.
  *

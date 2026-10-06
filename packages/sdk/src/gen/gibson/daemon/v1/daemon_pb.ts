@@ -1405,11 +1405,10 @@ export type ResumeMissionResponse = Message<"gibson.daemon.v1.ResumeMissionRespo
   result?: OperationResult | undefined;
 
   /**
-   * checkpoint_metadata surfaces the source checkpoint metadata at the
-   * start of a resumed stream so the dashboard can render the
-   * "Resumed from checkpoint X" affordance. Populated on the first
-   * event of a resume stream; nil/empty on subsequent events.
-   * Spec: mission-checkpointing R9.
+   * checkpoint_metadata is not set by the daemon. A resume continues the
+   * same run, so a resume stream has no source checkpoint. A run that
+   * starts at a checkpoint is a new run from RewindMission, and it records
+   * the checkpoint in parent_checkpoint_id (ADR-0170).
    *
    * @generated from field: gibson.daemon.v1.CheckpointMetadata checkpoint_metadata = 9;
    */
@@ -1424,17 +1423,16 @@ export const ResumeMissionResponseSchema: GenMessage<ResumeMissionResponse> = /*
   messageDesc(file_gibson_daemon_v1_daemon, 21);
 
 /**
- * CheckpointMetadata is the lightweight summary of the source checkpoint
- * streamed back on a ResumeMission response so the dashboard can render
- * "Resumed from checkpoint X".
- *
- * Spec: mission-checkpointing R9.
+ * CheckpointMetadata is the summary of a source checkpoint on a
+ * ResumeMission response. The daemon does not send it today: see
+ * ResumeMissionResponse.checkpoint_metadata. The checkpoints of a run are listed by
+ * GetMissionCheckpoints (ADR-0170).
  *
  * @generated from message gibson.daemon.v1.CheckpointMetadata
  */
 export type CheckpointMetadata = Message<"gibson.daemon.v1.CheckpointMetadata"> & {
   /**
-   * checkpoint_id is the unique identifier of the source checkpoint.
+   * checkpoint_id is the identifier of the source checkpoint.
    *
    * @generated from field: string checkpoint_id = 1;
    */
@@ -1748,7 +1746,7 @@ export type PauseMissionRequest = Message<"gibson.daemon.v1.PauseMissionRequest"
   missionId: string;
 
   /**
-   * force indicates whether to pause immediately without waiting for a clean checkpoint boundary
+   * force indicates whether to pause immediately without waiting for the current node to end
    * If false (default), waits for the current node to complete before pausing
    *
    * @generated from field: bool force = 2;
@@ -1777,7 +1775,9 @@ export type PauseMissionResponse = Message<"gibson.daemon.v1.PauseMissionRespons
   success: boolean;
 
   /**
-   * checkpoint_id is the ID of the checkpoint created during pause
+   * checkpoint_id is empty. A pause does not make a checkpoint: a
+   * checkpoint is the end of a node in a run (ADR-0170). Use
+   * GetMissionCheckpoints to list the checkpoints of a run.
    *
    * @generated from field: string checkpoint_id = 2;
    */
@@ -1812,19 +1812,19 @@ export type ResumeMissionRequest = Message<"gibson.daemon.v1.ResumeMissionReques
   missionId: string;
 
   /**
-   * checkpoint_id optionally specifies a specific checkpoint to resume from
-   * If empty, resumes from the latest checkpoint
+   * checkpoint_id must be empty. A resume continues the same run, and the
+   * daemon refuses a request that sets this field with InvalidArgument. To
+   * start a run at a checkpoint, call RewindMission (ADR-0170).
    *
    * @generated from field: string checkpoint_id = 2;
    */
   checkpointId: string;
 
   /**
-   * Empty string = legacy resume-from-latest behavior (backward compatible).
-   * When non-empty, the daemon rewinds the mission to the named checkpoint
-   * and resumes execution from that point. The handler additionally enforces
-   * the mission#admin FGA relation when this field is non-empty per
-   * mission-checkpointing R16.3.
+   * target_checkpoint_id must be empty, for the same reason as
+   * checkpoint_id. The daemon refuses a request that sets it with
+   * InvalidArgument. RewindMission starts a new run at a checkpoint
+   * (ADR-0170).
    *
    * @generated from field: string target_checkpoint_id = 3;
    */
@@ -2490,7 +2490,8 @@ export type Mission = Message<"gibson.daemon.v1.Mission"> & {
   metrics?: MissionMetrics | undefined;
 
   /**
-   * checkpoint is the latest checkpoint (if any)
+   * checkpoint is not set by the daemon. The checkpoints of a run are
+   * listed by GetMissionCheckpoints (ADR-0170).
    *
    * @generated from field: gibson.daemon.v1.MissionCheckpoint checkpoint = 8;
    */
@@ -2625,7 +2626,10 @@ export const MissionMetricsSchema: GenMessage<MissionMetrics> = /*@__PURE__*/
   messageDesc(file_gibson_daemon_v1_daemon, 47);
 
 /**
- * MissionCheckpoint represents a saved checkpoint state for pause/resume.
+ * MissionCheckpoint describes a saved checkpoint state blob. The daemon has
+ * no checkpoint store and does not send this message: the World snapshot is
+ * the only snapshot (ADR-0163). NodeCheckpoint describes a checkpoint of a
+ * run (ADR-0170).
  *
  * @generated from message gibson.daemon.v1.MissionCheckpoint
  */
@@ -5154,8 +5158,8 @@ export const DaemonService: GenService<{
     output: typeof ListMissionsResponseSchema;
   },
   /**
-   * PauseMission pauses a running mission at the next clean checkpoint boundary.
-   * If force is true, pauses immediately without waiting for a clean boundary.
+   * PauseMission pauses a running mission when the current node ends.
+   * If force is true, pauses immediately without waiting for the node to end.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.PauseMission
    */
@@ -5165,7 +5169,9 @@ export const DaemonService: GenService<{
     output: typeof PauseMissionResponseSchema;
   },
   /**
-   * ResumeMission resumes a paused mission from its last checkpoint.
+   * ResumeMission resumes a paused mission. The resume continues the same
+   * run. It does not move the run back to a checkpoint: RewindMission does
+   * that, and it starts a new run (ADR-0170).
    * Returns a stream of mission events as execution continues.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.ResumeMission

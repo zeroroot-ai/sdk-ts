@@ -6,7 +6,8 @@ import test from "node:test"
 import { create, toJsonString } from "@bufbuild/protobuf"
 import { createRouterTransport } from "@connectrpc/connect"
 import { TaskSchema } from "./gen/gibson/types/v1/types_pb.js"
-import { dispatchEnvFromClaim, SANDBOX_ENV, readSandboxDispatch, sandboxHarness, taskFromB64 } from "./sandbox.js"
+import { Watcher } from "./fork.js"
+import { dispatchEnvFromClaim, parkAfterResult, SANDBOX_ENV, readSandboxDispatch, sandboxHarness, taskFromB64 } from "./sandbox.js"
 
 const taskB64 = (goal: string) =>
   Buffer.from(toJsonString(TaskSchema, create(TaskSchema, { id: "t-1", goal }))).toString("base64")
@@ -109,4 +110,36 @@ test("dispatchEnvFromClaim gives a fork the launch of its claim", () => {
   assert.equal(d.goal, "scan the next host")
   assert.throws(() => dispatchEnvFromClaim(parent, { ...claim, grant: "" }), /no grant/)
   assert.throws(() => dispatchEnvFromClaim(parent, { ...claim, task: undefined }), /no task/)
+})
+
+test("parkAfterResult: no fork source returns at once, a parent ends at the timeout, a fork gets its launch", async () => {
+  const launch = {
+    GIBSON_CG_JWT: "parent-grant",
+    GIBSON_CALLBACK_ENDPOINT: "d:50001",
+    GIBSON_AGENT_TASK_B64: taskB64("scan the first host"),
+  }
+  const calls: string[] = []
+  const claimer = {
+    claimFork: async (id: string) => {
+      calls.push(id)
+      return { sandboxId: id, grant: "fork-grant", missionId: "child-1", missionRunId: "", agentRunId: "", nodeId: "node-b", model: "", task: create(TaskSchema, { id: "task-b", goal: "scan the next host" }) }
+    },
+  }
+  let name = "sbx-parent"
+  const w = Watcher.withReader(() => name)
+
+  assert.equal(await parkAfterResult(launch, w, { claimer }), undefined, "not a fork source")
+
+  const source = { ...launch, GIBSON_FORKABLE: "1", GIBSON_PARK_TIMEOUT: "30ms" }
+  assert.equal(await parkAfterResult(source, w, { claimer, pollIntervalMs: 5 }), undefined, "the parent")
+  assert.deepEqual(calls, [])
+
+  setTimeout(() => {
+    name = "sbx-fork-1"
+  }, 10)
+  const env = await parkAfterResult({ ...source, GIBSON_PARK_TIMEOUT: "5s" }, w, { claimer, pollIntervalMs: 5 })
+  assert.ok(env)
+  assert.deepEqual(calls, ["sbx-fork-1"], "one claim")
+  assert.equal(readSandboxDispatch(env).goal, "scan the next host")
+  assert.equal(env.GIBSON_FORKABLE, undefined)
 })

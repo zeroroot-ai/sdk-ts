@@ -133,10 +133,12 @@ export interface TaskHarness {
 export interface ForkableHarness extends TaskHarness, Claimer {
   /**
    * Ask the daemon for the dispatch of this process as a fork (D74,
-   * zeroroot-ai/sdk#248). Call it with the grant of the parent, before any
-   * other call of the fork. The daemon knows the fork only from its setec
-   * identity token, so a process with no identity socket is refused before
-   * the call with {@link NoSandboxIdentityError}.
+   * zeroroot-ai/sdk#248, D80). Call it before any other call of the fork.
+   * The setec identity token is the only proof: the call carries no grant,
+   * because the grant of the source may be long expired. A process with no
+   * identity socket is refused before the call with
+   * {@link NoSandboxIdentityError}. Pass the claim to `applyClaim`, so each
+   * later call carries the new grant of the claim.
    */
   claimFork(sandboxId: string): Promise<Claim>
   /**
@@ -171,12 +173,22 @@ const MIN_RENEW_DELAY_MS = 10_000
 /** Node's setTimeout ceiling; a larger delay fires at once. */
 const MAX_TIMER_DELAY_MS = 2_147_483_647
 
-/** Interceptor that reads the token on every call, so a renewal takes effect. */
+/**
+ * Interceptor that reads the token on every call, so a renewal takes effect.
+ * `ClaimFork` gets no grant: the fork proves itself with its setec identity
+ * token only (D80), and the grant in memory is the one of its source.
+ */
 export function grantInterceptor(token: () => string): Interceptor {
   return (next) => async (req) => {
-    req.header.set(CAPABILITY_GRANT_HEADER, token())
+    if (isClaimFork(req)) req.header.delete(CAPABILITY_GRANT_HEADER)
+    else req.header.set(CAPABILITY_GRANT_HEADER, token())
     return await next(req)
   }
+}
+
+/** Whether a request is HarnessCallbackService.ClaimFork. */
+function isClaimFork(req: { service: { typeName: string }; method: { name: string } }): boolean {
+  return req.service.typeName === HarnessCallbackService.typeName && req.method.name === "ClaimFork"
 }
 
 /**

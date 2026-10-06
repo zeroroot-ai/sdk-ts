@@ -7,6 +7,7 @@ import { create, toJson } from "@bufbuild/protobuf"
 import { hostname } from "node:os"
 import { Code, ConnectError, createRouterTransport } from "@connectrpc/connect"
 
+import { HarnessCallbackService } from "./clients.js"
 import { DaemonService } from "./gen/gibson/daemon/v1/daemon_pb.js"
 import { ContextInfoSchema } from "./gen/gibson/harness/v1/harness_callback_pb.js"
 import {
@@ -57,12 +58,21 @@ test("grantInterceptor sends the current grant in x-capability-grant, never a Be
   const icpt = grantInterceptor(() => token)
   const header = new Headers()
   const next = async (req: { header: Headers }) => req as never
-  await icpt(next as never)({ header } as never)
+  const call = { service: HarnessCallbackService, method: HarnessCallbackService.method.getMissionRunHistory, header }
+  await icpt(next as never)(call as never)
   assert.equal(header.get(CAPABILITY_GRANT_HEADER), "first")
   assert.equal(header.get("authorization"), null)
   token = "second"
-  await icpt(next as never)({ header } as never)
+  await icpt(next as never)(call as never)
   assert.equal(header.get(CAPABILITY_GRANT_HEADER), "second")
+})
+
+test("grantInterceptor sends no grant on ClaimFork: the identity token is the only proof (D80)", async () => {
+  const icpt = grantInterceptor(() => "source-grant")
+  const header = new Headers({ [CAPABILITY_GRANT_HEADER]: "set-by-the-caller" })
+  const next = async (req: { header: Headers }) => req as never
+  await icpt(next as never)({ service: HarnessCallbackService, method: HarnessCallbackService.method.claimFork, header } as never)
+  assert.equal(header.get(CAPABILITY_GRANT_HEADER), null)
 })
 
 /** Manual timers: the test fires what the harness scheduled. */

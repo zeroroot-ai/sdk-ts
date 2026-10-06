@@ -95,7 +95,7 @@ async function withSocketEnv(value: string | undefined, fn: () => Promise<void>)
   }
 }
 
-test("a parked source that is forked claims once with the parent grant and its own token, then acts as the fork", async () => {
+test("a parked source that is forked claims once with its own token and no grant, then acts as the fork with the new grant", async () => {
   const sock = await identitySocket()
   const d = await daemon()
   try {
@@ -118,9 +118,35 @@ test("a parked source that is forked claims once with the parent grant and its o
     })
     assert.deepEqual(d.seen, [
       { method: "getMissionRunHistory", grant: PARENT, identity: "gen0-req1", missionId: "parent-1", taskId: "task-a" },
-      { method: "claimFork", grant: PARENT, identity: "gen1-req2", sandboxId: "sbx-fork-1" },
+      { method: "claimFork", grant: null, identity: "gen1-req2", sandboxId: "sbx-fork-1" },
       { method: "getMissionRunHistory", grant: FORK, identity: "gen1-req3", missionId: "child-1", taskId: "task-b" },
     ])
+  } finally {
+    await d.close()
+    await sock.close()
+  }
+})
+
+test("a fork restored days later claims with an expired source grant, because the claim sends no grant (D80)", async () => {
+  const sock = await identitySocket()
+  const d = await daemon()
+  try {
+    await withSocketEnv(sock.path, async () => {
+      const expired = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "parent-1", task_id: "task-a", exp: 1 })
+      const h = openTaskHarness({ endpoint: d.endpoint, token: expired, insecure: true, renew: false })
+      const claim = await h.claimFork("sbx-restore-1")
+      h.applyClaim(claim)
+      await h.client.getMissionRunHistory({ context: h.context })
+      h.stop()
+    })
+    assert.deepEqual(
+      d.seen.map((s) => [s.method, s.grant]),
+      [
+        ["claimFork", null],
+        ["getMissionRunHistory", FORK],
+      ],
+    )
+    assert.ok(d.seen.every((s) => s.identity), "each call carries an identity token")
   } finally {
     await d.close()
     await sock.close()

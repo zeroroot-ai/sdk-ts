@@ -9,9 +9,9 @@
  *  - `standalone`: no platform. Findings go to a local log, componentize works.
  *  - `component`: checked in, no live mission. Reads and findings run under the
  *    component grant. No memory writes: a memory is a World observation and
- *    the World is written under a mission (gibson ADR-0012).
+ *    the World is written under a mission (ADR-0112).
  *  - `live`: checked in, and this session is a mission (gibson#1593, decision 9).
- *  - `task`: a dispatched run (gibson ADR-0016). The launch injected the
+ *  - `task`: a dispatched run (ADR-0116). The launch injected the
  *    per-dispatch grant; there is no check-in and no live mission to create,
  *    the mission already exists and this run is one of its nodes. Reads and
  *    writes use that grant.

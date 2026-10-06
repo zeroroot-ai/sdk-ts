@@ -6,7 +6,7 @@ import { TaskSchema, type Task } from "./gen/gibson/types/v1/types_pb.js"
 import { openTaskHarness, type OpenTaskHarnessOptions, type TaskHarness } from "./task-harness.js"
 
 /**
- * The sandboxed-dispatch contract (gibson ADR-0016), as the launcher writes
+ * The sandboxed-dispatch contract (ADR-0116), as the launcher writes
  * it into the sandbox environment (gibson
  * `internal/engine/harness/sandboxed/agent.go`, the `envAgent*` constants):
  *

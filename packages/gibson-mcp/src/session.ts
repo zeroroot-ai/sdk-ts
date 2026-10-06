@@ -56,7 +56,7 @@ export interface OpenGibsonOptions {
 
 /**
  * Pick the check-in source, check in, then make the session a live mission.
- * Fails open at every step (ADR-0005): a platform failure lands one posture
+ * Fails open at every step (ADR-0155): a platform failure lands one posture
  * down, never in a refusal to start.
  */
 export async function openGibson(opts: OpenGibsonOptions): Promise<Gibson> {
@@ -138,7 +138,7 @@ export async function openGibson(opts: OpenGibsonOptions): Promise<Gibson> {
       targetId: settings.targetId!,
       // The person originates the session mission through the CLI login
       // session; the component only claims its dispatch (gibson ADR-0063,
-      // ADR-0007 decision 3: one live mission per session).
+      // ADR-0157: one live mission per session).
       originate: opts.originate ?? ((definition, targetId) => submitMission(definition, targetId, { env, gibsonURL: settings.platformURL, tenant: settings.tenant })),
       harness: { insecure: settings.callbackInsecure },
     })

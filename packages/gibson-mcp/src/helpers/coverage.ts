@@ -81,7 +81,7 @@ export const NOT_A_TOOL: Record<string, string> = {
   componentKnowledge: "chooses which grant recall reads over",
 
   // The session mission is started by the check-in, not by a tool
-  // (ADR-0007 decision 3: one live mission per session).
+  // (ADR-0157: one live mission per session).
   componentOriginator: "who creates the session mission; decided at check-in",
   liveMissionDefinition: "the definition the session mission is created from at start",
   startLiveMission: "starts the session mission at check-in",
@@ -96,7 +96,7 @@ export const NOT_A_TOOL: Record<string, string> = {
   encodeToolError: "encodes a worker's result",
   encodeToolOutput: "encodes a worker's result",
 
-  // The model stays on the host's own provider (ADR-0007). The LLM shim is
+  // The model stays on the host's own provider (ADR-0157). The LLM shim is
   // the opencode adapter's business and never a tool.
   startCompletionsShim: "the local OpenAI-compatible shim; a host adapter starts it, and the model never routes through this server",
 

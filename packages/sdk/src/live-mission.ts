@@ -18,7 +18,7 @@ import { decodeAgentExecute, encodeAgentError, encodeAgentResult, type AgentOutc
  * `agent_execute` work to us, and the work item carries the task grant. From
  * then on the session is a dispatched agent: `Observe`, `WorldView`,
  * `QueryNodes` and the session store all run under that grant, attributed to a
- * mission a person launched (ADR-0012). The session ends the node with
+ * mission a person launched (ADR-0157). The session ends the node with
  * {@link LiveMission.end}, and the mission completes at quiescence.
  *
  * The target is the user's. A component cannot create one (the Target RPCs

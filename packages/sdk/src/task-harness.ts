@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { createClient, type Client, type Interceptor, type Transport } from "@connectrpc/connect"
+import { request } from "node:http"
+import { hostname } from "node:os"
+import { Code, ConnectError, createClient, type Client, type Interceptor, type Transport } from "@connectrpc/connect"
 import { createGrpcTransport } from "@connectrpc/connect-node"
 import { callbackBaseUrl, type TaskHarnessConfig } from "./callback.js"
 import { HarnessCallbackService } from "./clients.js"
@@ -35,6 +37,9 @@ import type { ContextInfo } from "./gen/gibson/harness/v1/harness_callback_pb.js
  *    `internal/server/extauthz/server/envoy_extauthz.go:135`, ADR-0045). A
  *    `Bearer` token on that route is handed to jwt_authn as if it were a
  *    Zitadel token, which it is not.
+ *  - **The sandbox identity.** Each call also carries a new setec identity
+ *    token in `x-gibson-sandbox-identity` (zeroroot-ai/sdk#251). The daemon
+ *    takes the sandbox of the caller only from it.
  */
 
 /** The claims this SDK reads off a task grant. Addressing only, never trust. */
@@ -152,6 +157,110 @@ export function grantInterceptor(token: () => string): Interceptor {
   }
 }
 
+/**
+ * The metadata key that carries the setec identity token of the caller on each
+ * callback (zeroroot-ai/sdk#251). The daemon takes the sandbox of the caller
+ * only from this token, so a fork from a snapshot cannot act as its parent.
+ */
+export const SANDBOX_IDENTITY_HEADER = "x-gibson-sandbox-identity"
+
+/**
+ * The metadata key that carries the hostname of the caller. It is a hint, not
+ * a proof: the daemon refuses a call whose hostname names another sandbox than
+ * the identity token.
+ */
+export const SANDBOX_ID_HEADER = "x-gibson-sandbox-id"
+
+/** The audience of the identity token that a callback sends. */
+export const SANDBOX_IDENTITY_AUDIENCE = "gibson-harness-callback"
+
+/**
+ * The environment variable that names the Unix socket of setec that gives the
+ * identity tokens of the sandbox. setec sets it in each process of a sandbox.
+ */
+export const IDENTITY_SOCKET_ENV = "SETEC_IDENTITY_SOCKET"
+
+/** One request for a token ends after this time. */
+const IDENTITY_TIMEOUT_MS = 5_000
+
+/** The error of a process with no identity socket: it does not run in a setec sandbox. */
+export class NoSandboxIdentityError extends Error {
+  constructor() {
+    super(`gibson-sdk: this process has no sandbox identity: ${IDENTITY_SOCKET_ENV} is not set`)
+    this.name = "NoSandboxIdentityError"
+  }
+}
+
+/** The path of the setec identity socket, or `""` when the process has none. */
+function identitySocket(env: NodeJS.ProcessEnv = process.env): string {
+  return (env[IDENTITY_SOCKET_ENV] ?? "").trim()
+}
+
+/**
+ * Get a new identity token of the sandbox from the setec identity socket, for
+ * {@link SANDBOX_IDENTITY_AUDIENCE}. It reads the environment and asks the
+ * socket on each call, and it keeps no copy. So a fork, which gets a new
+ * identity generation, never sends the token of its parent. It throws
+ * {@link NoSandboxIdentityError} when the process has no socket.
+ */
+export async function sandboxIdentityToken(env: NodeJS.ProcessEnv = process.env): Promise<string> {
+  const socket = identitySocket(env)
+  if (!socket) throw new NoSandboxIdentityError()
+  const path = `/v1/token?audience=${encodeURIComponent(SANDBOX_IDENTITY_AUDIENCE)}`
+  const { status, body } = await new Promise<{ status: number; body: string }>((resolve, reject) => {
+    const req = request({ socketPath: socket, path, method: "GET", timeout: IDENTITY_TIMEOUT_MS }, (res) => {
+      let data = ""
+      res.setEncoding("utf8")
+      res.on("data", (chunk: string) => {
+        data += chunk
+      })
+      res.on("end", () => resolve({ status: res.statusCode ?? 0, body: data }))
+      res.on("error", reject)
+    })
+    req.on("timeout", () => req.destroy(new Error(`no answer in ${IDENTITY_TIMEOUT_MS} ms`)))
+    req.on("error", reject)
+    req.end()
+  }).catch((error: unknown) => {
+    throw new Error(`gibson-sdk: get the sandbox identity token from ${socket}: ${String(error)}`, { cause: error })
+  })
+  let answer: { token?: unknown; error?: unknown }
+  try {
+    answer = JSON.parse(body) as { token?: unknown; error?: unknown }
+  } catch {
+    throw new Error(`gibson-sdk: the identity socket ${socket} answered ${status} with no JSON`)
+  }
+  if (status !== 200) {
+    throw new Error(`gibson-sdk: the identity socket ${socket} refused the token: ${status}: ${String(answer.error ?? "")}`)
+  }
+  if (typeof answer.token !== "string" || !answer.token) {
+    throw new Error(`gibson-sdk: the identity socket ${socket} answered no token`)
+  }
+  return answer.token
+}
+
+/**
+ * Interceptor that sends a new identity token and the hostname on each call.
+ * A process with no identity socket sends no token, and the daemon decides. A
+ * process with a socket that gives no token sends no call: the daemon would
+ * refuse it. Install it on each transport that calls HarnessCallbackService.
+ */
+export function sandboxIdentityInterceptor(env: NodeJS.ProcessEnv = process.env): Interceptor {
+  return (next) => async (req) => {
+    let token = ""
+    try {
+      token = await sandboxIdentityToken(env)
+    } catch (error) {
+      if (!(error instanceof NoSandboxIdentityError)) {
+        throw new ConnectError(error instanceof Error ? error.message : String(error), Code.Unauthenticated, undefined, undefined, error)
+      }
+    }
+    if (token) req.header.set(SANDBOX_IDENTITY_HEADER, token)
+    const host = hostname().trim()
+    if (host) req.header.set(SANDBOX_ID_HEADER, host)
+    return await next(req)
+  }
+}
+
 /** Open the task harness for a dispatched run. */
 export function openTaskHarness(opts: OpenTaskHarnessOptions): TaskHarness {
   if (!opts.token) {
@@ -170,7 +279,7 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): TaskHarness {
     opts.transport ??
     createGrpcTransport({
       baseUrl: callbackBaseUrl(opts.endpoint, opts.insecure),
-      interceptors: [grantInterceptor(() => current)],
+      interceptors: [grantInterceptor(() => current), sandboxIdentityInterceptor()],
     })
   const client = createClient(HarnessCallbackService, transport)
   const daemon = createClient(DaemonService, transport)

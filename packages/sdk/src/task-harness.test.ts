@@ -4,7 +4,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { create, toJson } from "@bufbuild/protobuf"
-import { createRouterTransport } from "@connectrpc/connect"
+import { hostname } from "node:os"
+import { Code, ConnectError, createRouterTransport } from "@connectrpc/connect"
 
 import { DaemonService } from "./gen/gibson/daemon/v1/daemon_pb.js"
 import { ContextInfoSchema } from "./gen/gibson/harness/v1/harness_callback_pb.js"
@@ -13,7 +14,14 @@ import {
   contextFromGrant,
   decodeGrantClaims,
   grantInterceptor,
+  IDENTITY_SOCKET_ENV,
+  NoSandboxIdentityError,
   openTaskHarness,
+  SANDBOX_ID_HEADER,
+  SANDBOX_IDENTITY_AUDIENCE,
+  SANDBOX_IDENTITY_HEADER,
+  sandboxIdentityInterceptor,
+  sandboxIdentityToken,
 } from "./task-harness.js"
 
 /** An unsigned JWT with the given payload. The client never verifies. */
@@ -187,4 +195,107 @@ test("the mission run from the launch rides in ContextInfo, and only when the la
   const bareJson = { missionId: "m-1", taskId: "run-1", agentName: "zerocool" }
   assert.deepEqual(toJson(ContextInfoSchema, bare), bareJson)
   assert.deepEqual(toJson(ContextInfoSchema, onWire), { ...bareJson, missionRunId: "mr-7" }, "nothing else on the wire changes")
+})
+
+/**
+ * A fake setec identity socket (setec#235). Each request gets a new token of
+ * the current generation. A snapshot raises the generation.
+ */
+async function fakeIdentitySocket(answer?: (res: import("node:http").ServerResponse) => void) {
+  const { createServer } = await import("node:http")
+  const { mkdtempSync, rmSync } = await import("node:fs")
+  const { tmpdir } = await import("node:os")
+  const { join } = await import("node:path")
+  const dir = mkdtempSync(join(tmpdir(), "id"))
+  const path = join(dir, "identity.sock")
+  const state = { generation: 0, requests: 0, audiences: [] as string[] }
+  const server = createServer((req, res) => {
+    state.requests++
+    state.audiences.push(new URL(req.url ?? "", "http://x").searchParams.get("audience") ?? "")
+    if (answer) return answer(res)
+    res.setHeader("Content-Type", "application/json")
+    res.end(JSON.stringify({ token: `gen${state.generation}-req${state.requests}`, expires: 1 }))
+  })
+  await new Promise<void>((r) => server.listen(path, r))
+  return {
+    path,
+    state,
+    snapshot: () => void state.generation++,
+    close: async () => {
+      await new Promise<void>((r) => server.close(() => r()))
+      rmSync(dir, { recursive: true, force: true })
+    },
+  }
+}
+
+/** Run the interceptor once and return the headers that the call carried. */
+async function callWith(icpt: ReturnType<typeof sandboxIdentityInterceptor>): Promise<Headers> {
+  const header = new Headers()
+  await icpt((async (req: { header: Headers }) => req) as never)({ header } as never)
+  return header
+}
+
+test("each call carries a new identity token for the daemon audience, and the hostname", async () => {
+  const sock = await fakeIdentitySocket()
+  try {
+    const icpt = sandboxIdentityInterceptor({ [IDENTITY_SOCKET_ENV]: sock.path })
+    const first = await callWith(icpt)
+    assert.equal(first.get(SANDBOX_IDENTITY_HEADER), "gen0-req1")
+    assert.equal(first.get(SANDBOX_ID_HEADER), hostname().trim())
+    assert.equal((await callWith(icpt)).get(SANDBOX_IDENTITY_HEADER), "gen0-req2")
+    assert.deepEqual(sock.state.audiences, [SANDBOX_IDENTITY_AUDIENCE, SANDBOX_IDENTITY_AUDIENCE])
+  } finally {
+    await sock.close()
+  }
+})
+
+test("a fork after a snapshot sends its own token, never a cached parent token", async () => {
+  const sock = await fakeIdentitySocket()
+  try {
+    const icpt = sandboxIdentityInterceptor({ [IDENTITY_SOCKET_ENV]: sock.path })
+    assert.equal((await callWith(icpt)).get(SANDBOX_IDENTITY_HEADER), "gen0-req1")
+    sock.snapshot()
+    assert.equal((await callWith(icpt)).get(SANDBOX_IDENTITY_HEADER), "gen1-req2")
+  } finally {
+    await sock.close()
+  }
+})
+
+test("a missing token is a clear error", async () => {
+  // No socket: no token, and the call goes on for the daemon to decide.
+  await assert.rejects(sandboxIdentityToken({}), NoSandboxIdentityError)
+  const none = await callWith(sandboxIdentityInterceptor({}))
+  assert.equal(none.get(SANDBOX_IDENTITY_HEADER), null)
+
+  // A socket that refuses: the call stops with Unauthenticated and the cause.
+  const refusing = await fakeIdentitySocket((res) => {
+    res.statusCode = 502
+    res.end(JSON.stringify({ error: "reach the launcher: no route" }))
+  })
+  try {
+    const env = { [IDENTITY_SOCKET_ENV]: refusing.path }
+    let reached = false
+    const icpt = sandboxIdentityInterceptor(env)
+    await assert.rejects(
+      icpt((async () => {
+        reached = true
+      }) as never)({ header: new Headers() } as never),
+      (err: unknown) => err instanceof ConnectError && err.code === Code.Unauthenticated && /reach the launcher: no route/.test(err.message),
+    )
+    assert.equal(reached, false, "a call with no token is not sent")
+  } finally {
+    await refusing.close()
+  }
+
+  // A socket that is gone, an answer with no token, an answer with no JSON.
+  await assert.rejects(sandboxIdentityToken({ [IDENTITY_SOCKET_ENV]: "/nonexistent/gone.sock" }), /gone\.sock/)
+  const empty = await fakeIdentitySocket((res) => res.end("{}"))
+  const garbage = await fakeIdentitySocket((res) => res.end("not json"))
+  try {
+    await assert.rejects(sandboxIdentityToken({ [IDENTITY_SOCKET_ENV]: empty.path }), /no token/)
+    await assert.rejects(sandboxIdentityToken({ [IDENTITY_SOCKET_ENV]: garbage.path }), /no JSON/)
+  } finally {
+    await empty.close()
+    await garbage.close()
+  }
 })

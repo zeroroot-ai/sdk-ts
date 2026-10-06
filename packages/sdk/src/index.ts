@@ -21,6 +21,7 @@ export * from "./task-knowledge.js"
 export * from "./task-mission.js"
 // Live sessions (zeroroot-ai/sdk-ts#33): task harness with renewal, one mission per session.
 export * from "./task-harness.js"
+export * from "./fork.js"
 export * from "./live-mission.js"
 export * from "./observe.js"
 export * from "./sandbox.js"

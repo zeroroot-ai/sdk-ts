@@ -9,6 +9,7 @@ import { callbackBaseUrl, type TaskHarnessConfig } from "./callback.js"
 import { HarnessCallbackService } from "./clients.js"
 import { DaemonService } from "./gen/gibson/daemon/v1/daemon_pb.js"
 import type { ContextInfo } from "./gen/gibson/harness/v1/harness_callback_pb.js"
+import type { Claim, Claimer } from "./fork.js"
 
 /**
  * The task harness: everything a dispatched run needs to speak to
@@ -123,6 +124,27 @@ export interface TaskHarness {
   expiresAt(): number
   /** Stop renewing. The client keeps working until the grant expires. */
   stop(): void
+}
+
+/**
+ * A task harness that takes part in the fork contract (D74,
+ * zeroroot-ai/sdk#248). openTaskHarness returns it.
+ */
+export interface ForkableHarness extends TaskHarness, Claimer {
+  /**
+   * Ask the daemon for the dispatch of this process as a fork (D74,
+   * zeroroot-ai/sdk#248). Call it with the grant of the parent, before any
+   * other call of the fork. The daemon knows the fork only from its setec
+   * identity token, so a process with no identity socket is refused before
+   * the call with {@link NoSandboxIdentityError}.
+   */
+  claimFork(sandboxId: string): Promise<Claim>
+  /**
+   * Act for the fork of the claim: each later call carries the grant and the
+   * ids of the claim, and `context` changes in place. The grant of the parent
+   * is not sent again.
+   */
+  applyClaim(claim: Claim): void
 }
 
 export interface OpenTaskHarnessOptions extends TaskHarnessConfig {
@@ -262,7 +284,7 @@ export function sandboxIdentityInterceptor(env: NodeJS.ProcessEnv = process.env)
 }
 
 /** Open the task harness for a dispatched run. */
-export function openTaskHarness(opts: OpenTaskHarnessOptions): TaskHarness {
+export function openTaskHarness(opts: OpenTaskHarnessOptions): ForkableHarness {
   if (!opts.token) {
     throw new Error(
       "gibson-sdk: callback token is empty — refusing to dial the harness unauthenticated " +
@@ -332,6 +354,33 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): TaskHarness {
     stop: () => {
       stopped = true
       if (timer !== undefined) timers.clearTimeout(timer)
+    },
+    claimFork: async (sandboxId: string): Promise<Claim> => {
+      if (!identitySocket()) throw new NoSandboxIdentityError()
+      const res = await client.claimFork({ sandboxId })
+      return {
+        sandboxId,
+        grant: res.grant,
+        missionId: res.missionId,
+        missionRunId: res.missionRunId,
+        agentRunId: res.agentRunId,
+        nodeId: res.nodeId,
+        model: res.model,
+        task: res.task,
+      }
+    },
+    applyClaim: (claim: Claim): void => {
+      if (!claim.grant) throw new Error("gibson-sdk: the claim has no grant")
+      const next = decodeGrantClaims(claim.grant)
+      current = claim.grant
+      claims = next
+      context.missionId = claim.missionId || next.missionId
+      context.taskId = claim.task?.id || next.taskId
+      if (claim.missionRunId) context.missionRunId = claim.missionRunId
+      else delete context.missionRunId
+      if (timer !== undefined) timers.clearTimeout(timer)
+      timer = undefined
+      schedule()
     },
   }
 }

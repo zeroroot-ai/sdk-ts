@@ -3,7 +3,7 @@
 
 import { fromJsonString } from "@bufbuild/protobuf"
 import { TaskSchema, type Task } from "./gen/gibson/types/v1/types_pb.js"
-import { openTaskHarness, type OpenTaskHarnessOptions, type TaskHarness } from "./task-harness.js"
+import { openTaskHarness, type ForkableHarness, type OpenTaskHarnessOptions } from "./task-harness.js"
 
 /**
  * The sandboxed-dispatch contract (ADR-0116), as the launcher writes
@@ -92,6 +92,6 @@ export function readSandboxDispatch(env: NodeJS.ProcessEnv): SandboxDispatch {
  * The task harness for a sandboxed run: the grant and the mission run from
  * the launch, nothing else.
  */
-export function sandboxHarness(d: SandboxDispatch, opts: Omit<OpenTaskHarnessOptions, "endpoint" | "token" | "missionRunId"> = {}): TaskHarness {
+export function sandboxHarness(d: SandboxDispatch, opts: Omit<OpenTaskHarnessOptions, "endpoint" | "token" | "missionRunId"> = {}): ForkableHarness {
   return openTaskHarness({ ...opts, endpoint: d.callbackEndpoint, token: d.grant, ...(d.missionRunId ? { missionRunId: d.missionRunId } : {}) })
 }

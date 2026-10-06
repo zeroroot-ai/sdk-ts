@@ -6,6 +6,7 @@ import { createGrpcTransport } from "@connectrpc/connect-node"
 import { CapabilityGrantClient, normalizePlatformURL, type CapabilityGrantConfig } from "./auth/client.js"
 import { createGibsonClients, type GibsonClients } from "./clients.js"
 import { registerInstance, startHeartbeat, type AgentRegistration, type InstanceRef } from "./component.js"
+import { sandboxIdentityInterceptor } from "./task-harness.js"
 
 export interface ConnectGibsonConfig extends CapabilityGrantConfig {
   /** Agent identity for RegisterComponent. */
@@ -57,7 +58,9 @@ export async function connectGibson(config: ConnectGibsonConfig): Promise<Gibson
     // exact string ext-authz pins (issue #7). With no daemonURL override the
     // baseUrl IS the client's canonical platformURL.
     baseUrl: config.daemonURL ? normalizePlatformURL(config.daemonURL) : cg.platformURL,
-    interceptors: [cg.authInterceptor()],
+    // Each call also carries the setec identity token of the sandbox, when the
+    // process runs in one (zeroroot-ai/sdk#251).
+    interceptors: [cg.authInterceptor(), sandboxIdentityInterceptor()],
   })
   const clients = createGibsonClients(transport)
 

@@ -22,7 +22,9 @@ import type { Task } from "./gen/gibson/types/v1/types_pb.js"
  *    sandbox with FAILED_PRECONDITION and the reason
  *    {@link REASON_FORK_UNCLAIMED}. {@link isForkUnclaimed} recognizes it.
  *  - A fork claims its dispatch with `HarnessCallbackService.ClaimFork`. The
- *    claim holds the new grant, the ids, the node id, the model and the task.
+ *    call carries the identity token and no grant (D80): the grant in memory
+ *    is the one of the source, and it can be long expired. The claim holds
+ *    the new grant, the ids, the node id, the model and the task.
  *  - A source that may be forked ({@link FORKABLE_ENV}) parks after its
  *    result line ({@link park}). An agent that forks its current state gets
  *    {@link ForkedError} in the fork ({@link point}).

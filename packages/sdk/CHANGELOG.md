@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.15.0...v0.16.0) (2026-10-06)
+
+
+### Features
+
+* **sdk:** ClaimFork proves the fork with the identity token only ([#78](https://github.com/zeroroot-ai/sdk-ts/issues/78)) ([c6446c0](https://github.com/zeroroot-ai/sdk-ts/commit/c6446c09dd377d75929589a698d7ba8db32ed552))
+
 ## [0.15.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.14.0...v0.15.0) (2026-10-06)
 
 

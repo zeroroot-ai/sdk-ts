@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.17.0...v0.18.0) (2026-10-07)
+
+
+### Features
+
+* **sdk:** a tool or plugin grant names its calling agent ([#85](https://github.com/zeroroot-ai/sdk-ts/issues/85)) ([789e7ca](https://github.com/zeroroot-ai/sdk-ts/commit/789e7ca739a15d232c8725655b5bf6aa9271c65f))
+
 ## [0.17.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.16.0...v0.17.0) (2026-10-07)
 
 

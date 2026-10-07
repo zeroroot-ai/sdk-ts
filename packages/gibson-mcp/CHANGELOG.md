@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.4.0...gibson-mcp-v0.5.0) (2026-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* end-phase integration of sdk-ts ([#82](https://github.com/zeroroot-ai/sdk-ts/issues/82))
+
+### Features
+
+* end-phase integration of sdk-ts ([#82](https://github.com/zeroroot-ai/sdk-ts/issues/82)) ([0c53e6b](https://github.com/zeroroot-ai/sdk-ts/commit/0c53e6b6ea7e459fd9f10b7a24741c056dec9214))
+* **sdk:** parkAfterResult ends a forkable run ([#76](https://github.com/zeroroot-ai/sdk-ts/issues/76)) ([9873f87](https://github.com/zeroroot-ai/sdk-ts/commit/9873f875674d0884839f0db376cd72c6bb7c5b2f))
+
 ## [0.4.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.3.0...gibson-mcp-v0.4.0) (2026-10-06)
 
 

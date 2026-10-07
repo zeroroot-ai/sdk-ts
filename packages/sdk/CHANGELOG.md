@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.17.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.16.0...v0.17.0) (2026-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* end-phase integration of sdk-ts ([#82](https://github.com/zeroroot-ai/sdk-ts/issues/82))
+
+### Features
+
+* end-phase integration of sdk-ts ([#82](https://github.com/zeroroot-ai/sdk-ts/issues/82)) ([0c53e6b](https://github.com/zeroroot-ai/sdk-ts/commit/0c53e6b6ea7e459fd9f10b7a24741c056dec9214))
+
 ## [0.16.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.15.0...v0.16.0) (2026-10-06)
 
 

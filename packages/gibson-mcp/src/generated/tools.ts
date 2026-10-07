@@ -91,6 +91,7 @@ export const GENERATED_SERVICES: GeneratedServiceDoc[] = [
       { method: "getPluginConfig", description: "GetPluginConfig retrieves the current configuration and schema for a plugin." },
       { method: "testPluginConnection", description: "TestPluginConnection validates connectivity and credentials for a plugin without persisting any state changes." },
       { method: "listTenantPlugins", description: "ListTenantPlugins returns the plugin access records for the calling tenant." },
+      { method: "enrollComponent", description: "EnrollComponent enrolls a component that the calling agent produced (gibson#33). The new component gets its own identity in the tenant of the caller and a short-lived bootstrap token for that identity only. The person who owns the calling agent owns the new component. The platform assigns its trust: a produced component is never trusted, so a catalog name is refused. A quota for each tenant bounds how many components agents enroll. Each enrollment writes an audit record." },
       { method: "completeWithTools", description: "CompleteWithTools proxies an LLM completion with tool definitions for function-calling support. Returns the response including any tool calls." },
       { method: "completeStructured", description: "CompleteStructured proxies an LLM completion requesting JSON output conforming to the supplied schema." },
       { method: "callToolStream", description: "CallToolStream proxies a tool execution with server-side streaming of progress, partial results, warnings, and the final output." },
@@ -255,7 +256,7 @@ export const GENERATED_SERVICES: GeneratedServiceDoc[] = [
       { method: "openJob", description: "OpenJob opens a job on a bank from a dispatched agent, under its grant. It mirrors gibson.job.v1.JobService.OpenJob." },
       { method: "sendInput", description: "SendInput sends the next message to an open job from a dispatched agent, under its grant. It mirrors gibson.job.v1.JobService.SendInput." },
       { method: "closeJob", description: "CloseJob closes a job with a verdict and a score from a dispatched agent, under its grant. A verification agent is the usual caller. It mirrors gibson.job.v1.JobService.CloseJob." },
-      { method: "claimFork", description: "ClaimFork returns the dispatch of a fork (D74, sdk#248). A fork from a snapshot starts with the grant of its parent in memory. It calls ClaimFork first, with that grant, and from then on uses only the grant of the response. The daemon knows the fork only from the setec identity token in the metadata key x-gibson-sandbox-identity (sdk#251). It accepts the call only when that sandbox is a fork of the sandbox of the grant, and only one time for each fork. Errors: Unauthenticated (no identity token, or a token that does not verify), PermissionDenied (the sandbox is not a fork of the grant, or sandbox_id names another sandbox than the token), AlreadyExists (the fork was claimed before), InvalidArgument." },
+      { method: "claimFork", description: "ClaimFork returns the dispatch of a fork (D74, sdk#248). A fork from a snapshot starts with the grant of its parent in memory. It calls ClaimFork first, with no grant (D80), and from then on uses only the grant of the response. The daemon knows the fork only from the setec identity token in the metadata key x-gibson-sandbox-identity (sdk#251). It accepts the call only when that sandbox is a fork of the sandbox of the grant, and only one time for each fork. Errors: Unauthenticated (no identity token, or a token that does not verify), PermissionDenied (the sandbox is not a fork of the grant, or sandbox_id names another sandbox than the token), AlreadyExists (the fork was claimed before), InvalidArgument." },
     ],
   },
   {
@@ -290,7 +291,6 @@ export const GENERATED_SERVICES: GeneratedServiceDoc[] = [
     methods: [
       { method: "listPluginInstalls", description: "ListPluginInstalls returns all plugin installs for the tenant." },
       { method: "getPluginInstall", description: "GetPluginInstall returns one install by ID." },
-      { method: "registerPlugin", description: "RegisterPlugin atomically registers a plugin per Spec 2 R3.1: validates manifest, creates the Zitadel plugin_principal SA, writes per-binding FGA can_resolve tuples (creating any inline secrets in the broker), returns the bootstrap token. Any partial failure rolls back all created state." },
       { method: "editPluginSecretBinding", description: "EditPluginSecretBinding modifies an existing binding (rebind to a different existing secret). Used by the plugin detail page's bindings table." },
       { method: "revokePluginSecretBinding", description: "RevokePluginSecretBinding removes an FGA can_resolve tuple between the plugin and a secret. Emits a secret_access_revoked audit event." },
     ],

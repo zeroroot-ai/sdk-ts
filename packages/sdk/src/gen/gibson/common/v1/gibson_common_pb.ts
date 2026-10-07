@@ -11,7 +11,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/common/v1/gibson_common.proto.
  */
 export const file_gibson_common_v1_gibson_common: GenFile = /*@__PURE__*/
-  fileDesc("CiRnaWJzb24vY29tbW9uL3YxL2dpYnNvbl9jb21tb24ucHJvdG8SEGdpYnNvbi5jb21tb24udjEiQwoMSGVhbHRoU3RhdHVzEg4KBnN0YXR1cxgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEhIKCmNoZWNrZWRfYXQYAyABKAMiGgoKSlNPTlNjaGVtYRIMCgRqc29uGAEgASgJIkoKBUVycm9yEgwKBGNvZGUYASABKAkSDwoHbWVzc2FnZRgCIAEoCRIPCgdkZXRhaWxzGAMgASgJEhEKCXJldHJ5YWJsZRgEIAEoCCKmAQoLRXJyb3JEZXRhaWwSMwoEY29kZRgBIAEoDjIbLmdpYnNvbi5jb21tb24udjEuRXJyb3JDb2RlQgi6SAWCAQIQARIuCgZyZWFzb24YAiABKAlCHrpIG3IZGIABMhReKFtBLVpdW0EtWjAtOV9dKik/JBIyCgxmaWVsZF9lcnJvcnMYAyADKAsyHC5naWJzb24uY29tbW9uLnYxLkZpZWxkRXJyb3IiWAoKRmllbGRFcnJvchIXCgVmaWVsZBgBIAEoCUIIukgFcgMYgAgSFgoEcnVsZRgCIAEoCUIIukgFcgMYgAISGQoHbWVzc2FnZRgDIAEoCUIIukgFcgMYgCAinwIKClR5cGVkVmFsdWUSMQoKbnVsbF92YWx1ZRgBIAEoDjIbLmdpYnNvbi5jb21tb24udjEuTnVsbFZhbHVlSAASFgoMc3RyaW5nX3ZhbHVlGAIgASgJSAASEwoJaW50X3ZhbHVlGAMgASgDSAASFgoMZG91YmxlX3ZhbHVlGAQgASgBSAASFAoKYm9vbF92YWx1ZRgFIAEoCEgAEhUKC2J5dGVzX3ZhbHVlGAYgASgMSAASMwoLYXJyYXlfdmFsdWUYByABKAsyHC5naWJzb24uY29tbW9uLnYxLlR5cGVkQXJyYXlIABIvCgltYXBfdmFsdWUYCCABKAsyGi5naWJzb24uY29tbW9uLnYxLlR5cGVkTWFwSABCBgoEa2luZCI5CgpUeXBlZEFycmF5EisKBWl0ZW1zGAEgAygLMhwuZ2lic29uLmNvbW1vbi52MS5UeXBlZFZhbHVlIpIBCghUeXBlZE1hcBI4CgdlbnRyaWVzGAEgAygLMicuZ2lic29uLmNvbW1vbi52MS5UeXBlZE1hcC5FbnRyaWVzRW50cnkaTAoMRW50cmllc0VudHJ5EgsKA2tleRgBIAEoCRIrCgV2YWx1ZRgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZToCOAEi5wEKCE1ldGFkYXRhEjYKBmxhYmVscxgBIAMoCzImLmdpYnNvbi5jb21tb24udjEuTWV0YWRhdGEuTGFiZWxzRW50cnkSQAoLYW5ub3RhdGlvbnMYAiADKAsyKy5naWJzb24uY29tbW9uLnYxLk1ldGFkYXRhLkFubm90YXRpb25zRW50cnkaLQoLTGFiZWxzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ARoyChBBbm5vdGF0aW9uc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiqwEKCVByaW5jaXBhbBIuCgRraW5kGAEgASgOMiAuZ2lic29uLmNvbW1vbi52MS5QcmluY2lwYWwuS2luZBIKCgJpZBgCIAEoCSJiCgRLaW5kEhQKEEtJTkRfVU5TUEVDSUZJRUQQABINCglLSU5EX1VTRVIQARIPCgtLSU5EX1RFTkFOVBACEhIKDktJTkRfQ09NUE9ORU5UEAMSEAoMS0lORF9TRVJWSUNFEAQqJwoJTnVsbFZhbHVlEhoKFk5VTExfVkFMVUVfVU5TUEVDSUZJRUQQACqqBgoJRXJyb3JDb2RlEhoKFkVSUk9SX0NPREVfVU5TUEVDSUZJRUQQABIXChNFUlJPUl9DT0RFX0lOVEVSTkFMEAESHwobRVJST1JfQ09ERV9JTlZBTElEX0FSR1VNRU5UEAISGAoURVJST1JfQ09ERV9OT1RfRk9VTkQQAxIWChJFUlJPUl9DT0RFX1RJTUVPVVQQBBIaChZFUlJPUl9DT0RFX1VOQVZBSUxBQkxFEAUSIAocRVJST1JfQ09ERV9QRVJNSVNTSU9OX0RFTklFRBAGEh0KGUVSUk9SX0NPREVfQUxSRUFEWV9FWElTVFMQBxIhCh1FUlJPUl9DT0RFX1JFU09VUkNFX0VYSEFVU1RFRBAIEhgKFEVSUk9SX0NPREVfQ0FOQ0VMTEVEEAkSHAoYRVJST1JfQ09ERV9BR0VOVF9USU1FT1VUEAoSGgoWRVJST1JfQ09ERV9BR0VOVF9QQU5JQxALEiAKHEVSUk9SX0NPREVfQUdFTlRfSU5JVF9GQUlMRUQQDBIfChtFUlJPUl9DT0RFX0xMTV9SQVRFX0xJTUlURUQQDRIjCh9FUlJPUl9DT0RFX0xMTV9DT05URVhUX0VYQ0VFREVEEA4SHAoYRVJST1JfQ09ERV9MTE1fQVBJX0VSUk9SEA8SHgoaRVJST1JfQ09ERV9MTE1fUEFSU0VfRVJST1IQEBIdChlFUlJPUl9DT0RFX1RPT0xfTk9UX0ZPVU5EEBESGwoXRVJST1JfQ09ERV9UT09MX1RJTUVPVVQQEhIfChtFUlJPUl9DT0RFX1RPT0xfRVhFQ19GQUlMRUQQExIeChpFUlJPUl9DT0RFX05FVFdPUktfVElNRU9VVBAUEiIKHkVSUk9SX0NPREVfTkVUV09SS19VTlJFQUNIQUJMRRAVEhgKFEVSUk9SX0NPREVfVExTX0VSUk9SEBYSIAocRVJST1JfQ09ERV9ERUxFR0FUSU9OX0ZBSUxFRBAXEiEKHUVSUk9SX0NPREVfQ0hJTERfQUdFTlRfRkFJTEVEEBgSGwoXRVJST1JfQ09ERV9DT05GSUdfRVJST1IQGSp8CgtIZWFsdGhTdGF0ZRIcChhIRUFMVEhfU1RBVEVfVU5TUEVDSUZJRUQQABIYChRIRUFMVEhfU1RBVEVfSEVBTFRIWRABEhkKFUhFQUxUSF9TVEFURV9ERUdSQURFRBACEhoKFkhFQUxUSF9TVEFURV9VTkhFQUxUSFkQA0JQUAFaPGdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL2NvbW1vbi92MTtjb21tb25wYqoCDUdpYnNvbi5Db21tb25iBnByb3RvMw", [file_buf_validate_validate]);
+  fileDesc("CiRnaWJzb24vY29tbW9uL3YxL2dpYnNvbl9jb21tb24ucHJvdG8SEGdpYnNvbi5jb21tb24udjEiQQoMSGVhbHRoU3RhdHVzEg4KBnN0YXR1cxgBIAEoCRIPCgdtZXNzYWdlGAIgASgJSgQIAxAEUgpjaGVja2VkX2F0IhoKCkpTT05TY2hlbWESDAoEanNvbhgBIAEoCSJKCgVFcnJvchIMCgRjb2RlGAEgASgJEg8KB21lc3NhZ2UYAiABKAkSDwoHZGV0YWlscxgDIAEoCRIRCglyZXRyeWFibGUYBCABKAgipgEKC0Vycm9yRGV0YWlsEjMKBGNvZGUYASABKA4yGy5naWJzb24uY29tbW9uLnYxLkVycm9yQ29kZUIIukgFggECEAESLgoGcmVhc29uGAIgASgJQh66SBtyGRiAATIUXihbQS1aXVtBLVowLTlfXSopPyQSMgoMZmllbGRfZXJyb3JzGAMgAygLMhwuZ2lic29uLmNvbW1vbi52MS5GaWVsZEVycm9yIlgKCkZpZWxkRXJyb3ISFwoFZmllbGQYASABKAlCCLpIBXIDGIAIEhYKBHJ1bGUYAiABKAlCCLpIBXIDGIACEhkKB21lc3NhZ2UYAyABKAlCCLpIBXIDGIAgIp8CCgpUeXBlZFZhbHVlEjEKCm51bGxfdmFsdWUYASABKA4yGy5naWJzb24uY29tbW9uLnYxLk51bGxWYWx1ZUgAEhYKDHN0cmluZ192YWx1ZRgCIAEoCUgAEhMKCWludF92YWx1ZRgDIAEoA0gAEhYKDGRvdWJsZV92YWx1ZRgEIAEoAUgAEhQKCmJvb2xfdmFsdWUYBSABKAhIABIVCgtieXRlc192YWx1ZRgGIAEoDEgAEjMKC2FycmF5X3ZhbHVlGAcgASgLMhwuZ2lic29uLmNvbW1vbi52MS5UeXBlZEFycmF5SAASLwoJbWFwX3ZhbHVlGAggASgLMhouZ2lic29uLmNvbW1vbi52MS5UeXBlZE1hcEgAQgYKBGtpbmQiOQoKVHlwZWRBcnJheRIrCgVpdGVtcxgBIAMoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZSKSAQoIVHlwZWRNYXASOAoHZW50cmllcxgBIAMoCzInLmdpYnNvbi5jb21tb24udjEuVHlwZWRNYXAuRW50cmllc0VudHJ5GkwKDEVudHJpZXNFbnRyeRILCgNrZXkYASABKAkSKwoFdmFsdWUYAiABKAsyHC5naWJzb24uY29tbW9uLnYxLlR5cGVkVmFsdWU6AjgBIqsBCglQcmluY2lwYWwSLgoEa2luZBgBIAEoDjIgLmdpYnNvbi5jb21tb24udjEuUHJpbmNpcGFsLktpbmQSCgoCaWQYAiABKAkiYgoES2luZBIUChBLSU5EX1VOU1BFQ0lGSUVEEAASDQoJS0lORF9VU0VSEAESDwoLS0lORF9URU5BTlQQAhISCg5LSU5EX0NPTVBPTkVOVBADEhAKDEtJTkRfU0VSVklDRRAEKicKCU51bGxWYWx1ZRIaChZOVUxMX1ZBTFVFX1VOU1BFQ0lGSUVEEAAqqgYKCUVycm9yQ29kZRIaChZFUlJPUl9DT0RFX1VOU1BFQ0lGSUVEEAASFwoTRVJST1JfQ09ERV9JTlRFUk5BTBABEh8KG0VSUk9SX0NPREVfSU5WQUxJRF9BUkdVTUVOVBACEhgKFEVSUk9SX0NPREVfTk9UX0ZPVU5EEAMSFgoSRVJST1JfQ09ERV9USU1FT1VUEAQSGgoWRVJST1JfQ09ERV9VTkFWQUlMQUJMRRAFEiAKHEVSUk9SX0NPREVfUEVSTUlTU0lPTl9ERU5JRUQQBhIdChlFUlJPUl9DT0RFX0FMUkVBRFlfRVhJU1RTEAcSIQodRVJST1JfQ09ERV9SRVNPVVJDRV9FWEhBVVNURUQQCBIYChRFUlJPUl9DT0RFX0NBTkNFTExFRBAJEhwKGEVSUk9SX0NPREVfQUdFTlRfVElNRU9VVBAKEhoKFkVSUk9SX0NPREVfQUdFTlRfUEFOSUMQCxIgChxFUlJPUl9DT0RFX0FHRU5UX0lOSVRfRkFJTEVEEAwSHwobRVJST1JfQ09ERV9MTE1fUkFURV9MSU1JVEVEEA0SIwofRVJST1JfQ09ERV9MTE1fQ09OVEVYVF9FWENFRURFRBAOEhwKGEVSUk9SX0NPREVfTExNX0FQSV9FUlJPUhAPEh4KGkVSUk9SX0NPREVfTExNX1BBUlNFX0VSUk9SEBASHQoZRVJST1JfQ09ERV9UT09MX05PVF9GT1VORBAREhsKF0VSUk9SX0NPREVfVE9PTF9USU1FT1VUEBISHwobRVJST1JfQ09ERV9UT09MX0VYRUNfRkFJTEVEEBMSHgoaRVJST1JfQ09ERV9ORVRXT1JLX1RJTUVPVVQQFBIiCh5FUlJPUl9DT0RFX05FVFdPUktfVU5SRUFDSEFCTEUQFRIYChRFUlJPUl9DT0RFX1RMU19FUlJPUhAWEiAKHEVSUk9SX0NPREVfREVMRUdBVElPTl9GQUlMRUQQFxIhCh1FUlJPUl9DT0RFX0NISUxEX0FHRU5UX0ZBSUxFRBAYEhsKF0VSUk9SX0NPREVfQ09ORklHX0VSUk9SEBlCUFABWjxnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9jb21tb24vdjE7Y29tbW9ucGKqAg1HaWJzb24uQ29tbW9uYgZwcm90bzM", [file_buf_validate_validate]);
 
 /**
  * @generated from message gibson.common.v1.HealthStatus
@@ -28,13 +28,6 @@ export type HealthStatus = Message<"gibson.common.v1.HealthStatus"> & {
    * @generated from field: string message = 2;
    */
   message: string;
-
-  /**
-   * Unix timestamp in milliseconds
-   *
-   * @generated from field: int64 checked_at = 3;
-   */
-  checkedAt: bigint;
 };
 
 /**
@@ -279,30 +272,6 @@ export const TypedMapSchema: GenMessage<TypedMap> = /*@__PURE__*/
   messageDesc(file_gibson_common_v1_gibson_common, 7);
 
 /**
- * Metadata contains labels and annotations for resources
- *
- * @generated from message gibson.common.v1.Metadata
- */
-export type Metadata = Message<"gibson.common.v1.Metadata"> & {
-  /**
-   * @generated from field: map<string, string> labels = 1;
-   */
-  labels: { [key: string]: string };
-
-  /**
-   * @generated from field: map<string, string> annotations = 2;
-   */
-  annotations: { [key: string]: string };
-};
-
-/**
- * Describes the message gibson.common.v1.Metadata.
- * Use `create(MetadataSchema)` to create a new message.
- */
-export const MetadataSchema: GenMessage<Metadata> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 8);
-
-/**
  * Principal names who acts: a person, the tenant, a component run, or a
  * platform service. Banks record their owner as a Principal. Jobs record who
  * opened them and who sent each input as a Principal.
@@ -330,7 +299,7 @@ export type Principal = Message<"gibson.common.v1.Principal"> & {
  * Use `create(PrincipalSchema)` to create a new message.
  */
 export const PrincipalSchema: GenMessage<Principal> = /*@__PURE__*/
-  messageDesc(file_gibson_common_v1_gibson_common, 9);
+  messageDesc(file_gibson_common_v1_gibson_common, 8);
 
 /**
  * Kind is the class of principal. It decides how to read id.
@@ -377,7 +346,7 @@ export enum Principal_Kind {
  * Describes the enum gibson.common.v1.Principal.Kind.
  */
 export const Principal_KindSchema: GenEnum<Principal_Kind> = /*@__PURE__*/
-  enumDesc(file_gibson_common_v1_gibson_common, 9, 0);
+  enumDesc(file_gibson_common_v1_gibson_common, 8, 0);
 
 /**
  * NullValue represents a null value in TypedValue
@@ -539,37 +508,4 @@ export enum ErrorCode {
  */
 export const ErrorCodeSchema: GenEnum<ErrorCode> = /*@__PURE__*/
   enumDesc(file_gibson_common_v1_gibson_common, 1);
-
-/**
- * HealthState defines standard health states
- *
- * @generated from enum gibson.common.v1.HealthState
- */
-export enum HealthState {
-  /**
-   * @generated from enum value: HEALTH_STATE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: HEALTH_STATE_HEALTHY = 1;
-   */
-  HEALTHY = 1,
-
-  /**
-   * @generated from enum value: HEALTH_STATE_DEGRADED = 2;
-   */
-  DEGRADED = 2,
-
-  /**
-   * @generated from enum value: HEALTH_STATE_UNHEALTHY = 3;
-   */
-  UNHEALTHY = 3,
-}
-
-/**
- * Describes the enum gibson.common.v1.HealthState.
- */
-export const HealthStateSchema: GenEnum<HealthState> = /*@__PURE__*/
-  enumDesc(file_gibson_common_v1_gibson_common, 2);
 

@@ -7,14 +7,13 @@
 
 import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2";
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
-import { file_taxonomy_v1_taxonomy } from "../../../taxonomy/v1/taxonomy_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file gibson/graphrag/v1/graphrag.proto.
  */
 export const file_gibson_graphrag_v1_graphrag: GenFile = /*@__PURE__*/
-  fileDesc("CiFnaWJzb24vZ3JhcGhyYWcvdjEvZ3JhcGhyYWcucHJvdG8SEmdpYnNvbi5ncmFwaHJhZy52MSKdAwoKR3JhcGhRdWVyeRIMCgR0ZXh0GAEgASgJEhEKCWVtYmVkZGluZxgCIAMoAhINCgV0b3BfaxgDIAEoBRISCgpub2RlX3R5cGVzGAQgAygJEhEKCW1pbl9zY29yZRgFIAEoARIRCgltYXhfc2NvcmUYBiABKAESEgoKbWlzc2lvbl9pZBgHIAEoCRIWCg5taXNzaW9uX3J1bl9pZBgIIAEoCRItCgVzY29wZRgJIAEoDjIeLmdpYnNvbi5ncmFwaHJhZy52MS5RdWVyeVNjb3BlEjwKB2ZpbHRlcnMYCiADKAsyKy5naWJzb24uZ3JhcGhyYWcudjEuR3JhcGhRdWVyeS5GaWx0ZXJzRW50cnkSFQoNdmVjdG9yX3dlaWdodBgLIAEoARIUCgxncmFwaF93ZWlnaHQYDCABKAESFAoMZnJvbV9ub2RlX2lkGA0gASgJEhkKEXJlbGF0aW9uc2hpcF90eXBlGA4gASgJGi4KDEZpbHRlcnNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIpQBCgtRdWVyeVJlc3VsdBIrCgRub2RlGAEgASgLMh0uZ2lic29uLmdyYXBocmFnLnYxLkdyYXBoTm9kZRINCgVzY29yZRgCIAEoARIUCgx2ZWN0b3Jfc2NvcmUYAyABKAESEwoLZ3JhcGhfc2NvcmUYBCABKAESDAoEcGF0aBgFIAMoCRIQCghkaXN0YW5jZRgGIAEoBSLpAwoJR3JhcGhOb2RlEgoKAmlkGAEgASgJEgwKBHR5cGUYAiABKAkSQQoKcHJvcGVydGllcxgDIAMoCzItLmdpYnNvbi5ncmFwaHJhZy52MS5HcmFwaE5vZGUuUHJvcGVydGllc0VudHJ5Eg8KB2NvbnRlbnQYBCABKAkSEgoKbWlzc2lvbl9pZBgKIAEoCRIWCg5taXNzaW9uX3J1bl9pZBgLIAEoCRIUCgxhZ2VudF9ydW5faWQYDCABKAkSFQoNZGlzY292ZXJlZF9ieRgNIAEoCRIVCg1kaXNjb3ZlcmVkX2F0GA4gASgDEhIKCmNyZWF0ZWRfYXQYFCABKAMSEgoKdXBkYXRlZF9hdBgVIAEoAxIWCglwYXJlbnRfaWQYHiABKAlIAIgBARIYCgtwYXJlbnRfdHlwZRgfIAEoCUgBiAEBEiAKE3BhcmVudF9yZWxhdGlvbnNoaXAYICABKAlIAogBARpMCg9Qcm9wZXJ0aWVzRW50cnkSCwoDa2V5GAEgASgJEigKBXZhbHVlGAIgASgLMhkuZ2lic29uLmdyYXBocmFnLnYxLlZhbHVlOgI4AUIMCgpfcGFyZW50X2lkQg4KDF9wYXJlbnRfdHlwZUIWChRfcGFyZW50X3JlbGF0aW9uc2hpcCKEAgoFVmFsdWUSFgoMc3RyaW5nX3ZhbHVlGAEgASgJSAASEwoJaW50X3ZhbHVlGAIgASgDSAASFgoMZG91YmxlX3ZhbHVlGAMgASgBSAASFAoKYm9vbF92YWx1ZRgEIAEoCEgAEhUKC2J5dGVzX3ZhbHVlGAUgASgMSAASGQoPdGltZXN0YW1wX3ZhbHVlGAYgASgDSAASMwoKbGlzdF92YWx1ZRgHIAEoCzIdLmdpYnNvbi5ncmFwaHJhZy52MS5MaXN0VmFsdWVIABIxCgltYXBfdmFsdWUYCCABKAsyHC5naWJzb24uZ3JhcGhyYWcudjEuTWFwVmFsdWVIAEIGCgRraW5kIjYKCUxpc3RWYWx1ZRIpCgZ2YWx1ZXMYASADKAsyGS5naWJzb24uZ3JhcGhyYWcudjEuVmFsdWUijgEKCE1hcFZhbHVlEjgKBmZpZWxkcxgBIAMoCzIoLmdpYnNvbi5ncmFwaHJhZy52MS5NYXBWYWx1ZS5GaWVsZHNFbnRyeRpICgtGaWVsZHNFbnRyeRILCgNrZXkYASABKAkSKAoFdmFsdWUYAiABKAsyGS5naWJzb24uZ3JhcGhyYWcudjEuVmFsdWU6AjgBIqwCCgxSZWxhdGlvbnNoaXASCgoCaWQYASABKAkSDwoHZnJvbV9pZBgCIAEoCRINCgV0b19pZBgDIAEoCRIMCgR0eXBlGAQgASgJEkQKCnByb3BlcnRpZXMYBSADKAsyMC5naWJzb24uZ3JhcGhyYWcudjEuUmVsYXRpb25zaGlwLlByb3BlcnRpZXNFbnRyeRIOCgZ3ZWlnaHQYBiABKAESEgoKbWlzc2lvbl9pZBgKIAEoCRIWCg5taXNzaW9uX3J1bl9pZBgLIAEoCRISCgpjcmVhdGVkX2F0GBQgASgDGkwKD1Byb3BlcnRpZXNFbnRyeRILCgNrZXkYASABKAkSKAoFdmFsdWUYAiABKAsyGS5naWJzb24uZ3JhcGhyYWcudjEuVmFsdWU6AjgBIokFCg9EaXNjb3ZlcnlSZXN1bHQSJwoFaG9zdHMYASADKAsyGC5naWJzb24uZ3JhcGhyYWcudjEuSG9zdBInCgVwb3J0cxgCIAMoCzIYLmdpYnNvbi5ncmFwaHJhZy52MS5Qb3J0Ei0KCHNlcnZpY2VzGAMgAygLMhsuZ2lic29uLmdyYXBocmFnLnYxLlNlcnZpY2USLwoJZW5kcG9pbnRzGAQgAygLMhwuZ2lic29uLmdyYXBocmFnLnYxLkVuZHBvaW50EisKB2RvbWFpbnMYBSADKAsyGi5naWJzb24uZ3JhcGhyYWcudjEuRG9tYWluEjEKCnN1YmRvbWFpbnMYBiADKAsyHS5naWJzb24uZ3JhcGhyYWcudjEuU3ViZG9tYWluEjQKDHRlY2hub2xvZ2llcxgHIAMoCzIeLmdpYnNvbi5ncmFwaHJhZy52MS5UZWNobm9sb2d5EjUKDGNlcnRpZmljYXRlcxgIIAMoCzIfLmdpYnNvbi5ncmFwaHJhZy52MS5DZXJ0aWZpY2F0ZRItCghmaW5kaW5ncxgJIAMoCzIbLmdpYnNvbi5ncmFwaHJhZy52MS5GaW5kaW5nEi4KCGV2aWRlbmNlGAogAygLMhwuZ2lic29uLmdyYXBocmFnLnYxLkV2aWRlbmNlEjQKDGN1c3RvbV9ub2RlcxgUIAMoCzIeLmdpYnNvbi5ncmFwaHJhZy52MS5DdXN0b21Ob2RlEkgKFmV4cGxpY2l0X3JlbGF0aW9uc2hpcHMYFSADKAsyKC5naWJzb24uZ3JhcGhyYWcudjEuRXhwbGljaXRSZWxhdGlvbnNoaXBKBAgWEBdSEmNvbXBsaWFuY2Vfc2lnbmFscyLWAQoESG9zdBIPCgJpZBgBIAEoCUgAiAEBEgoKAmlwGAIgASgJEhUKCGhvc3RuYW1lGAMgASgJSAGIAQESEgoFc3RhdGUYBCABKAlIAogBARIPCgJvcxgFIAEoCUgDiAEBEhcKCm9zX3ZlcnNpb24YBiABKAlIBIgBARIYCgttYWNfYWRkcmVzcxgHIAEoCUgFiAEBQgUKA19pZEILCglfaG9zdG5h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FwoKY3Zzc19zY29yZRgIIAEoAUgFiAEBEhQKB2N2ZV9pZHMYCSABKAlIBogBARIWCglwYXJlbnRfaWQYCiABKAlIB4gBARIYCgtwYXJlbnRfdHlwZRgLIAEoCUgIiAEBQgUKA19pZEIOCgxfZGVzY3JpcHRpb25CDQoLX2NvbmZpZGVuY2VCCwoJX2NhdGVnb3J5Qg4KDF9yZW1lZGlhdGlvbkINCgtfY3Zzc19zY29yZUIKCghfY3ZlX2lkc0IMCgpfcGFyZW50X2lkQg4KDF9wYXJlbnRfdHlwZSKAAQoIRXZpZGVuY2USDwoCaWQYASABKAlIAIgBARISCgpmaW5kaW5nX2lkGAIgASgJEgwKBHR5cGUYAyABKAkSFAoHY29udGVudBgEIAEoCUgBiAEBEhAKA3VybBgFIAEoCUgCiAEBQgUKA19pZEIKCghfY29udGVudEIGCgRfdXJsIuYDCgpDdXN0b21Ob2RlEhEKCW5vZGVfdHlwZRgBIAEoCRJHCg1pZF9wcm9wZXJ0aWVzGAIgAygLMjAuZ2lic29uLmdyYXBocmFnLnYxLkN1c3RvbU5vZGUuSWRQcm9wZXJ0aWVzRW50cnkSQgoKcHJvcGVydGllcxgDIAMoCzIuLmdpYnNvbi5ncmFwaHJhZy52MS5DdXN0b21Ob2RlLlByb3BlcnRpZXNFbnRyeRIYCgtwYXJlbnRfdHlwZRgEIAEoCUgAiAEBEj8KCXBhcmVudF9pZBgFIAMoCzIsLmdpYnNvbi5ncmFwaHJhZy52MS5DdXN0b21Ob2RlLlBhcmVudElkRW50cnkSHgoRcmVsYXRpb25zaGlwX3R5cGUYBiABKAlIAYgBARozChFJZFByb3BlcnRpZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBGjEKD1Byb3BlcnRpZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBGi8KDVBhcmVudElkRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4AUIOCgxfcGFyZW50X3R5cGVCFAoSX3JlbGF0aW9uc2hpcF90eXBlIrwDChRFeHBsaWNpdFJlbGF0aW9uc2hpcBIRCglmcm9tX3R5cGUYASABKAkSRQoHZnJvbV9pZBgCIAMoCzI0LmdpYnNvbi5ncmFwaHJhZy52MS5FeHBsaWNpdFJlbGF0aW9uc2hpcC5Gcm9tSWRFbnRyeRIPCgd0b190eXBlGAMgASgJEkEKBXRvX2lkGAQgAygLMjIuZ2lic29uLmdyYXBocmFnLnYxLkV4cGxpY2l0UmVsYXRpb25zaGlwLlRvSWRFbnRyeRIZChFyZWxhdGlvbnNoaXBfdHlwZRgFIAEoCRJMCgpwcm9wZXJ0aWVzGAYgAygLMjguZ2lic29uLmdyYXBocmFnLnYxLkV4cGxpY2l0UmVsYXRpb25zaGlwLlByb3BlcnRpZXNFbnRyeRotCgtGcm9tSWRFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBGisKCVRvSWRFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBGjEKD1Byb3BlcnRpZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIkYKDEhpZXJhcmNoeURlZhIRCglub2RlX3R5cGUYASABKAkSDQoFbGFiZWwYAiABKAkSFAoMc3ViX2NsYXNzX29mGAMgASgJIi0KBklGUERlZhIRCglub2RlX3R5cGUYASABKAkSEAoIcHJvcGVydHkYAiABKAkiKgoKU2FtZUFzUGFpchINCgVpcmlfYRgBIAEoCRINCgVpcmlfYhgCIAEoCSK3AgoRT250b2xvZ3lFeHRlbnNpb24SRQoIcHJlZml4ZXMYASADKAsyMy5naWJzb24uZ3JhcGhyYWcudjEuT250b2xvZ3lFeHRlbnNpb24uUHJlZml4ZXNFbnRyeRI1CgtoaWVyYXJjaGllcxgCIAMoCzIgLmdpYnNvbi5ncmFwaHJhZy52MS5IaWVyYXJjaHlEZWYSNAoMZXF1aXZhbGVuY2VzGAMgAygLMh4uZ2lic29uLmdyYXBocmFnLnYxLlNhbWVBc1BhaXISKAoEaWZwcxgEIAMoCzIaLmdpYnNvbi5ncmFwaHJhZy52MS5JRlBEZWYSEwoLcmF3X3RyaXBsZXMYBSABKAwaLwoNUHJlZml4ZXNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIsoBCg1BdHRhY2tQYXR0ZXJuEgoKAmlkGAEgASgJEhQKDHRlY2huaXF1ZV9pZBgCIAEoCRIMCgRuYW1lGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEg8KB3RhY3RpY3MYBSADKAkSEQoJcGxhdGZvcm1zGAYgAygJEhQKDGRhdGFfc291cmNlcxgHIAMoCRISCgpyZWZlcmVuY2VzGAggAygJEhIKCmNyZWF0ZWRfYXQYFCABKAMSEgoKdXBkYXRlZF9hdBgVIAEoAyJ9CgpBdHRhY2tTdGVwEg0KBW9yZGVyGAEgASgFEhQKDHRlY2huaXF1ZV9pZBgCIAEoCRIPCgdub2RlX2lkGAMgASgJEhMKC2Rlc2NyaXB0aW9uGAQgASgJEhAKCGV2aWRlbmNlGAUgAygJEhIKCmNvbmZpZGVuY2UYBiABKAEiuAEKC0F0dGFja0NoYWluEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSLQoFc3RlcHMYAyADKAsyHi5naWJzb24uZ3JhcGhyYWcudjEuQXR0YWNrU3RlcBISCgptaXNzaW9uX2lkGAQgASgJEhIKCmNvbmZpZGVuY2UYBSABKAESEAoIc2V2ZXJpdHkYBiABKAkSEgoKY3JlYXRlZF9hdBgUIAEoAxISCgp1cGRhdGVkX2F0GBUgASgDIsQBCgtGaW5kaW5nTm9kZRIKCgJpZBgBIAEoCRINCgV0aXRsZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIQCghzZXZlcml0eRgEIAEoCRIQCghjYXRlZ29yeRgFIAEoCRISCgpjb25maWRlbmNlGAYgASgBEhIKCm1pc3Npb25faWQYByABKAkSEQoJdGFyZ2V0X2lkGAggASgJEhIKCmNyZWF0ZWRfYXQYFCABKAMSEgoKdXBkYXRlZF9hdBgVIAEoAyp3CgpRdWVyeVNjb3BlEhsKF1FVRVJZX1NDT1BFX1VOU1BFQ0lGSUVEEAASFwoTUVVFUllfU0NPUEVfTUlTU0lPThABEhsKF1FVRVJZX1NDT1BFX01JU1NJT05fUlVOEAISFgoSUVVFUllfU0NPUEVfR0xPQkFMEANCVlABWkBnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9ncmFwaHJhZy92MTtncmFwaHJhZ3BiqgIPR2lic29uLkdyYXBocmFnYgZwcm90bzM", [file_taxonomy_v1_taxonomy]);
+  fileDesc("CiFnaWJzb24vZ3JhcGhyYWcvdjEvZ3JhcGhyYWcucHJvdG8SEmdpYnNvbi5ncmFwaHJhZy52MSKXAwoKR3JhcGhRdWVyeRIMCgR0ZXh0GAEgASgJEhEKCWVtYmVkZGluZxgCIAMoAhINCgV0b3BfaxgDIAEoBRISCgpub2RlX3R5cGVzGAQgAygJEhEKCW1pbl9zY29yZRgFIAEoARISCgptaXNzaW9uX2lkGAcgASgJEhYKDm1pc3Npb25fcnVuX2lkGAggASgJEi0KBXNjb3BlGAkgASgOMh4uZ2lic29uLmdyYXBocmFnLnYxLlF1ZXJ5U2NvcGUSPAoHZmlsdGVycxgKIAMoCzIrLmdpYnNvbi5ncmFwaHJhZy52MS5HcmFwaFF1ZXJ5LkZpbHRlcnNFbnRyeRIUCgxmcm9tX25vZGVfaWQYDSABKAkSGQoRcmVsYXRpb25zaGlwX3R5cGUYDiABKAkaLgoMRmlsdGVyc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAFKBAgGEAdKBAgLEAxKBAgMEA1SCW1heF9zY29yZVINdmVjdG9yX3dlaWdodFIMZ3JhcGhfd2VpZ2h0IpABCgtRdWVyeVJlc3VsdBIrCgRub2RlGAEgASgLMh0uZ2lic29uLmdyYXBocmFnLnYxLkdyYXBoTm9kZRINCgVzY29yZRgCIAEoARIMCgRwYXRoGAUgAygJEhAKCGRpc3RhbmNlGAYgASgFSgQIAxAESgQIBBAFUgx2ZWN0b3Jfc2NvcmVSC2dyYXBoX3Njb3JlIpwDCglHcmFwaE5vZGUSCgoCaWQYASABKAkSDAoEdHlwZRgCIAEoCRJBCgpwcm9wZXJ0aWVzGAMgAygLMi0uZ2lic29uLmdyYXBocmFnLnYxLkdyYXBoTm9kZS5Qcm9wZXJ0aWVzRW50cnkSDwoHY29udGVudBgEIAEoCRISCgptaXNzaW9uX2lkGAogASgJEhYKDm1pc3Npb25fcnVuX2lkGAsgASgJEhQKDGFnZW50X3J1bl9pZBgMIAEoCRIVCg1kaXNjb3ZlcmVkX2F0GA4gASgDEhIKCmNyZWF0ZWRfYXQYFCABKAMSEgoKdXBkYXRlZF9hdBgVIAEoAxpMCg9Qcm9wZXJ0aWVzRW50cnkSCwoDa2V5GAEgASgJEigKBXZhbHVlGAIgASgLMhkuZ2lic29uLmdyYXBocmFnLnYxLlZhbHVlOgI4AUoECA0QDkoECB4QH0oECB8QIEoECCAQIVINZGlzY292ZXJlZF9ieVIJcGFyZW50X2lkUgtwYXJlbnRfdHlwZVITcGFyZW50X3JlbGF0aW9uc2hpcCKEAgoFVmFsdWUSFgoMc3RyaW5nX3ZhbHVlGAEgASgJSAASEwoJaW50X3ZhbHVlGAIgASgDSAASFgoMZG91YmxlX3ZhbHVlGAMgASgBSAASFAoKYm9vbF92YWx1ZRgEIAEoCEgAEhUKC2J5dGVzX3ZhbHVlGAUgASgMSAASGQoPdGltZXN0YW1wX3ZhbHVlGAYgASgDSAASMwoKbGlzdF92YWx1ZRgHIAEoCzIdLmdpYnNvbi5ncmFwaHJhZy52MS5MaXN0VmFsdWVIABIxCgltYXBfdmFsdWUYCCABKAsyHC5naWJzb24uZ3JhcGhyYWcudjEuTWFwVmFsdWVIAEIGCgRraW5kIjYKCUxpc3RWYWx1ZRIpCgZ2YWx1ZXMYASADKAsyGS5naWJzb24uZ3JhcGhyYWcudjEuVmFsdWUijgEKCE1hcFZhbHVlEjgKBmZpZWxkcxgBIAMoCzIoLmdpYnNvbi5ncmFwaHJhZy52MS5NYXBWYWx1ZS5GaWVsZHNFbnRyeRpICgtGaWVsZHNFbnRyeRILCgNrZXkYASABKAkSKAoFdmFsdWUYAiABKAsyGS5naWJzb24uZ3JhcGhyYWcudjEuVmFsdWU6AjgBIokFCg9EaXNjb3ZlcnlSZXN1bHQSJwoFaG9zdHMYASADKAsyGC5naWJzb24uZ3JhcGhyYWcudjEuSG9zdBInCgVwb3J0cxgCIAMoCzIYLmdpYnNvbi5ncmFwaHJhZy52MS5Qb3J0Ei0KCHNlcnZpY2VzGAMgAygLMhsuZ2lic29uLmdyYXBocmFnLnYxLlNlcnZpY2USLwoJZW5kcG9pbnRzGAQgAygLMhwuZ2lic29uLmdyYXBocmFnLnYxLkVuZHBvaW50EisKB2RvbWFpbnMYBSADKAsyGi5naWJzb24uZ3JhcGhyYWcudjEuRG9tYWluEjEKCnN1YmRvbWFpbnMYBiADKAsyHS5naWJzb24uZ3JhcGhyYWcudjEuU3ViZG9tYWluEjQKDHRlY2hub2xvZ2llcxgHIAMoCzIeLmdpYnNvbi5ncmFwaHJhZy52MS5UZWNobm9sb2d5EjUKDGNlcnRpZmljYXRlcxgIIAMoCzIfLmdpYnNvbi5ncmFwaHJhZy52MS5DZXJ0aWZpY2F0ZRItCghmaW5kaW5ncxgJIAMoCzIbLmdpYnNvbi5ncmFwaHJhZy52MS5GaW5kaW5nEi4KCGV2aWRlbmNlGAogAygLMhwuZ2lic29uLmdyYXBocmFnLnYxLkV2aWRlbmNlEjQKDGN1c3RvbV9ub2RlcxgUIAMoCzIeLmdpYnNvbi5ncmFwaHJhZy52MS5DdXN0b21Ob2RlEkgKFmV4cGxpY2l0X3JlbGF0aW9uc2hpcHMYFSADKAsyKC5naWJzb24uZ3JhcGhyYWcudjEuRXhwbGljaXRSZWxhdGlvbnNoaXBKBAgWEBdSEmNvbXBsaWFuY2Vfc2lnbmFscyLAAQoESG9zdBIPCgJpZBgBIAEoCUgAiAEBEgoKAmlwGAIgASgJEhUKCGhvc3RuYW1lGAMgASgJSAGIAQESEgoFc3RhdGUYBCABKAlIAogBARIPCgJvcxgFIAEoCUgDiAEBEhgKC21hY19hZGRyZXNzGAcgASgJSASIAQFCBQoDX2lkQgsKCV9ob3N0bmFtZUIICgZfc3RhdGVCBQoDX29zQg4KDF9tYWNfYWRkcmVzc0oECAYQB1IKb3NfdmVyc2lvbiKPAQoEUG9ydBIPCgJpZBgBIAEoCUgAiAEBEg8KB2hvc3RfaWQYAiABKAkSDgoGbnVtYmVyGAMgASgFEhAKCHByb3RvY29sGAQgASgJEhIKBXN0YXRlGAUgASgJSAGIAQESEwoGcmVhc29uGAYgASgJSAKIAQFCBQoDX2lkQggKBl9zdGF0ZUIJCgdfcmVhc29uIsEBCgdTZXJ2aWNlEg8KAmlkGAEgASgJSACIAQESDwoHcG9ydF9pZBgCIAEoCRIMCgRuYW1lGAMgASgJEhQKB3Byb2R1Y3QYBCABKAlIAYgBARIUCgd2ZXJzaW9uGAUgASgJSAKIAQESEwoGYmFubmVyGAcgASgJSAOIAQFCBQoDX2lkQgoKCF9wcm9kdWN0QgoKCF92ZXJzaW9uQgkKB19iYW5uZXJKBAgGEAdKBAgIEAlSCmV4dHJhX2luZm9SA2NwZSLtAQoIRW5kcG9pbnQSDwoCaWQYASABKAlIAIgBARISCgpzZXJ2aWNlX2lkGAIgASgJEgsKA3VybBgDIAEoCRITCgZtZXRob2QYBCABKAlIAYgBARIYCgtzdGF0dXNfY29kZRgFIAEoBUgCiAEBEhkKDGNvbnRlbnRfdHlwZRgGIAEoCUgDiAEBEhIKBXRpdGxlGAggASgJSASIAQFCBQoDX2lkQgkKB19tZXRob2RCDgoMX3N0YXR1c19jb2RlQg8KDV9jb250ZW50X3R5cGVCCAoGX3RpdGxlSgQIBxAIUg5jb250ZW50X2xlbmd0aCJmCgZEb21haW4SDwoCaWQYASABKAlIAIgBARIMCgRuYW1lGAIgASgJQgUKA19pZEoECAMQBEoECAQQBUoECAUQBlIJcmVnaXN0cmFyUgxjcmVhdGVkX2RhdGVSC2V4cGlyeV9kYXRlImoKCVN1YmRvbWFpbhIPCgJpZBgBIAEoCUgAiAEBEhEKCWRvbWFpbl9pZBgCIAEoCRIMCgRuYW1lGAMgASgJEhYKCWZ1bGxfbmFtZRgEIAEoCUgBiAEBQgUKA19pZEIMCgpfZnVsbF9uYW1lIuQBCgpUZWNobm9sb2d5Eg8KAmlkGAEgASgJSACIAQESDAoEbmFtZRgCIAEoCRIUCgd2ZXJzaW9uGAMgASgJSAGIAQESFQoIY2F0ZWdvcnkYBCABKAlIAogBARIXCgpjb25maWRlbmNlGAUgASgFSAOIAQESFgoJcGFyZW50X2lkGAogASgJSASIAQFCBQoDX2lkQgoKCF92ZXJzaW9uQgsKCV9jYXRlZ29yeUINCgtfY29uZmlkZW5jZUIMCgpfcGFyZW50X2lkSgQIBhAHSgQICxAMUgNjcGVSC3BhcmVudF90eXBlIrACCgtDZXJ0aWZpY2F0ZRIPCgJpZBgBIAEoCUgAiAEBEhQKB3N1YmplY3QYAiABKAlIAYgBARITCgZpc3N1ZXIYAyABKAlIAogBARIWCglub3RfYWZ0ZXIYBiABKANIA4gBARIfChJmaW5nZXJwcmludF9zaGEyNTYYByABKAlIBIgBARIWCglwYXJlbnRfaWQYCiABKAlIBYgBAUIFCgNfaWRCCgoIX3N1YmplY3RCCQoHX2lzc3VlckIMCgpfbm90X2FmdGVyQhUKE19maW5nZXJwcmludF9zaGEyNTZCDAoKX3BhcmVudF9pZEoECAQQBUoECAUQBkoECAgQCUoECAsQDFINc2VyaWFsX251bWJlclIKbm90X2JlZm9yZVIDc2FuUgtwYXJlbnRfdHlwZSLPAgoHRmluZGluZxIPCgJpZBgBIAEoCUgAiAEBEg0KBXRpdGxlGAIgASgJEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQESEAoIc2V2ZXJpdHkYBCABKAkSFwoKY29uZmlkZW5jZRgFIAEoAUgCiAEBEhUKCGNhdGVnb3J5GAYgASgJSAOIAQESGAoLcmVtZWRpYXRpb24YByABKAlIBIgBARIUCgdjdmVfaWRzGAkgASgJSAWIAQESFgoJcGFyZW50X2lkGAogASgJSAaIAQFCBQoDX2lkQg4KDF9kZXNjcmlwdGlvbkINCgtfY29uZmlkZW5jZUILCglfY2F0ZWdvcnlCDgoMX3JlbWVkaWF0aW9uQgoKCF9jdmVfaWRzQgwKCl9wYXJlbnRfaWRKBAgIEAlKBAgLEAxSCmN2c3Nfc2NvcmVSC3BhcmVudF90eXBlIoABCghFdmlkZW5jZRIPCgJpZBgBIAEoCUgAiAEBEhIKCmZpbmRpbmdfaWQYAiABKAkSDAoEdHlwZRgDIAEoCRIUCgdjb250ZW50GAQgASgJSAGIAQESEAoDdXJsGAUgASgJSAKIAQFCBQoDX2lkQgoKCF9jb250ZW50QgYKBF91cmwi5gMKCkN1c3RvbU5vZGUSEQoJbm9kZV90eXBlGAEgASgJEkcKDWlkX3Byb3BlcnRpZXMYAiADKAsyMC5naWJzb24uZ3JhcGhyYWcudjEuQ3VzdG9tTm9kZS5JZFByb3BlcnRpZXNFbnRyeRJCCgpwcm9wZXJ0aWVzGAMgAygLMi4uZ2lic29uLmdyYXBocmFnLnYxLkN1c3RvbU5vZGUuUHJvcGVydGllc0VudHJ5EhgKC3BhcmVudF90eXBlGAQgASgJSACIAQESPwoJcGFyZW50X2lkGAUgAygLMiwuZ2lic29uLmdyYXBocmFnLnYxLkN1c3RvbU5vZGUuUGFyZW50SWRFbnRyeRIeChFyZWxhdGlvbnNoaXBfdHlwZRgGIAEoCUgBiAEBGjMKEUlkUHJvcGVydGllc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaMQoPUHJvcGVydGllc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaLwoNUGFyZW50SWRFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBQg4KDF9wYXJlbnRfdHlwZUIUChJfcmVsYXRpb25zaGlwX3R5cGUivAMKFEV4cGxpY2l0UmVsYXRpb25zaGlwEhEKCWZyb21fdHlwZRgBIAEoCRJFCgdmcm9tX2lkGAIgAygLMjQuZ2lic29uLmdyYXBocmFnLnYxLkV4cGxpY2l0UmVsYXRpb25zaGlwLkZyb21JZEVudHJ5Eg8KB3RvX3R5cGUYAyABKAkSQQoFdG9faWQYBCADKAsyMi5naWJzb24uZ3JhcGhyYWcudjEuRXhwbGljaXRSZWxhdGlvbnNoaXAuVG9JZEVudHJ5EhkKEXJlbGF0aW9uc2hpcF90eXBlGAUgASgJEkwKCnByb3BlcnRpZXMYBiADKAsyOC5naWJzb24uZ3JhcGhyYWcudjEuRXhwbGljaXRSZWxhdGlvbnNoaXAuUHJvcGVydGllc0VudHJ5Gi0KC0Zyb21JZEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaKwoJVG9JZEVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEaMQoPUHJvcGVydGllc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiRgoMSGllcmFyY2h5RGVmEhEKCW5vZGVfdHlwZRgBIAEoCRINCgVsYWJlbBgCIAEoCRIUCgxzdWJfY2xhc3Nfb2YYAyABKAkiLQoGSUZQRGVmEhEKCW5vZGVfdHlwZRgBIAEoCRIQCghwcm9wZXJ0eRgCIAEoCSIqCgpTYW1lQXNQYWlyEg0KBWlyaV9hGAEgASgJEg0KBWlyaV9iGAIgASgJIrcCChFPbnRvbG9neUV4dGVuc2lvbhJFCghwcmVmaXhlcxgBIAMoCzIzLmdpYnNvbi5ncmFwaHJhZy52MS5PbnRvbG9neUV4dGVuc2lvbi5QcmVmaXhlc0VudHJ5EjUKC2hpZXJhcmNoaWVzGAIgAygLMiAuZ2lic29uLmdyYXBocmFnLnYxLkhpZXJhcmNoeURlZhI0CgxlcXVpdmFsZW5jZXMYAyADKAsyHi5naWJzb24uZ3JhcGhyYWcudjEuU2FtZUFzUGFpchIoCgRpZnBzGAQgAygLMhouZ2lic29uLmdyYXBocmFnLnYxLklGUERlZhITCgtyYXdfdHJpcGxlcxgFIAEoDBovCg1QcmVmaXhlc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEixAEKDUF0dGFja1BhdHRlcm4SCgoCaWQYASABKAkSFAoMdGVjaG5pcXVlX2lkGAIgASgJEgwKBG5hbWUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSEgoKcmVmZXJlbmNlcxgIIAMoCRISCgpjcmVhdGVkX2F0GBQgASgDEhIKCnVwZGF0ZWRfYXQYFSABKANKBAgFEAZKBAgGEAdKBAgHEAhSB3RhY3RpY3NSCXBsYXRmb3Jtc1IMZGF0YV9zb3VyY2VzIn0KCkF0dGFja1N0ZXASDQoFb3JkZXIYASABKAUSFAoMdGVjaG5pcXVlX2lkGAIgASgJEg8KB25vZGVfaWQYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSEAoIZXZpZGVuY2UYBSADKAkSEgoKY29uZmlkZW5jZRgGIAEoASK4AQoLQXR0YWNrQ2hhaW4SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRItCgVzdGVwcxgDIAMoCzIeLmdpYnNvbi5ncmFwaHJhZy52MS5BdHRhY2tTdGVwEhIKCm1pc3Npb25faWQYBCABKAkSEgoKY29uZmlkZW5jZRgFIAEoARIQCghzZXZlcml0eRgGIAEoCRISCgpjcmVhdGVkX2F0GBQgASgDEhIKCnVwZGF0ZWRfYXQYFSABKAMixAEKC0ZpbmRpbmdOb2RlEgoKAmlkGAEgASgJEg0KBXRpdGxlGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEhAKCHNldmVyaXR5GAQgASgJEhAKCGNhdGVnb3J5GAUgASgJEhIKCmNvbmZpZGVuY2UYBiABKAESEgoKbWlzc2lvbl9pZBgHIAEoCRIRCgl0YXJnZXRfaWQYCCABKAkSEgoKY3JlYXRlZF9hdBgUIAEoAxISCgp1cGRhdGVkX2F0GBUgASgDKncKClF1ZXJ5U2NvcGUSGwoXUVVFUllfU0NPUEVfVU5TUEVDSUZJRUQQABIXChNRVUVSWV9TQ09QRV9NSVNTSU9OEAESGwoXUVVFUllfU0NPUEVfTUlTU0lPTl9SVU4QAhIWChJRVUVSWV9TQ09QRV9HTE9CQUwQA0JWUAFaQGdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL2dyYXBocmFnL3YxO2dyYXBocmFncGKqAg9HaWJzb24uR3JhcGhyYWdiBnByb3RvMw");
 
 /**
  * GraphQuery represents a query against the knowledge graph using proto-canonical types.
@@ -48,11 +47,6 @@ export type GraphQuery = Message<"gibson.graphrag.v1.GraphQuery"> & {
   minScore: number;
 
   /**
-   * @generated from field: double max_score = 6;
-   */
-  maxScore: number;
-
-  /**
    * @generated from field: string mission_id = 7;
    */
   missionId: string;
@@ -71,16 +65,6 @@ export type GraphQuery = Message<"gibson.graphrag.v1.GraphQuery"> & {
    * @generated from field: map<string, string> filters = 10;
    */
   filters: { [key: string]: string };
-
-  /**
-   * @generated from field: double vector_weight = 11;
-   */
-  vectorWeight: number;
-
-  /**
-   * @generated from field: double graph_weight = 12;
-   */
-  graphWeight: number;
 
   /**
    * from_node_id anchors a relationship traversal: with relationship_type,
@@ -124,16 +108,6 @@ export type QueryResult = Message<"gibson.graphrag.v1.QueryResult"> & {
    * @generated from field: double score = 2;
    */
   score: number;
-
-  /**
-   * @generated from field: double vector_score = 3;
-   */
-  vectorScore: number;
-
-  /**
-   * @generated from field: double graph_score = 4;
-   */
-  graphScore: number;
 
   /**
    * @generated from field: repeated string path = 5;
@@ -202,11 +176,6 @@ export type GraphNode = Message<"gibson.graphrag.v1.GraphNode"> & {
   agentRunId: string;
 
   /**
-   * @generated from field: string discovered_by = 13;
-   */
-  discoveredBy: string;
-
-  /**
    * @generated from field: int64 discovered_at = 14;
    */
   discoveredAt: bigint;
@@ -222,23 +191,6 @@ export type GraphNode = Message<"gibson.graphrag.v1.GraphNode"> & {
    * @generated from field: int64 updated_at = 21;
    */
   updatedAt: bigint;
-
-  /**
-   * Parent reference
-   *
-   * @generated from field: optional string parent_id = 30;
-   */
-  parentId?: string | undefined;
-
-  /**
-   * @generated from field: optional string parent_type = 31;
-   */
-  parentType?: string | undefined;
-
-  /**
-   * @generated from field: optional string parent_relationship = 32;
-   */
-  parentRelationship?: string | undefined;
 };
 
 /**
@@ -350,69 +302,6 @@ export const MapValueSchema: GenMessage<MapValue> = /*@__PURE__*/
   messageDesc(file_gibson_graphrag_v1_graphrag, 5);
 
 /**
- * Relationship represents a connection between two nodes.
- *
- * @generated from message gibson.graphrag.v1.Relationship
- */
-export type Relationship = Message<"gibson.graphrag.v1.Relationship"> & {
-  /**
-   * @generated from field: string id = 1;
-   */
-  id: string;
-
-  /**
-   * @generated from field: string from_id = 2;
-   */
-  fromId: string;
-
-  /**
-   * @generated from field: string to_id = 3;
-   */
-  toId: string;
-
-  /**
-   * @generated from field: string type = 4;
-   */
-  type: string;
-
-  /**
-   * @generated from field: map<string, gibson.graphrag.v1.Value> properties = 5;
-   */
-  properties: { [key: string]: Value };
-
-  /**
-   * @generated from field: double weight = 6;
-   */
-  weight: number;
-
-  /**
-   * Scoping
-   *
-   * @generated from field: string mission_id = 10;
-   */
-  missionId: string;
-
-  /**
-   * @generated from field: string mission_run_id = 11;
-   */
-  missionRunId: string;
-
-  /**
-   * Timestamps
-   *
-   * @generated from field: int64 created_at = 20;
-   */
-  createdAt: bigint;
-};
-
-/**
- * Describes the message gibson.graphrag.v1.Relationship.
- * Use `create(RelationshipSchema)` to create a new message.
- */
-export const RelationshipSchema: GenMessage<Relationship> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 6);
-
-/**
  * DiscoveryResult is a standardized container for tool-discovered entities.
  * Tools populate this message and Gibson automatically persists to the graph.
  *
@@ -491,7 +380,7 @@ export type DiscoveryResult = Message<"gibson.graphrag.v1.DiscoveryResult"> & {
  * Use `create(DiscoveryResultSchema)` to create a new message.
  */
 export const DiscoveryResultSchema: GenMessage<DiscoveryResult> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 7);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 6);
 
 /**
  * Host discovered by a tool.
@@ -527,11 +416,6 @@ export type Host = Message<"gibson.graphrag.v1.Host"> & {
   os?: string | undefined;
 
   /**
-   * @generated from field: optional string os_version = 6;
-   */
-  osVersion?: string | undefined;
-
-  /**
    * @generated from field: optional string mac_address = 7;
    */
   macAddress?: string | undefined;
@@ -542,7 +426,7 @@ export type Host = Message<"gibson.graphrag.v1.Host"> & {
  * Use `create(HostSchema)` to create a new message.
  */
 export const HostSchema: GenMessage<Host> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 8);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 7);
 
 /**
  * Port discovered on a host.
@@ -590,7 +474,7 @@ export type Port = Message<"gibson.graphrag.v1.Port"> & {
  * Use `create(PortSchema)` to create a new message.
  */
 export const PortSchema: GenMessage<Port> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 9);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 8);
 
 /**
  * Service running on a port.
@@ -628,19 +512,9 @@ export type Service = Message<"gibson.graphrag.v1.Service"> & {
   version?: string | undefined;
 
   /**
-   * @generated from field: optional string extra_info = 6;
-   */
-  extraInfo?: string | undefined;
-
-  /**
    * @generated from field: optional string banner = 7;
    */
   banner?: string | undefined;
-
-  /**
-   * @generated from field: optional string cpe = 8;
-   */
-  cpe?: string | undefined;
 };
 
 /**
@@ -648,7 +522,7 @@ export type Service = Message<"gibson.graphrag.v1.Service"> & {
  * Use `create(ServiceSchema)` to create a new message.
  */
 export const ServiceSchema: GenMessage<Service> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 10);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 9);
 
 /**
  * Endpoint (URL) on a service.
@@ -691,11 +565,6 @@ export type Endpoint = Message<"gibson.graphrag.v1.Endpoint"> & {
   contentType?: string | undefined;
 
   /**
-   * @generated from field: optional int64 content_length = 7;
-   */
-  contentLength?: bigint | undefined;
-
-  /**
    * @generated from field: optional string title = 8;
    */
   title?: string | undefined;
@@ -706,7 +575,7 @@ export type Endpoint = Message<"gibson.graphrag.v1.Endpoint"> & {
  * Use `create(EndpointSchema)` to create a new message.
  */
 export const EndpointSchema: GenMessage<Endpoint> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 11);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 10);
 
 /**
  * Domain discovered.
@@ -725,21 +594,6 @@ export type Domain = Message<"gibson.graphrag.v1.Domain"> & {
    * @generated from field: string name = 2;
    */
   name: string;
-
-  /**
-   * @generated from field: optional string registrar = 3;
-   */
-  registrar?: string | undefined;
-
-  /**
-   * @generated from field: optional int64 created_date = 4;
-   */
-  createdDate?: bigint | undefined;
-
-  /**
-   * @generated from field: optional int64 expiry_date = 5;
-   */
-  expiryDate?: bigint | undefined;
 };
 
 /**
@@ -747,7 +601,7 @@ export type Domain = Message<"gibson.graphrag.v1.Domain"> & {
  * Use `create(DomainSchema)` to create a new message.
  */
 export const DomainSchema: GenMessage<Domain> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 12);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 11);
 
 /**
  * Subdomain under a domain.
@@ -785,7 +639,7 @@ export type Subdomain = Message<"gibson.graphrag.v1.Subdomain"> & {
  * Use `create(SubdomainSchema)` to create a new message.
  */
 export const SubdomainSchema: GenMessage<Subdomain> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 13);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 12);
 
 /**
  * Technology detected.
@@ -821,23 +675,11 @@ export type Technology = Message<"gibson.graphrag.v1.Technology"> & {
   confidence?: number | undefined;
 
   /**
-   * @generated from field: optional string cpe = 6;
-   */
-  cpe?: string | undefined;
-
-  /**
    * Parent entity reference (optional - tech can be associated with various entities)
    *
    * @generated from field: optional string parent_id = 10;
    */
   parentId?: string | undefined;
-
-  /**
-   * e.g., "service", "endpoint", "host"
-   *
-   * @generated from field: optional string parent_type = 11;
-   */
-  parentType?: string | undefined;
 };
 
 /**
@@ -845,7 +687,7 @@ export type Technology = Message<"gibson.graphrag.v1.Technology"> & {
  * Use `create(TechnologySchema)` to create a new message.
  */
 export const TechnologySchema: GenMessage<Technology> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 14);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 13);
 
 /**
  * Certificate discovered.
@@ -871,16 +713,6 @@ export type Certificate = Message<"gibson.graphrag.v1.Certificate"> & {
   issuer?: string | undefined;
 
   /**
-   * @generated from field: optional string serial_number = 4;
-   */
-  serialNumber?: string | undefined;
-
-  /**
-   * @generated from field: optional int64 not_before = 5;
-   */
-  notBefore?: bigint | undefined;
-
-  /**
    * @generated from field: optional int64 not_after = 6;
    */
   notAfter?: bigint | undefined;
@@ -891,23 +723,11 @@ export type Certificate = Message<"gibson.graphrag.v1.Certificate"> & {
   fingerprintSha256?: string | undefined;
 
   /**
-   * @generated from field: optional string san = 8;
-   */
-  san?: string | undefined;
-
-  /**
    * Parent entity reference (optional - cert can be associated with various entities)
    *
    * @generated from field: optional string parent_id = 10;
    */
   parentId?: string | undefined;
-
-  /**
-   * e.g., "service", "endpoint", "host"
-   *
-   * @generated from field: optional string parent_type = 11;
-   */
-  parentType?: string | undefined;
 };
 
 /**
@@ -915,7 +735,7 @@ export type Certificate = Message<"gibson.graphrag.v1.Certificate"> & {
  * Use `create(CertificateSchema)` to create a new message.
  */
 export const CertificateSchema: GenMessage<Certificate> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 15);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 14);
 
 /**
  * Finding (vulnerability or security issue).
@@ -961,11 +781,6 @@ export type Finding = Message<"gibson.graphrag.v1.Finding"> & {
   remediation?: string | undefined;
 
   /**
-   * @generated from field: optional double cvss_score = 8;
-   */
-  cvssScore?: number | undefined;
-
-  /**
    * @generated from field: optional string cve_ids = 9;
    */
   cveIds?: string | undefined;
@@ -976,13 +791,6 @@ export type Finding = Message<"gibson.graphrag.v1.Finding"> & {
    * @generated from field: optional string parent_id = 10;
    */
   parentId?: string | undefined;
-
-  /**
-   * e.g., "service", "endpoint", "host", "technology"
-   *
-   * @generated from field: optional string parent_type = 11;
-   */
-  parentType?: string | undefined;
 };
 
 /**
@@ -990,7 +798,7 @@ export type Finding = Message<"gibson.graphrag.v1.Finding"> & {
  * Use `create(FindingSchema)` to create a new message.
  */
 export const FindingSchema: GenMessage<Finding> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 16);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 15);
 
 /**
  * Evidence for a finding.
@@ -1033,7 +841,7 @@ export type Evidence = Message<"gibson.graphrag.v1.Evidence"> & {
  * Use `create(EvidenceSchema)` to create a new message.
  */
 export const EvidenceSchema: GenMessage<Evidence> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 17);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 16);
 
 /**
  * CustomNode for entities not in standard taxonomy.
@@ -1077,7 +885,7 @@ export type CustomNode = Message<"gibson.graphrag.v1.CustomNode"> & {
  * Use `create(CustomNodeSchema)` to create a new message.
  */
 export const CustomNodeSchema: GenMessage<CustomNode> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 18);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 17);
 
 /**
  * ExplicitRelationship for custom connections.
@@ -1121,7 +929,7 @@ export type ExplicitRelationship = Message<"gibson.graphrag.v1.ExplicitRelations
  * Use `create(ExplicitRelationshipSchema)` to create a new message.
  */
 export const ExplicitRelationshipSchema: GenMessage<ExplicitRelationship> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 19);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 18);
 
 /**
  * HierarchyDef is one subClassOf assertion within an OntologyExtension.
@@ -1158,7 +966,7 @@ export type HierarchyDef = Message<"gibson.graphrag.v1.HierarchyDef"> & {
  * Use `create(HierarchyDefSchema)` to create a new message.
  */
 export const HierarchyDefSchema: GenMessage<HierarchyDef> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 20);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 19);
 
 /**
  * IFPDef declares an inverse-functional property within an OntologyExtension.
@@ -1187,7 +995,7 @@ export type IFPDef = Message<"gibson.graphrag.v1.IFPDef"> & {
  * Use `create(IFPDefSchema)` to create a new message.
  */
 export const IFPDefSchema: GenMessage<IFPDef> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 21);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 20);
 
 /**
  * SameAsPair is one [iriA, iriB] equivalence assertion in an OntologyExtension.
@@ -1214,7 +1022,7 @@ export type SameAsPair = Message<"gibson.graphrag.v1.SameAsPair"> & {
  * Use `create(SameAsPairSchema)` to create a new message.
  */
 export const SameAsPairSchema: GenMessage<SameAsPair> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 22);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 21);
 
 /**
  * OntologyExtension is the proto-canonical form of a parsed ontology.yaml.
@@ -1274,7 +1082,7 @@ export type OntologyExtension = Message<"gibson.graphrag.v1.OntologyExtension"> 
  * Use `create(OntologyExtensionSchema)` to create a new message.
  */
 export const OntologyExtensionSchema: GenMessage<OntologyExtension> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 23);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 22);
 
 /**
  * AttackPattern is a MITRE ATT&CK-shaped technique record from the tenant graph.
@@ -1305,25 +1113,6 @@ export type AttackPattern = Message<"gibson.graphrag.v1.AttackPattern"> & {
   description: string;
 
   /**
-   * tactics, e.g. ["Initial Access", "Execution"].
-   *
-   * @generated from field: repeated string tactics = 5;
-   */
-  tactics: string[];
-
-  /**
-   * platforms, e.g. ["Windows", "Linux"].
-   *
-   * @generated from field: repeated string platforms = 6;
-   */
-  platforms: string[];
-
-  /**
-   * @generated from field: repeated string data_sources = 7;
-   */
-  dataSources: string[];
-
-  /**
    * @generated from field: repeated string references = 8;
    */
   references: string[];
@@ -1344,7 +1133,7 @@ export type AttackPattern = Message<"gibson.graphrag.v1.AttackPattern"> & {
  * Use `create(AttackPatternSchema)` to create a new message.
  */
 export const AttackPatternSchema: GenMessage<AttackPattern> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 24);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 23);
 
 /**
  * AttackStep is one hop in an AttackChain.
@@ -1390,7 +1179,7 @@ export type AttackStep = Message<"gibson.graphrag.v1.AttackStep"> & {
  * Use `create(AttackStepSchema)` to create a new message.
  */
 export const AttackStepSchema: GenMessage<AttackStep> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 25);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 24);
 
 /**
  * AttackChain is a multi-hop technique sequence discovered by graph traversal.
@@ -1446,7 +1235,7 @@ export type AttackChain = Message<"gibson.graphrag.v1.AttackChain"> & {
  * Use `create(AttackChainSchema)` to create a new message.
  */
 export const AttackChainSchema: GenMessage<AttackChain> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 26);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 25);
 
 /**
  * FindingNode is a finding as it appears in the knowledge graph.
@@ -1516,7 +1305,7 @@ export type FindingNode = Message<"gibson.graphrag.v1.FindingNode"> & {
  * Use `create(FindingNodeSchema)` to create a new message.
  */
 export const FindingNodeSchema: GenMessage<FindingNode> = /*@__PURE__*/
-  messageDesc(file_gibson_graphrag_v1_graphrag, 27);
+  messageDesc(file_gibson_graphrag_v1_graphrag, 26);
 
 /**
  * QueryScope defines the scope of a graph query.

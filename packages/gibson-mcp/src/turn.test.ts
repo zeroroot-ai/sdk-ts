@@ -5,7 +5,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { createRouterTransport, type Transport } from "@connectrpc/connect"
 import { CAPABILITY_GRANT_HEADER, HarnessCallbackService, type TaskHarness } from "@zeroroot-ai/sdk"
-import { rpcTools } from "./rpc.js"
+import { rpcCatalog } from "./rpc.js"
 import { createTurnController, TURN_GRANT_HEADER } from "./turn.js"
 
 /**
@@ -67,7 +67,7 @@ function controllerOver(base: TaskHarness) {
 }
 
 async function callWorldView(harness: TaskHarness, transport: Transport): Promise<void> {
-  const tool = rpcTools({ channels: { task: { ...harness, transport } }, streamLimit: 10 }).find((t) => t.name === "harness_callback_service_world_view")!
+  const tool = rpcCatalog({ channels: { task: { ...harness, transport } }, streamLimit: 10 }).map((e) => e.tool).find((t) => t.name === "harness_callback_service_world_view")!
   const res = await tool.handler({ focus: [] }, {})
   assert.notEqual(res.isError, true, JSON.stringify(res.content))
 }

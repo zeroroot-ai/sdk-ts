@@ -2,7 +2,7 @@
 // Copyright 2026 Zero Root AI
 
 import { createHash, createPrivateKey, createPublicKey, generateKeyPairSync, type KeyObject } from "node:crypto"
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs"
 import { dirname } from "node:path"
 
 export interface HostKey {
@@ -37,9 +37,20 @@ export function generateAgentKey(): AgentKey {
   return { publicKey, privateKey }
 }
 
-/** Persistent host key: generated once (0600), reused across restarts. */
+/**
+ * Persistent host key: generated once (0600), reused across restarts. A key
+ * file that the group or other users can read or write is refused: the key
+ * proves the identity of the host.
+ */
 export function loadOrGenerateHostKey(path: string): HostKey {
   if (existsSync(path)) {
+    const mode = statSync(path).mode & 0o777
+    if (process.platform !== "win32" && (mode & 0o077) !== 0) {
+      throw new Error(
+        `gibson-sdk: the host key file ${path} has mode ${mode.toString(8).padStart(4, "0")}; ` +
+          "only its owner may read it. Run chmod 600 on it.",
+      )
+    }
     const privateKey = createPrivateKey(readFileSync(path, "utf8"))
     const publicKey = createPublicKey(privateKey)
     return { id: jwkThumbprint(publicKey), publicKey, privateKey, firstCheckIn: false }

@@ -2,12 +2,18 @@
 // Copyright 2026 Zero Root AI
 
 import assert from "node:assert/strict"
-import { mkdtemp, stat } from "node:fs/promises"
+import { mkdtemp, readFile, stat } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import test from "node:test"
 import { homedir } from "node:os"
-import { clearLive, keyFor, readAmbient, readLive, stateDir, writeAmbient, writeLive } from "./state.js"
+import { clearLive, keyFor, stateDir, writeAmbient, writeLive, type LiveState } from "./state.js"
+
+// The read half lives in each host's hooks (zerocool-plugins
+// packages/claude-gibson/src/state.ts). These read the files the same way.
+const readAmbient = (dir: string, cwd: string) => readFile(join(dir, `ambient-${keyFor(cwd)}.md`), "utf8").catch(() => "")
+const readLive = (dir: string, cwd: string) =>
+  readFile(join(dir, `live-${keyFor(cwd)}.json`), "utf8").then((s) => JSON.parse(s) as LiveState, () => undefined)
 
 test("the state directory is ~/.zerocool, not a per-host subdirectory", () => {
   assert.equal(stateDir({}), join(homedir(), ".zerocool"))

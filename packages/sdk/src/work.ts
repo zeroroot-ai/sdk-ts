@@ -39,15 +39,6 @@ import { ResultSchema, ResultStatus, type Task } from "./gen/gibson/types/v1/typ
  *     uses the generated schemas rather than hand-built JSON.
  */
 
-/** A claimed unit of work. */
-export interface WorkItem {
-  workId: string
-  workType: string
-  payload: Uint8Array
-  context: Record<string, string>
-  timeoutMs: bigint
-}
-
 /** What a tool handler receives: the already-parsed tool input. */
 export interface ToolInvocation {
   workId: string

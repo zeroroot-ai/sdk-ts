@@ -156,11 +156,6 @@ export function rpcCatalog(opts: RpcToolOptions): RpcEntry[] {
   return out
 }
 
-/** The same set as {@link rpcCatalog}, as bare tool definitions. */
-export function rpcTools(opts: RpcToolOptions): ToolDefinition[] {
-  return rpcCatalog(opts).map((e) => e.tool)
-}
-
 function rpcTool(
   service: DescService,
   method: DescMethod,
@@ -230,40 +225,4 @@ async function decode(
   }
   const { messages: out, truncated } = await collect(call(source, options) as AsyncIterable<unknown>, method.output, opts.streamLimit)
   return json({ messages: out, truncated })
-}
-
-/** What the generated table says about one service. */
-export interface ServiceDoc {
-  service: DescService
-  methods: { method: string; description: string }[]
-}
-
-/** What a drift comparison found. Empty on both sides means no drift. */
-export interface Drift {
-  /** RPCs the descriptors have and the table does not. */
-  missing: string[]
-  /** Entries the table has and the descriptors do not. */
-  extra: string[]
-}
-
-/**
- * Compare a generated table against the descriptors it claims to describe.
- *
- * The guard and its test both call this, so what CI enforces and what the
- * test proves are one function rather than two spellings of one intention.
- */
-export function driftBetween(table: ServiceDoc[]): Drift {
-  const missing: string[] = []
-  const extra: string[] = []
-  for (const entry of table) {
-    const declared = new Set(entry.methods.map((m) => m.method))
-    const real = new Set(entry.service.methods.map((m) => m.localName))
-    for (const name of real) {
-      if (!declared.has(name)) missing.push(`${entry.service.typeName}.${name}`)
-    }
-    for (const name of declared) {
-      if (!real.has(name)) extra.push(`${entry.service.typeName}.${name}`)
-    }
-  }
-  return { missing: missing.sort(), extra: extra.sort() }
 }

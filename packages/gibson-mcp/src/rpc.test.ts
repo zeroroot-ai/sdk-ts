@@ -9,8 +9,45 @@ import { HarnessCallbackService } from "@zeroroot-ai/sdk"
 import type { TaskHarness } from "@zeroroot-ai/sdk"
 import { ComponentService } from "@zeroroot-ai/sdk/gen/gibson/component/v1/component_pb.js"
 import { GENERATED_RPC_COUNT, GENERATED_SERVICES } from "./generated/tools.js"
-import { driftBetween, rpcTools, snake, toolNameFor, transportFor, type ServiceDoc } from "./rpc.js"
+import { rpcCatalog, snake, toolNameFor, transportFor, type RpcToolOptions } from "./rpc.js"
 import { TOOL_NAME } from "./registry.js"
+
+/** What the generated table says about one service. */
+interface ServiceDoc {
+  service: DescService
+  methods: { method: string; description: string }[]
+}
+
+/** What a drift comparison found. Empty on both sides means no drift. */
+interface Drift {
+  /** RPCs the descriptors have and the table does not. */
+  missing: string[]
+  /** Entries the table has and the descriptors do not. */
+  extra: string[]
+}
+
+/**
+ * Compare a generated table against the descriptors it claims to describe.
+ *
+ * The drift tests below are the guard, and this is the one function they share.
+ */
+function driftBetween(table: ServiceDoc[]): Drift {
+  const missing: string[] = []
+  const extra: string[] = []
+  for (const entry of table) {
+    const declared = new Set(entry.methods.map((m) => m.method))
+    const real = new Set(entry.service.methods.map((m) => m.localName))
+    for (const name of real) {
+      if (!declared.has(name)) missing.push(`${entry.service.typeName}.${name}`)
+    }
+    for (const name of declared) {
+      if (!real.has(name)) extra.push(`${entry.service.typeName}.${name}`)
+    }
+  }
+  return { missing: missing.sort(), extra: extra.sort() }
+}
+
+const rpcTools = (opts: RpcToolOptions) => rpcCatalog(opts).map((e) => e.tool)
 
 /**
  * The drift guard. The descriptors are the truth about what exists; the

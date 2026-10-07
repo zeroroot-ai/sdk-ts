@@ -26,7 +26,7 @@ export { attachServer, packageVersion, SERVER_NAME } from "./server.js"
 export { ToolRegistry, type JsonSchema, type ToolContext, type ToolDefinition, type ToolGroup, type ToolHandler } from "./registry.js"
 export { defineTool, jsonSchemaOf, type ToolSpec } from "./tool.js"
 export { openGibson, type Gibson, type OpenGibsonOptions } from "./session.js"
-export { rpcCatalog, rpcTools, driftBetween, snake, toolNameFor, transportFor, type Drift, type RpcChannels, type RpcEntry, type RpcToolOptions, type ServiceDoc } from "./rpc.js"
+export { rpcCatalog, snake, toolNameFor, transportFor, type RpcChannels, type RpcEntry, type RpcToolOptions } from "./rpc.js"
 export {
   apiTools,
   closest,
@@ -42,12 +42,12 @@ export {
 } from "./api.js"
 export { messageSchema, requestSchema, MAX_DEPTH } from "./schema.js"
 export { startDiscovery, toolKey, pluginKey, DISCOVERY_INTERVAL_MS, type Discovery, type DiscoveryOutcome } from "./discovery.js"
-export { helperTools, helperToolsFor, helperContext, HELPER_TOOL_FOR_EXPORT, NOT_A_TOOL, TOOL_WITHOUT_EXPORT, type HelperContext } from "./helpers/index.js"
+export { helperTools, helperToolsFor, helperContext, type HelperContext } from "./helpers/index.js"
 export { GENERATED_SERVICES, GENERATED_RPC_COUNT } from "./generated/tools.js"
 export { decideSource, type CheckInSource, type SourceDecision, type SourceInputs } from "./source.js"
 export { decideMode, type Mode, type ModeDecision } from "./mode.js"
 export { loadSettings, readConfig, writeConfig, resolveSettings, DEFAULT_AGENT_NAME, type Settings, type ServerConfig } from "./config.js"
-export { stateDir, readAmbient, readLive, writeAmbient, writeLive, clearLive, type LiveState } from "./state.js"
+export { stateDir, writeAmbient, writeLive, clearLive, type LiveState } from "./state.js"
 export { describeGibson } from "./tools/status.js"
 export {
   ambientPrompt,

@@ -3,7 +3,7 @@
 
 import { mkdir, writeFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
-import { buildComponentManifest, enrollComponent, enrollmentSupported, validateComponentSpec, type ComponentKind, type ComponentSpec } from "@zeroroot-ai/sdk"
+import { buildComponentManifest, enrollComponent, validateComponentSpec, type ComponentKind, type ComponentSpec } from "@zeroroot-ai/sdk"
 import { z } from "zod"
 import type { ToolDefinition } from "../registry.js"
 import { defineTool } from "../tool.js"
@@ -17,7 +17,7 @@ const specSchema = {
   kind: z.enum(KINDS).describe("Component kind."),
   name: z.string().describe("Component name, as it will appear in the tenant registry."),
   version: z.string().describe('Semantic version of the artifact, e.g. "0.1.0".'),
-  image: z.string().optional().describe("OCI image reference of the built artifact. Required before it can be dispatched."),
+  image: z.string().optional().describe("OCI image reference of the built artifact, pinned by digest. Required before it can be enrolled."),
   language: z.string().optional().describe("Language the artifact is written in, for the catalog."),
   capabilities: z.array(z.string()).optional().describe('Agent capabilities. Required when kind is "agent".'),
   methods: z.array(z.string()).optional().describe('Plugin method names. Required when kind is "plugin".'),
@@ -102,7 +102,10 @@ export function componentizeTools(ctx: HelperContext): ToolDefinition[] {
     out.push(
       defineTool({
         name: "enroll_component",
-        description: "Register a produced artifact with Gibson so it joins the tenant fleet. Run componentize first to check the artifact against the component contract.",
+        description:
+          "Enroll a produced artifact with Gibson so it joins the tenant fleet with an identity of its own. " +
+          "Run componentize first to check the artifact against the component contract. The image must be " +
+          "pinned by digest. Returns a one-time bootstrap token: start the component with it as GIBSON_BOOTSTRAP_TOKEN.",
         input: specSchema,
         handler: async (args) => {
           const spec = toSpec(args)
@@ -110,10 +113,13 @@ export function componentizeTools(ctx: HelperContext): ToolDefinition[] {
           if (problems.length > 0) return invalid(spec, problems)
           try {
             const result = await enrollComponent(component, spec)
-            const { reason } = enrollmentSupported()
+            const until = result.expiresAt ? ` It is good until ${result.expiresAt.toISOString()}.` : ""
             return text(
               `enrolled ${spec.name}`,
-              `Registered ${spec.kind} ${spec.name}@${spec.version} as instance ${result.instanceId}.\n\nNote: ${reason}. It is visible in the tenant registry, but it drops out when heartbeats stop (every ${Math.round(result.heartbeatIntervalMs / 1000)}s) unless the artifact itself runs and checks in.`,
+              `Enrolled ${spec.kind} ${spec.name}@${spec.version} as ${result.principalId}.\n\n` +
+                `Start the component with GIBSON_BOOTSTRAP_TOKEN=${result.bootstrapToken} and GIBSON_URL set. ` +
+                `The token is for this component only and works one time.${until} ` +
+                "The platform runs the component as untrusted, in a sandbox.",
             )
           } catch (e) {
             return failure("enroll failed", (e as Error).message)

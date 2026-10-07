@@ -13,17 +13,19 @@ import type { ComponentService } from "./clients.js"
  * version, and the kind-specific fields below. This module builds and validates
  * that shape, then registers it.
  *
- * SCOPE — two pieces of #11 are deliberately not here:
+ * SCOPE — one piece of #11 is deliberately not here:
  *
  *  1. **Image build and publish** is a build-system concern, not an RPC. A
- *     produced artifact needs an image reference before it can be dispatched;
- *     that is carried in `metadata.image` and is the caller's responsibility.
- *  2. **Autonomous enrollment** — a produced component needs its own identity and
- *     a short-TTL bootstrap token, which requires the policy-bounded enrollment
- *     RPC in gibson#1185. That RPC does not exist yet. {@link enrollComponent}
- *     therefore registers under the CALLING agent's identity, which makes the
- *     component visible in the tenant registry but does not give it a credential
- *     of its own. {@link enrollmentSupported} reports this honestly.
+ *     produced artifact needs an image reference, pinned by digest, before it
+ *     can be enrolled. That is carried in `metadata.image` and is the
+ *     caller's responsibility.
+ *
+ * Enrollment gives the produced component an identity of its own
+ * (`ComponentService.EnrollComponent`, gibson#33). The daemon takes the
+ * tenant and the producer from the identity of the calling agent, assigns the
+ * trust, applies the quota of the tenant and returns a one-time bootstrap
+ * token for the new component. The component starts with that token
+ * (`GIBSON_BOOTSTRAP_TOKEN`) and registers itself.
  */
 
 /** The three component kinds the registry accepts. */
@@ -164,53 +166,51 @@ export function buildComponentManifest(spec: ComponentSpec): ComponentManifest {
 }
 
 export interface EnrollmentResult {
-  /** Registry instance ID of the enrolled component. */
-  instanceId: string
-  /** How often the component must heartbeat to stay in the registry. */
-  heartbeatIntervalMs: number
+  /** The identity of the new component, for example "tool_principal:<id>". */
+  principalId: string
   /**
-   * True once the component holds its own credential. Always false today:
-   * the policy-bounded enrollment RPC is gibson#1185, so the component is
-   * registered under the calling agent's identity.
+   * The one-time credential of the new component. Start the component with
+   * it as GIBSON_BOOTSTRAP_TOKEN before expiresAt. It is good for this
+   * component only.
    */
-  hasOwnIdentity: boolean
+  bootstrapToken: string
+  /** The end of the bootstrap token. */
+  expiresAt: Date | undefined
 }
 
-/**
- * Whether a produced component can be given an identity of its own.
- *
- * Hardcoded to false until gibson#1185 lands the tenant-scoped enrollment RPC.
- * Callers should surface this rather than imply the artifact is fully autonomous.
- */
-export function enrollmentSupported(): { supported: false; reason: string } {
-  return {
-    supported: false,
-    reason:
-      "autonomous component enrollment needs the policy-bounded enrollment RPC (gibson#1185); " +
-      "the component is registered under the calling agent's identity and has no credential of its own",
-  }
-}
+/** An image reference pinned by digest, the form the daemon accepts. */
+const PINNED_IMAGE = /@sha256:[0-9a-f]{64}$/
 
 /**
- * Register a produced artifact into the tenant fleet.
+ * Enroll a produced artifact into the tenant fleet with an identity of its
+ * own (gibson#33).
  *
- * Throws when the spec is invalid — an unregistrable artifact should fail loudly
- * at the point of enrollment, not become an inert catalog entry.
+ * Throws when the spec is invalid or the image is not pinned by digest — an
+ * unenrollable artifact should fail loudly at the point of enrollment.
  */
 export async function enrollComponent(
   component: Client<typeof ComponentService>,
   spec: ComponentSpec,
 ): Promise<EnrollmentResult> {
   const problems = validateComponentSpec(spec)
+  const image = spec.metadata?.image ?? ""
+  if (!PINNED_IMAGE.test(image)) {
+    problems.push("metadata.image must be an image reference pinned by digest (@sha256:...)")
+  }
   if (problems.length > 0) {
     throw new Error(`enrollComponent: invalid ${spec.kind} spec: ${problems.join("; ")}`)
   }
 
-  const manifest = buildComponentManifest(spec)
-  const res = await component.registerComponent(manifest)
+  const res = await component.enrollComponent({
+    kind: spec.kind,
+    name: spec.name,
+    version: spec.version,
+    image,
+    description: spec.metadata?.description ?? "",
+  })
   return {
-    instanceId: res.instanceId,
-    heartbeatIntervalMs: res.heartbeatIntervalMs > 0 ? res.heartbeatIntervalMs : 15_000,
-    hasOwnIdentity: false,
+    principalId: res.principalId,
+    bootstrapToken: res.bootstrapToken,
+    expiresAt: res.expiresAt ? new Date(Number(res.expiresAt.seconds) * 1000 + Math.floor(res.expiresAt.nanos / 1e6)) : undefined,
   }
 }

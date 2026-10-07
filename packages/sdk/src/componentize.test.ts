@@ -6,7 +6,6 @@ import assert from "node:assert/strict"
 import {
   buildComponentManifest,
   enrollComponent,
-  enrollmentSupported,
   validateComponentSpec,
   type ComponentSpec,
 } from "./componentize.js"
@@ -113,47 +112,48 @@ test("fileDescriptorSet is omitted when the spec has none", () => {
   assert.ok(!("fileDescriptorSet" in manifest))
 })
 
-test("enrollComponent registers a valid spec and reports the borrowed identity", async () => {
+const PINNED = "ghcr.io/tenant/produced-recon@sha256:" + "a".repeat(64)
+
+test("enrollComponent enrolls a valid spec with an identity of its own", async () => {
   let captured: Record<string, unknown> | undefined
   const component = {
-    registerComponent: async (req: Record<string, unknown>) => {
+    enrollComponent: async (req: Record<string, unknown>) => {
       captured = req
-      return { instanceId: "inst-1", heartbeatIntervalMs: 20_000 }
+      return { principalId: "agent_principal:new", bootstrapToken: "one-time", expiresAt: { seconds: 1800000000n, nanos: 0 } }
     },
   }
 
-  const result = await enrollComponent(component as never, AGENT)
+  const result = await enrollComponent(component as never, { ...AGENT, metadata: { image: PINNED, description: "recon" } })
 
   assert.equal(captured?.kind, "agent")
   assert.equal(captured?.name, "produced-recon-agent")
-  assert.equal(result.instanceId, "inst-1")
-  assert.equal(result.heartbeatIntervalMs, 20_000)
-  // Until gibson#1185 lands there is no per-component credential.
-  assert.equal(result.hasOwnIdentity, false)
+  assert.equal(captured?.image, PINNED)
+  assert.equal(captured?.description, "recon")
+  assert.equal(result.principalId, "agent_principal:new")
+  assert.equal(result.bootstrapToken, "one-time")
+  assert.equal(result.expiresAt?.getTime(), 1800000000 * 1000)
 })
 
-test("enrollComponent falls back to a sane heartbeat interval", async () => {
+test("enrollComponent refuses an image that is not pinned by digest", async () => {
   const component = {
-    registerComponent: async () => ({ instanceId: "inst-1", heartbeatIntervalMs: 0 }),
-  }
-  const result = await enrollComponent(component as never, AGENT)
-  assert.equal(result.heartbeatIntervalMs, 15_000)
-})
-
-test("enrollComponent refuses an invalid spec before it reaches the wire", async () => {
-  const component = {
-    registerComponent: async () => {
+    enrollComponent: async () => {
       throw new Error("must not be called")
     },
   }
   await assert.rejects(
-    () => enrollComponent(component as never, { ...AGENT, capabilities: [] }),
-    /invalid agent spec.*capability/s,
+    () => enrollComponent(component as never, AGENT),
+    /pinned by digest/,
   )
 })
 
-test("enrollmentSupported reports the gibson#1185 gap honestly", () => {
-  const { supported, reason } = enrollmentSupported()
-  assert.equal(supported, false)
-  assert.match(reason, /gibson#1185/)
+test("enrollComponent refuses an invalid spec before it reaches the wire", async () => {
+  const component = {
+    enrollComponent: async () => {
+      throw new Error("must not be called")
+    },
+  }
+  await assert.rejects(
+    () => enrollComponent(component as never, { ...AGENT, capabilities: [], metadata: { image: PINNED } }),
+    /invalid agent spec.*capability/s,
+  )
 })

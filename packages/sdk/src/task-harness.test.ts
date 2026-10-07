@@ -35,7 +35,7 @@ const CLAIMS = { sub: "component:agent:zerocool", tenant: "t-1", mission_id: "m-
 
 test("decodeGrantClaims reads the addressing claims the daemon mints", () => {
   const c = decodeGrantClaims(fakeJwt(CLAIMS))
-  assert.deepEqual(c, { sub: "component:agent:zerocool", tenant: "t-1", missionId: "m-1", taskId: "run-1", exp: 1_000 })
+  assert.deepEqual(c, { sub: "component:agent:zerocool", tenant: "t-1", missionId: "m-1", taskId: "run-1", exp: 1_000, callingAgent: "" })
 })
 
 test("decodeGrantClaims refuses a token that is not a JWT", () => {
@@ -46,6 +46,17 @@ test("decodeGrantClaims refuses a token that is not a JWT", () => {
 test("contextFromGrant derives agent_name from the component subject", () => {
   const ctx = contextFromGrant(decodeGrantClaims(fakeJwt(CLAIMS)))
   assert.deepEqual(ctx, { missionId: "m-1", taskId: "run-1", agentName: "zerocool" })
+})
+
+test("contextFromGrant names the dispatching agent of a tool or plugin grant", () => {
+  const tool = { ...CLAIMS, sub: "component:tool:nmap", cag: "zerocool" }
+  assert.equal(decodeGrantClaims(fakeJwt(tool)).callingAgent, "zerocool")
+  assert.deepEqual(contextFromGrant(decodeGrantClaims(fakeJwt(tool))), { missionId: "m-1", taskId: "run-1", agentName: "zerocool" })
+  // A grant of an agent names the agent in its subject, whatever a claim says.
+  const agent = { ...CLAIMS, cag: "other" }
+  assert.equal(contextFromGrant(decodeGrantClaims(fakeJwt(agent))).agentName, "zerocool")
+  // A tool grant with no claim keeps the subject name.
+  assert.equal(contextFromGrant(decodeGrantClaims(fakeJwt({ ...CLAIMS, sub: "component:tool:nmap" }))).agentName, "nmap")
 })
 
 test("contextFromGrant fails closed on a subject or mission it cannot address", () => {

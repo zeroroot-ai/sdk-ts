@@ -52,6 +52,11 @@ export interface GrantClaims {
   taskId: string
   /** Expiry, Unix seconds. `0` when the token carries none. */
   exp: number
+  /**
+   * The agent that dispatched a tool or plugin grant (the signed claim `cag`).
+   * Empty for the grant of an agent.
+   */
+  callingAgent: string
 }
 
 /** The header ext-authz reads a capability-grant JWT from. */
@@ -75,7 +80,7 @@ export function decodeGrantClaims(token: string): GrantClaims {
   }
   const str = (k: string): string => (typeof payload[k] === "string" ? (payload[k] as string) : "")
   const exp = typeof payload.exp === "number" ? (payload.exp as number) : 0
-  return { sub: str("sub"), tenant: str("tenant"), missionId: str("mission_id"), taskId: str("task_id"), exp }
+  return { sub: str("sub"), tenant: str("tenant"), missionId: str("mission_id"), taskId: str("task_id"), exp, callingAgent: str("cag") }
 }
 
 /**
@@ -95,7 +100,11 @@ export function contextFromGrant(claims: GrantClaims): TaskContext {
   if (!claims.missionId) {
     throw new Error("gibson-sdk: task grant carries no mission_id; callback RPCs would be refused")
   }
-  return { missionId: claims.missionId, taskId: claims.taskId, agentName: m[1] }
+  // A tool or plugin grant names the dispatching agent in the claim `cag`. The
+  // daemon refuses a callback whose agent_name is any other name. The grant of
+  // an agent carries no claim, and the subject names the agent.
+  const agentName = !claims.sub.startsWith("component:agent:") && claims.callingAgent ? claims.callingAgent : m[1]
+  return { missionId: claims.missionId, taskId: claims.taskId, agentName }
 }
 
 /**

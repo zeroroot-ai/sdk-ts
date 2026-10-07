@@ -14,7 +14,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/types/v1/types.proto.
  */
 export const file_gibson_types_v1_types: GenFile = /*@__PURE__*/
-  fileDesc("ChtnaWJzb24vdHlwZXMvdjEvdHlwZXMucHJvdG8SD2dpYnNvbi50eXBlcy52MSKFAwoEVGFzaxIKCgJpZBgBIAEoCRIMCgRnb2FsGAIgASgJEjMKB2NvbnRleHQYAyADKAsyIi5naWJzb24udHlwZXMudjEuVGFzay5Db250ZXh0RW50cnkSNQoLY29uc3RyYWludHMYBCABKAsyIC5naWJzb24udHlwZXMudjEuVGFza0NvbnN0cmFpbnRzEjUKCG1ldGFkYXRhGAUgAygLMiMuZ2lic29uLnR5cGVzLnYxLlRhc2suTWV0YWRhdGFFbnRyeRIjCgNqb2IYBiABKAsyFi5naWJzb24uam9iLnYxLkpvYlNwZWMaTAoMQ29udGV4dEVudHJ5EgsKA2tleRgBIAEoCRIrCgV2YWx1ZRgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZToCOAEaTQoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSKwoFdmFsdWUYAiABKAsyHC5naWJzb24uY29tbW9uLnYxLlR5cGVkVmFsdWU6AjgBImYKD1Rhc2tDb25zdHJhaW50cxIRCgltYXhfdHVybnMYASABKAUSEgoKbWF4X3Rva2VucxgCIAEoBRIVCg1hbGxvd2VkX3Rvb2xzGAMgAygJEhUKDWJsb2NrZWRfdG9vbHMYBCADKAkirwIKBlJlc3VsdBItCgZzdGF0dXMYASABKA4yHS5naWJzb24udHlwZXMudjEuUmVzdWx0U3RhdHVzEiwKBm91dHB1dBgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZRITCgtmaW5kaW5nX2lkcxgDIAMoCRI3CghtZXRhZGF0YRgEIAMoCzIlLmdpYnNvbi50eXBlcy52MS5SZXN1bHQuTWV0YWRhdGFFbnRyeRIrCgVlcnJvchgFIAEoCzIcLmdpYnNvbi50eXBlcy52MS5SZXN1bHRFcnJvchpNCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRIrCgV2YWx1ZRgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZToCOAEiyAEKC1Jlc3VsdEVycm9yEikKBGNvZGUYASABKA4yGy5naWJzb24uY29tbW9uLnYxLkVycm9yQ29kZRIPCgdtZXNzYWdlGAIgASgJEjoKB2RldGFpbHMYAyADKAsyKS5naWJzb24udHlwZXMudjEuUmVzdWx0RXJyb3IuRGV0YWlsc0VudHJ5EhEKCXJldHJ5YWJsZRgEIAEoCBouCgxEZXRhaWxzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASLOBQoHRmluZGluZxIKCgJpZBgBIAEoCRISCgptaXNzaW9uX2lkGAIgASgJEhIKCmFnZW50X25hbWUYAyABKAkSFgoOZGVsZWdhdGVkX2Zyb20YBCABKAkSDQoFdGl0bGUYBSABKAkSEwoLZGVzY3JpcHRpb24YBiABKAkSEAoIY2F0ZWdvcnkYByABKAkSEwoLc3ViY2F0ZWdvcnkYCCABKAkSMgoIc2V2ZXJpdHkYCSABKA4yIC5naWJzb24udHlwZXMudjEuRmluZGluZ1NldmVyaXR5EhIKCmNvbmZpZGVuY2UYCiABKAESLgoGc3RhdHVzGAsgASgOMh4uZ2lic29uLnR5cGVzLnYxLkZpbmRpbmdTdGF0dXMSMwoMbWl0cmVfYXR0YWNrGAwgASgLMh0uZ2lic29uLnR5cGVzLnYxLk1pdHJlTWFwcGluZxIyCgttaXRyZV9hdGxhcxgNIAEoCzIdLmdpYnNvbi50eXBlcy52MS5NaXRyZU1hcHBpbmcSKwoIZXZpZGVuY2UYDiADKAsyGS5naWJzb24udHlwZXMudjEuRXZpZGVuY2USMAoMcmVwcm9kdWN0aW9uGA8gAygLMhouZ2lic29uLnR5cGVzLnYxLlJlcHJvU3RlcBISCgpjdnNzX3Njb3JlGBAgASgBEhIKCnJpc2tfc2NvcmUYESABKAESEwoLcmVtZWRpYXRpb24YEiABKAkSEgoKcmVmZXJlbmNlcxgTIAMoCRIRCgl0YXJnZXRfaWQYFCABKAkSEQoJdGVjaG5pcXVlGBUgASgJEgwKBHRhZ3MYFiADKAkSEgoKY3JlYXRlZF9hdBgXIAEoAxISCgp1cGRhdGVkX2F0GBggASgDEj8KE2NvbXBsaWFuY2VfbWFwcGluZ3MYGSADKAsyIi5naWJzb24udHlwZXMudjEuQ29tcGxpYW5jZU1hcHBpbmciYwoRQ29tcGxpYW5jZU1hcHBpbmcSEQoJZnJhbWV3b3JrGAEgASgJEhIKCmNvbnRyb2xfaWQYAiABKAkSEQoJcmF0aW9uYWxlGAMgASgJEhQKDGV2aWRlbmNlX3JlZhgEIAEoCSKMAQoMTWl0cmVNYXBwaW5nEg4KBm1hdHJpeBgBIAEoCRIRCgl0YWN0aWNfaWQYAiABKAkSEwoLdGFjdGljX25hbWUYAyABKAkSFAoMdGVjaG5pcXVlX2lkGAQgASgJEhYKDnRlY2huaXF1ZV9uYW1lGAUgASgJEhYKDnN1Yl90ZWNobmlxdWVzGAYgAygJIsMBCghFdmlkZW5jZRINCgV0aXRsZRgBIAEoCRIrCgR0eXBlGAIgASgOMh0uZ2lic29uLnR5cGVzLnYxLkV2aWRlbmNlVHlwZRIPCgdjb250ZW50GAMgASgJEjkKCG1ldGFkYXRhGAQgAygLMicuZ2lic29uLnR5cGVzLnYxLkV2aWRlbmNlLk1ldGFkYXRhRW50cnkaLwoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIk4KCVJlcHJvU3RlcBINCgVvcmRlchgBIAEoBRITCgtkZXNjcmlwdGlvbhgCIAEoCRINCgVpbnB1dBgDIAEoCRIOCgZvdXRwdXQYBCABKAki5gIKCkdyYXBoUXVlcnkSDAoEdGV4dBgBIAEoCRIRCgllbWJlZGRpbmcYAiADKAISDQoFdG9wX2sYAyABKAUSEgoKbm9kZV90eXBlcxgEIAMoCRIRCgltaW5fc2NvcmUYBSABKAESEQoJbWF4X3Njb3JlGAYgASgBEhIKCm1pc3Npb25faWQYByABKAkSFgoObWlzc2lvbl9ydW5faWQYCCABKAkSKgoFc2NvcGUYCSABKA4yGy5naWJzb24udHlwZXMudjEuUXVlcnlTY29wZRI5CgdmaWx0ZXJzGAogAygLMiguZ2lic29uLnR5cGVzLnYxLkdyYXBoUXVlcnkuRmlsdGVyc0VudHJ5EhUKDXZlY3Rvcl93ZWlnaHQYCyABKAESFAoMZ3JhcGhfd2VpZ2h0GAwgASgBGi4KDEZpbHRlcnNFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6AjgBIo0BChFNaXNzaW9uUnVuU3VtbWFyeRISCgptaXNzaW9uX2lkGAEgASgJEhIKCnJ1bl9udW1iZXIYAiABKAUSDgoGc3RhdHVzGAMgASgJEhYKDmZpbmRpbmdzX2NvdW50GAQgASgFEhIKCmNyZWF0ZWRfYXQYBSABKAMSFAoMY29tcGxldGVkX2F0GAYgASgDKrUBCgxSZXN1bHRTdGF0dXMSHQoZUkVTVUxUX1NUQVRVU19VTlNQRUNJRklFRBAAEhkKFVJFU1VMVF9TVEFUVVNfU1VDQ0VTUxABEhgKFFJFU1VMVF9TVEFUVVNfRkFJTEVEEAISGQoVUkVTVUxUX1NUQVRVU19QQVJUSUFMEAMSGwoXUkVTVUxUX1NUQVRVU19DQU5DRUxMRUQQBBIZChVSRVNVTFRfU1RBVFVTX1RJTUVPVVQQBSq/AQoPRmluZGluZ1NldmVyaXR5EiAKHEZJTkRJTkdfU0VWRVJJVFlfVU5TUEVDSUZJRUQQABIdChlGSU5ESU5HX1NFVkVSSVRZX0NSSVRJQ0FMEAESGQoVRklORElOR19TRVZFUklUWV9ISUdIEAISGwoXRklORElOR19TRVZFUklUWV9NRURJVU0QAxIYChRGSU5ESU5HX1NFVkVSSVRZX0xPVxAEEhkKFUZJTkRJTkdfU0VWRVJJVFlfSU5GTxAFKqQBCg1GaW5kaW5nU3RhdHVzEh4KGkZJTkRJTkdfU1RBVFVTX1VOU1BFQ0lGSUVEEAASFwoTRklORElOR19TVEFUVVNfT1BFThABEhwKGEZJTkRJTkdfU1RBVFVTX0NPTkZJUk1FRBACEhkKFUZJTkRJTkdfU1RBVFVTX0NMT1NFRBADEiEKHUZJTkRJTkdfU1RBVFVTX0ZBTFNFX1BPU0lUSVZFEAQqygEKDEV2aWRlbmNlVHlwZRIdChlFVklERU5DRV9UWVBFX1VOU1BFQ0lGSUVEEAASGQoVRVZJREVOQ0VfVFlQRV9SRVFVRVNUEAESGgoWRVZJREVOQ0VfVFlQRV9SRVNQT05TRRACEhwKGEVWSURFTkNFX1RZUEVfU0NSRUVOU0hPVBADEhYKEkVWSURFTkNFX1RZUEVfQ09ERRAEEhUKEUVWSURFTkNFX1RZUEVfTE9HEAUSFwoTRVZJREVOQ0VfVFlQRV9PVEhFUhAGKncKClF1ZXJ5U2NvcGUSGwoXUVVFUllfU0NPUEVfVU5TUEVDSUZJRUQQABIbChdRVUVSWV9TQ09QRV9NSVNTSU9OX1JVThABEhcKE1FVRVJZX1NDT1BFX01JU1NJT04QAhIWChJRVUVSWV9TQ09QRV9HTE9CQUwQA0JNUAFaOmdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL3R5cGVzL3YxO3R5cGVzcGKqAgxHaWJzb24uVHlwZXNiBnByb3RvMw", [file_gibson_common_v1_gibson_common, file_gibson_job_v1_job]);
+  fileDesc("ChtnaWJzb24vdHlwZXMvdjEvdHlwZXMucHJvdG8SD2dpYnNvbi50eXBlcy52MSKFAwoEVGFzaxIKCgJpZBgBIAEoCRIMCgRnb2FsGAIgASgJEjMKB2NvbnRleHQYAyADKAsyIi5naWJzb24udHlwZXMudjEuVGFzay5Db250ZXh0RW50cnkSNQoLY29uc3RyYWludHMYBCABKAsyIC5naWJzb24udHlwZXMudjEuVGFza0NvbnN0cmFpbnRzEjUKCG1ldGFkYXRhGAUgAygLMiMuZ2lic29uLnR5cGVzLnYxLlRhc2suTWV0YWRhdGFFbnRyeRIjCgNqb2IYBiABKAsyFi5naWJzb24uam9iLnYxLkpvYlNwZWMaTAoMQ29udGV4dEVudHJ5EgsKA2tleRgBIAEoCRIrCgV2YWx1ZRgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZToCOAEaTQoNTWV0YWRhdGFFbnRyeRILCgNrZXkYASABKAkSKwoFdmFsdWUYAiABKAsyHC5naWJzb24uY29tbW9uLnYxLlR5cGVkVmFsdWU6AjgBImYKD1Rhc2tDb25zdHJhaW50cxIRCgltYXhfdHVybnMYASABKAUSEgoKbWF4X3Rva2VucxgCIAEoBRIVCg1hbGxvd2VkX3Rvb2xzGAMgAygJEhUKDWJsb2NrZWRfdG9vbHMYBCADKAkirwIKBlJlc3VsdBItCgZzdGF0dXMYASABKA4yHS5naWJzb24udHlwZXMudjEuUmVzdWx0U3RhdHVzEiwKBm91dHB1dBgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZRITCgtmaW5kaW5nX2lkcxgDIAMoCRI3CghtZXRhZGF0YRgEIAMoCzIlLmdpYnNvbi50eXBlcy52MS5SZXN1bHQuTWV0YWRhdGFFbnRyeRIrCgVlcnJvchgFIAEoCzIcLmdpYnNvbi50eXBlcy52MS5SZXN1bHRFcnJvchpNCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRIrCgV2YWx1ZRgCIAEoCzIcLmdpYnNvbi5jb21tb24udjEuVHlwZWRWYWx1ZToCOAEiyAEKC1Jlc3VsdEVycm9yEikKBGNvZGUYASABKA4yGy5naWJzb24uY29tbW9uLnYxLkVycm9yQ29kZRIPCgdtZXNzYWdlGAIgASgJEjoKB2RldGFpbHMYAyADKAsyKS5naWJzb24udHlwZXMudjEuUmVzdWx0RXJyb3IuRGV0YWlsc0VudHJ5EhEKCXJldHJ5YWJsZRgEIAEoCBouCgxEZXRhaWxzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKoBQoHRmluZGluZxIKCgJpZBgBIAEoCRISCgptaXNzaW9uX2lkGAIgASgJEhIKCmFnZW50X25hbWUYAyABKAkSFgoOZGVsZWdhdGVkX2Zyb20YBCABKAkSDQoFdGl0bGUYBSABKAkSEwoLZGVzY3JpcHRpb24YBiABKAkSEAoIY2F0ZWdvcnkYByABKAkSEwoLc3ViY2F0ZWdvcnkYCCABKAkSMgoIc2V2ZXJpdHkYCSABKA4yIC5naWJzb24udHlwZXMudjEuRmluZGluZ1NldmVyaXR5EhIKCmNvbmZpZGVuY2UYCiABKAESLgoGc3RhdHVzGAsgASgOMh4uZ2lic29uLnR5cGVzLnYxLkZpbmRpbmdTdGF0dXMSMwoMbWl0cmVfYXR0YWNrGAwgASgLMh0uZ2lic29uLnR5cGVzLnYxLk1pdHJlTWFwcGluZxIyCgttaXRyZV9hdGxhcxgNIAEoCzIdLmdpYnNvbi50eXBlcy52MS5NaXRyZU1hcHBpbmcSKwoIZXZpZGVuY2UYDiADKAsyGS5naWJzb24udHlwZXMudjEuRXZpZGVuY2USMAoMcmVwcm9kdWN0aW9uGA8gAygLMhouZ2lic29uLnR5cGVzLnYxLlJlcHJvU3RlcBISCgpjdnNzX3Njb3JlGBAgASgBEhIKCnJpc2tfc2NvcmUYESABKAESEwoLcmVtZWRpYXRpb24YEiABKAkSEgoKcmVmZXJlbmNlcxgTIAMoCRIRCgl0YXJnZXRfaWQYFCABKAkSEQoJdGVjaG5pcXVlGBUgASgJEgwKBHRhZ3MYFiADKAkSEgoKY3JlYXRlZF9hdBgXIAEoAxISCgp1cGRhdGVkX2F0GBggASgDSgQIGRAaUhNjb21wbGlhbmNlX21hcHBpbmdzIowBCgxNaXRyZU1hcHBpbmcSDgoGbWF0cml4GAEgASgJEhEKCXRhY3RpY19pZBgCIAEoCRITCgt0YWN0aWNfbmFtZRgDIAEoCRIUCgx0ZWNobmlxdWVfaWQYBCABKAkSFgoOdGVjaG5pcXVlX25hbWUYBSABKAkSFgoOc3ViX3RlY2huaXF1ZXMYBiADKAkiwwEKCEV2aWRlbmNlEg0KBXRpdGxlGAEgASgJEisKBHR5cGUYAiABKA4yHS5naWJzb24udHlwZXMudjEuRXZpZGVuY2VUeXBlEg8KB2NvbnRlbnQYAyABKAkSOQoIbWV0YWRhdGEYBCADKAsyJy5naWJzb24udHlwZXMudjEuRXZpZGVuY2UuTWV0YWRhdGFFbnRyeRovCg1NZXRhZGF0YUVudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEiTgoJUmVwcm9TdGVwEg0KBW9yZGVyGAEgASgFEhMKC2Rlc2NyaXB0aW9uGAIgASgJEg0KBWlucHV0GAMgASgJEg4KBm91dHB1dBgEIAEoCSKNAQoRTWlzc2lvblJ1blN1bW1hcnkSEgoKbWlzc2lvbl9pZBgBIAEoCRISCgpydW5fbnVtYmVyGAIgASgFEg4KBnN0YXR1cxgDIAEoCRIWCg5maW5kaW5nc19jb3VudBgEIAEoBRISCgpjcmVhdGVkX2F0GAUgASgDEhQKDGNvbXBsZXRlZF9hdBgGIAEoAyq1AQoMUmVzdWx0U3RhdHVzEh0KGVJFU1VMVF9TVEFUVVNfVU5TUEVDSUZJRUQQABIZChVSRVNVTFRfU1RBVFVTX1NVQ0NFU1MQARIYChRSRVNVTFRfU1RBVFVTX0ZBSUxFRBACEhkKFVJFU1VMVF9TVEFUVVNfUEFSVElBTBADEhsKF1JFU1VMVF9TVEFUVVNfQ0FOQ0VMTEVEEAQSGQoVUkVTVUxUX1NUQVRVU19USU1FT1VUEAUqvwEKD0ZpbmRpbmdTZXZlcml0eRIgChxGSU5ESU5HX1NFVkVSSVRZX1VOU1BFQ0lGSUVEEAASHQoZRklORElOR19TRVZFUklUWV9DUklUSUNBTBABEhkKFUZJTkRJTkdfU0VWRVJJVFlfSElHSBACEhsKF0ZJTkRJTkdfU0VWRVJJVFlfTUVESVVNEAMSGAoURklORElOR19TRVZFUklUWV9MT1cQBBIZChVGSU5ESU5HX1NFVkVSSVRZX0lORk8QBSqkAQoNRmluZGluZ1N0YXR1cxIeChpGSU5ESU5HX1NUQVRVU19VTlNQRUNJRklFRBAAEhcKE0ZJTkRJTkdfU1RBVFVTX09QRU4QARIcChhGSU5ESU5HX1NUQVRVU19DT05GSVJNRUQQAhIZChVGSU5ESU5HX1NUQVRVU19DTE9TRUQQAxIhCh1GSU5ESU5HX1NUQVRVU19GQUxTRV9QT1NJVElWRRAEKsoBCgxFdmlkZW5jZVR5cGUSHQoZRVZJREVOQ0VfVFlQRV9VTlNQRUNJRklFRBAAEhkKFUVWSURFTkNFX1RZUEVfUkVRVUVTVBABEhoKFkVWSURFTkNFX1RZUEVfUkVTUE9OU0UQAhIcChhFVklERU5DRV9UWVBFX1NDUkVFTlNIT1QQAxIWChJFVklERU5DRV9UWVBFX0NPREUQBBIVChFFVklERU5DRV9UWVBFX0xPRxAFEhcKE0VWSURFTkNFX1RZUEVfT1RIRVIQBkJNUAFaOmdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL3R5cGVzL3YxO3R5cGVzcGKqAgxHaWJzb24uVHlwZXNiBnByb3RvMw", [file_gibson_common_v1_gibson_common, file_gibson_job_v1_job]);
 
 /**
  * Task represents a goal-oriented task with context and constraints.
@@ -307,16 +307,6 @@ export type Finding = Message<"gibson.types.v1.Finding"> & {
    * @generated from field: int64 updated_at = 24;
    */
   updatedAt: bigint;
-
-  /**
-   * Compliance framework mappings — added by audit-finding-compliance-mappings.
-   * Links the finding to specific control IDs in compliance frameworks
-   * (SOC2, NIST AI RMF, MITRE ATLAS, MITRE ATT&CK). Multiple entries per
-   * framework allowed; downstream exporters (SARIF) surface them.
-   *
-   * @generated from field: repeated gibson.types.v1.ComplianceMapping compliance_mappings = 25;
-   */
-  complianceMappings: ComplianceMapping[];
 };
 
 /**
@@ -325,50 +315,6 @@ export type Finding = Message<"gibson.types.v1.Finding"> & {
  */
 export const FindingSchema: GenMessage<Finding> = /*@__PURE__*/
   messageDesc(file_gibson_types_v1_types, 4);
-
-/**
- * ComplianceMapping links a Finding to a compliance framework control.
- * See finding/compliance_mapping.go for the author-side Go type.
- *
- * @generated from message gibson.types.v1.ComplianceMapping
- */
-export type ComplianceMapping = Message<"gibson.types.v1.ComplianceMapping"> & {
-  /**
-   * Compliance framework identifier (e.g. SOC2, NIST_AI_RMF, MITRE_ATLAS,
-   * MITRE_ATTACK, PLATFORM).
-   *
-   * @generated from field: string framework = 1;
-   */
-  framework: string;
-
-  /**
-   * Control identifier within the framework.
-   *
-   * @generated from field: string control_id = 2;
-   */
-  controlId: string;
-
-  /**
-   * Optional human-readable rationale.
-   *
-   * @generated from field: string rationale = 3;
-   */
-  rationale: string;
-
-  /**
-   * Optional pointer to supporting evidence.
-   *
-   * @generated from field: string evidence_ref = 4;
-   */
-  evidenceRef: string;
-};
-
-/**
- * Describes the message gibson.types.v1.ComplianceMapping.
- * Use `create(ComplianceMappingSchema)` to create a new message.
- */
-export const ComplianceMappingSchema: GenMessage<ComplianceMapping> = /*@__PURE__*/
-  messageDesc(file_gibson_types_v1_types, 5);
 
 /**
  * MitreMapping represents a mapping to MITRE ATT&CK or ATLAS framework.
@@ -412,7 +358,7 @@ export type MitreMapping = Message<"gibson.types.v1.MitreMapping"> & {
  * Use `create(MitreMappingSchema)` to create a new message.
  */
 export const MitreMappingSchema: GenMessage<MitreMapping> = /*@__PURE__*/
-  messageDesc(file_gibson_types_v1_types, 6);
+  messageDesc(file_gibson_types_v1_types, 5);
 
 /**
  * Evidence represents supporting evidence for a finding.
@@ -446,7 +392,7 @@ export type Evidence = Message<"gibson.types.v1.Evidence"> & {
  * Use `create(EvidenceSchema)` to create a new message.
  */
 export const EvidenceSchema: GenMessage<Evidence> = /*@__PURE__*/
-  messageDesc(file_gibson_types_v1_types, 7);
+  messageDesc(file_gibson_types_v1_types, 6);
 
 /**
  * ReproStep represents a step in reproducing a finding.
@@ -480,83 +426,7 @@ export type ReproStep = Message<"gibson.types.v1.ReproStep"> & {
  * Use `create(ReproStepSchema)` to create a new message.
  */
 export const ReproStepSchema: GenMessage<ReproStep> = /*@__PURE__*/
-  messageDesc(file_gibson_types_v1_types, 8);
-
-/**
- * GraphQuery represents a query against the knowledge graph.
- *
- * @generated from message gibson.types.v1.GraphQuery
- */
-export type GraphQuery = Message<"gibson.types.v1.GraphQuery"> & {
-  /**
-   * @generated from field: string text = 1;
-   */
-  text: string;
-
-  /**
-   * @generated from field: repeated float embedding = 2;
-   */
-  embedding: number[];
-
-  /**
-   * @generated from field: int32 top_k = 3;
-   */
-  topK: number;
-
-  /**
-   * @generated from field: repeated string node_types = 4;
-   */
-  nodeTypes: string[];
-
-  /**
-   * @generated from field: double min_score = 5;
-   */
-  minScore: number;
-
-  /**
-   * @generated from field: double max_score = 6;
-   */
-  maxScore: number;
-
-  /**
-   * @generated from field: string mission_id = 7;
-   */
-  missionId: string;
-
-  /**
-   * @generated from field: string mission_run_id = 8;
-   */
-  missionRunId: string;
-
-  /**
-   * @generated from field: gibson.types.v1.QueryScope scope = 9;
-   */
-  scope: QueryScope;
-
-  /**
-   * @generated from field: map<string, string> filters = 10;
-   */
-  filters: { [key: string]: string };
-
-  /**
-   * Weights for hybrid scoring (must sum to 1.0)
-   *
-   * @generated from field: double vector_weight = 11;
-   */
-  vectorWeight: number;
-
-  /**
-   * @generated from field: double graph_weight = 12;
-   */
-  graphWeight: number;
-};
-
-/**
- * Describes the message gibson.types.v1.GraphQuery.
- * Use `create(GraphQuerySchema)` to create a new message.
- */
-export const GraphQuerySchema: GenMessage<GraphQuery> = /*@__PURE__*/
-  messageDesc(file_gibson_types_v1_types, 9);
+  messageDesc(file_gibson_types_v1_types, 7);
 
 /**
  * MissionRunSummary describes one run of a mission.
@@ -611,7 +481,7 @@ export type MissionRunSummary = Message<"gibson.types.v1.MissionRunSummary"> & {
  * Use `create(MissionRunSummarySchema)` to create a new message.
  */
 export const MissionRunSummarySchema: GenMessage<MissionRunSummary> = /*@__PURE__*/
-  messageDesc(file_gibson_types_v1_types, 10);
+  messageDesc(file_gibson_types_v1_types, 8);
 
 /**
  * ResultStatus represents the execution status of a task or operation.
@@ -784,37 +654,4 @@ export enum EvidenceType {
  */
 export const EvidenceTypeSchema: GenEnum<EvidenceType> = /*@__PURE__*/
   enumDesc(file_gibson_types_v1_types, 3);
-
-/**
- * QueryScope represents the scope of a GraphRAG query.
- *
- * @generated from enum gibson.types.v1.QueryScope
- */
-export enum QueryScope {
-  /**
-   * @generated from enum value: QUERY_SCOPE_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: QUERY_SCOPE_MISSION_RUN = 1;
-   */
-  MISSION_RUN = 1,
-
-  /**
-   * @generated from enum value: QUERY_SCOPE_MISSION = 2;
-   */
-  MISSION = 2,
-
-  /**
-   * @generated from enum value: QUERY_SCOPE_GLOBAL = 3;
-   */
-  GLOBAL = 3,
-}
-
-/**
- * Describes the enum gibson.types.v1.QueryScope.
- */
-export const QueryScopeSchema: GenEnum<QueryScope> = /*@__PURE__*/
-  enumDesc(file_gibson_types_v1_types, 4);
 

@@ -6,7 +6,6 @@ import type { GenEnum, GenFile, GenMessage } from "@bufbuild/protobuf/codegenv2"
 import { enumDesc, fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
-import type { PrincipalKind } from "../../identity/v1/identity_pb.js";
 import { file_gibson_identity_v1_identity } from "../../identity/v1/identity_pb.js";
 import { file_buf_validate_validate } from "../../../buf/validate/validate_pb.js";
 import type { Message } from "@bufbuild/protobuf";
@@ -15,7 +14,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/manifest/v1/manifest.proto.
  */
 export const file_gibson_manifest_v1_manifest: GenFile = /*@__PURE__*/
-  fileDesc("CiFnaWJzb24vbWFuaWZlc3QvdjEvbWFuaWZlc3QucHJvdG8SEmdpYnNvbi5tYW5pZmVzdC52MSLzBQoSQ2FwYWJpbGl0eU1hbmlmZXN0EhMKC21hbmlmZXN0X2lkGAEgASgJEhgKEG1hbmlmZXN0X3ZlcnNpb24YAiABKAQSEQoJdGVuYW50X2lkGAMgASgJEg8KB3N1YmplY3QYBCABKAkSLQoJaXNzdWVkX2F0GAUgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIuCgpleHBpcmVzX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBITCgt0dGxfc2Vjb25kcxgHIAEoDRI5Cg50ZW5hbnRfY29udGV4dBgKIAEoCzIhLmdpYnNvbi5tYW5pZmVzdC52MS5UZW5hbnRDb250ZXh0EjcKBmFnZW50cxgLIAMoCzInLmdpYnNvbi5tYW5pZmVzdC52MS5Db21wb25lbnRDYXBhYmlsaXR5EjYKBXRvb2xzGAwgAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSOAoHcGx1Z2lucxgNIAMoCzInLmdpYnNvbi5tYW5pZmVzdC52MS5Db21wb25lbnRDYXBhYmlsaXR5EkUKFWNyb3NzX2NvbXBvbmVudF9ydWxlcxgUIAMoCzImLmdpYnNvbi5tYW5pZmVzdC52MS5Dcm9zc0NvbXBvbmVudFJ1bGUSJwofY3Jvc3NfY29tcG9uZW50X3J1bGVzX3RydW5jYXRlZBgVIAEoCBIzCgZsaW1pdHMYHiABKAsyIy5naWJzb24ubWFuaWZlc3QudjEuTGltaXRzQW5kUXVvdGFzEhsKE2F2YWlsYWJsZV9sbG1fc2xvdHMYHyADKAkSNQoGbWVtb3J5GCAgASgLMiUuZ2lic29uLm1hbmlmZXN0LnYxLk1lbW9yeVBlcm1pc3Npb25zEhIKCXNpZ25hdHVyZRjIASABKAwSFwoOc2lnbmluZ19rZXlfaWQYyQEgASgJSgQIZBBlSgQIZRBmImsKDVRlbmFudENvbnRleHQSEQoJdGVuYW50X2lkGAEgASgJEhsKE3RlbmFudF9kaXNwbGF5X25hbWUYAiABKAkSGAoQdGVhbV9tZW1iZXJzaGlwcxgDIAMoCRIQCghpc19hZG1pbhgEIAEoCCLjAwoTQ29tcG9uZW50Q2FwYWJpbGl0eRIMCgRuYW1lGAEgASgJEgwKBGtpbmQYAiABKAkSFQoNY29tcG9uZW50X3JlZhgDIAEoCRIPCgd2ZXJzaW9uGAQgASgJEhMKC2Rlc2NyaXB0aW9uGAUgASgJEhEKCWlzX3N5c3RlbRgGIAEoCBIUCgxvd25lcl90ZW5hbnQYByABKAkSEwoLcGVybWlzc2lvbnMYCiADKAkSOwoOYWdlbnRfY29udHJhY3QYFCABKAsyIS5naWJzb24ubWFuaWZlc3QudjEuQWdlbnRDb250cmFjdEgAEjkKDXRvb2xfY29udHJhY3QYFSABKAsyIC5naWJzb24ubWFuaWZlc3QudjEuVG9vbENvbnRyYWN0SAASPQoPcGx1Z2luX2NvbnRyYWN0GBYgASgLMiIuZ2lic29uLm1hbmlmZXN0LnYxLlBsdWdpbkNvbnRyYWN0SAASNwoIbGl2ZW5lc3MYHiABKAsyJS5naWJzb24ubWFuaWZlc3QudjEuQ29tcG9uZW50TGl2ZW5lc3MSOQoOcHJpbmNpcGFsX2tpbmQYKCABKA4yIS5naWJzb24uaWRlbnRpdHkudjEuUHJpbmNpcGFsS2luZEIKCghjb250cmFjdCJxCg1BZ2VudENvbnRyYWN0EhYKDmxsbV9zbG90X25hbWVzGAEgAygJEiIKGmRlY2xhcmVkX3Rvb2xfZGVwZW5kZW5jaWVzGAIgAygJEiQKHGRlY2xhcmVkX3BsdWdpbl9kZXBlbmRlbmNpZXMYAyADKAkitAEKDFRvb2xDb250cmFjdBIYChBpbnB1dF9wcm90b19uYW1lGAEgASgJEhkKEW91dHB1dF9wcm90b19uYW1lGAIgASgJEhkKEWlucHV0X3NjaGVtYV9qc29uGAMgASgJEhoKEm91dHB1dF9zY2hlbWFfanNvbhgEIAEoCRI4CgtpZGVtcG90ZW5jeRgFIAEoDjIjLmdpYnNvbi5tYW5pZmVzdC52MS5Ub29sSWRlbXBvdGVuY3kiQwoOUGx1Z2luQ29udHJhY3QSMQoHbWV0aG9kcxgBIAMoCzIgLmdpYnNvbi5tYW5pZmVzdC52MS5QbHVnaW5NZXRob2QiaAoMUGx1Z2luTWV0aG9kEgwKBG5hbWUYASABKAkSGgoScGFyYW1zX3NjaGVtYV9qc29uGAIgASgJEhoKEnJlc3VsdF9zY2hlbWFfanNvbhgDIAEoCRISCgpjYW5faW52b2tlGAQgASgIIuQBChJDcm9zc0NvbXBvbmVudFJ1bGUSHAoUc291cmNlX2NvbXBvbmVudF9yZWYYASABKAkSHAoUdGFyZ2V0X2NvbXBvbmVudF9yZWYYAiABKAkSPQoGZWZmZWN0GAMgASgOMi0uZ2lic29uLm1hbmlmZXN0LnYxLkNyb3NzQ29tcG9uZW50UnVsZS5FZmZlY3QSDgoGcmVhc29uGAQgASgJIkMKBkVmZmVjdBIWChJFRkZFQ1RfVU5TUEVDSUZJRUQQABIQCgxFRkZFQ1RfQUxMT1cQARIPCgtFRkZFQ1RfREVOWRACIoQBCg9MaW1pdHNBbmRRdW90YXMSGwoTbWF4X3Rva2Vuc19wZXJfY2FsbBgBIAEoBBIeChZtYXhfdG9rZW5zX3Blcl9zZXNzaW9uGAIgASgEEh0KFXJhdGVfbGltaXRfcGVyX21pbnV0ZRgDIAEoDRIVCg1tYXhfc3BlbmRfdXNkGAQgASgJIkcKEU1lbW9yeVBlcm1pc3Npb25zEg8KB3dvcmtpbmcYASABKAkSDwoHbWlzc2lvbhgCIAEoCRIQCghsb25ndGVybRgDIAEoCSJvChFDb21wb25lbnRMaXZlbmVzcxIOCgZzdGF0dXMYASABKAkSMgoObGFzdF9oZWFydGJlYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhYKDmluc3RhbmNlX2NvdW50GAMgASgNIkQKHEdldENhcGFiaWxpdHlNYW5pZmVzdFJlcXVlc3QSJAoSYWdlbnRfcHJpbmNpcGFsX2lkGAEgASgJQgi6SAVyAxiACCJZCh1HZXRDYXBhYmlsaXR5TWFuaWZlc3RSZXNwb25zZRI4CghtYW5pZmVzdBgBIAEoCzImLmdpYnNvbi5tYW5pZmVzdC52MS5DYXBhYmlsaXR5TWFuaWZlc3QiIwohV2F0Y2hNYW5pZmVzdEludmFsaWRhdGlvbnNSZXF1ZXN0ImIKIldhdGNoTWFuaWZlc3RJbnZhbGlkYXRpb25zUmVzcG9uc2USPAoFZXZlbnQYASABKAsyLS5naWJzb24ubWFuaWZlc3QudjEuTWFuaWZlc3RJbnZhbGlkYXRpb25FdmVudCK4AgoZTWFuaWZlc3RJbnZhbGlkYXRpb25FdmVudBJLCgpldmVudF90eXBlGAEgASgOMjcuZ2lic29uLm1hbmlmZXN0LnYxLk1hbmlmZXN0SW52YWxpZGF0aW9uRXZlbnQuRXZlbnRUeXBlEhEKCXRlbmFudF9pZBgCIAEoCRIOCgZyZWFzb24YAyABKAkSHAoUbmV3X21hbmlmZXN0X3ZlcnNpb24YBCABKAQSLgoKZW1pdHRlZF9hdBgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiXQoJRXZlbnRUeXBlEhoKFkVWRU5UX1RZUEVfVU5TUEVDSUZJRUQQABIYChRFVkVOVF9UWVBFX0hFQVJUQkVBVBABEhoKFkVWRU5UX1RZUEVfSU5WQUxJREFURUQQAiqdAQoPVG9vbElkZW1wb3RlbmN5EiAKHFRPT0xfSURFTVBPVEVOQ1lfVU5TUEVDSUZJRUQQABIhCh1UT09MX0lERU1QT1RFTkNZX0FUX01PU1RfT05DRRABEiIKHlRPT0xfSURFTVBPVEVOQ1lfQVRfTEVBU1RfT05DRRACEiEKHVRPT0xfSURFTVBPVEVOQ1lfRVhBQ1RMWV9PTkNFEANCVlABWkBnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9tYW5pZmVzdC92MTttYW5pZmVzdHBiqgIPR2lic29uLk1hbmlmZXN0YgZwcm90bzM", [file_google_protobuf_timestamp, file_gibson_identity_v1_identity, file_buf_validate_validate]);
+  fileDesc("CiFnaWJzb24vbWFuaWZlc3QvdjEvbWFuaWZlc3QucHJvdG8SEmdpYnNvbi5tYW5pZmVzdC52MSKBBQoSQ2FwYWJpbGl0eU1hbmlmZXN0EhMKC21hbmlmZXN0X2lkGAEgASgJEhgKEG1hbmlmZXN0X3ZlcnNpb24YAiABKAQSEQoJdGVuYW50X2lkGAMgASgJEg8KB3N1YmplY3QYBCABKAkSLgoKZXhwaXJlc19hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEwoLdHRsX3NlY29uZHMYByABKA0SNwoGYWdlbnRzGAsgAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSNgoFdG9vbHMYDCADKAsyJy5naWJzb24ubWFuaWZlc3QudjEuQ29tcG9uZW50Q2FwYWJpbGl0eRI4CgdwbHVnaW5zGA0gAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSMwoGbGltaXRzGB4gASgLMiMuZ2lic29uLm1hbmlmZXN0LnYxLkxpbWl0c0FuZFF1b3RhcxI1CgZtZW1vcnkYICABKAsyJS5naWJzb24ubWFuaWZlc3QudjEuTWVtb3J5UGVybWlzc2lvbnMSEgoJc2lnbmF0dXJlGMgBIAEoDEoECGQQZUoECGUQZkoECAUQBkoECAoQC0oECBQQFUoECBUQFkoECB8QIEoGCMkBEMoBUglpc3N1ZWRfYXRSDnRlbmFudF9jb250ZXh0UhVjcm9zc19jb21wb25lbnRfcnVsZXNSH2Nyb3NzX2NvbXBvbmVudF9ydWxlc190cnVuY2F0ZWRSE2F2YWlsYWJsZV9sbG1fc2xvdHNSDnNpZ25pbmdfa2V5X2lkIrsCChNDb21wb25lbnRDYXBhYmlsaXR5EgwKBG5hbWUYASABKAkSDAoEa2luZBgCIAEoCRIVCg1jb21wb25lbnRfcmVmGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSFAoMb3duZXJfdGVuYW50GAcgASgJEhMKC3Blcm1pc3Npb25zGAogAygJEjcKCGxpdmVuZXNzGB4gASgLMiUuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudExpdmVuZXNzSgQIBhAHSgQIFBAVSgQIFRAWSgQIFhAXSgQIKBApUglpc19zeXN0ZW1SDmFnZW50X2NvbnRyYWN0Ug10b29sX2NvbnRyYWN0Ug9wbHVnaW5fY29udHJhY3RSDnByaW5jaXBhbF9raW5kIn4KD0xpbWl0c0FuZFF1b3RhcxIbChNtYXhfdG9rZW5zX3Blcl9jYWxsGAEgASgESgQIAhADSgQIAxAESgQIBBAFUhZtYXhfdG9rZW5zX3Blcl9zZXNzaW9uUhVyYXRlX2xpbWl0X3Blcl9taW51dGVSDW1heF9zcGVuZF91c2QiRQoRTWVtb3J5UGVybWlzc2lvbnMSDwoHd29ya2luZxgBIAEoCRIPCgdtaXNzaW9uGAIgASgJSgQIAxAEUghsb25ndGVybSJtChFDb21wb25lbnRMaXZlbmVzcxIOCgZzdGF0dXMYASABKAkSMgoObGFzdF9oZWFydGJlYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSgQIAxAEUg5pbnN0YW5jZV9jb3VudCJEChxHZXRDYXBhYmlsaXR5TWFuaWZlc3RSZXF1ZXN0EiQKEmFnZW50X3ByaW5jaXBhbF9pZBgBIAEoCUIIukgFcgMYgAgiWQodR2V0Q2FwYWJpbGl0eU1hbmlmZXN0UmVzcG9uc2USOAoIbWFuaWZlc3QYASABKAsyJi5naWJzb24ubWFuaWZlc3QudjEuQ2FwYWJpbGl0eU1hbmlmZXN0IiMKIVdhdGNoTWFuaWZlc3RJbnZhbGlkYXRpb25zUmVxdWVzdCJiCiJXYXRjaE1hbmlmZXN0SW52YWxpZGF0aW9uc1Jlc3BvbnNlEjwKBWV2ZW50GAEgASgLMi0uZ2lic29uLm1hbmlmZXN0LnYxLk1hbmlmZXN0SW52YWxpZGF0aW9uRXZlbnQimAIKGU1hbmlmZXN0SW52YWxpZGF0aW9uRXZlbnQSSwoKZXZlbnRfdHlwZRgBIAEoDjI3LmdpYnNvbi5tYW5pZmVzdC52MS5NYW5pZmVzdEludmFsaWRhdGlvbkV2ZW50LkV2ZW50VHlwZRIRCgl0ZW5hbnRfaWQYAiABKAkSDgoGcmVhc29uGAMgASgJIl0KCUV2ZW50VHlwZRIaChZFVkVOVF9UWVBFX1VOU1BFQ0lGSUVEEAASGAoURVZFTlRfVFlQRV9IRUFSVEJFQVQQARIaChZFVkVOVF9UWVBFX0lOVkFMSURBVEVEEAJKBAgEEAVKBAgFEAZSFG5ld19tYW5pZmVzdF92ZXJzaW9uUgplbWl0dGVkX2F0QlZQAVpAZ2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vbWFuaWZlc3QvdjE7bWFuaWZlc3RwYqoCD0dpYnNvbi5NYW5pZmVzdGIGcHJvdG8z", [file_google_protobuf_timestamp, file_gibson_identity_v1_identity, file_buf_validate_validate]);
 
 /**
  * CapabilityManifest is the single, signed, versioned snapshot of every
@@ -47,11 +46,6 @@ export type CapabilityManifest = Message<"gibson.manifest.v1.CapabilityManifest"
   subject: string;
 
   /**
-   * @generated from field: google.protobuf.Timestamp issued_at = 5;
-   */
-  issuedAt?: Timestamp | undefined;
-
-  /**
    * @generated from field: google.protobuf.Timestamp expires_at = 6;
    */
   expiresAt?: Timestamp | undefined;
@@ -60,11 +54,6 @@ export type CapabilityManifest = Message<"gibson.manifest.v1.CapabilityManifest"
    * @generated from field: uint32 ttl_seconds = 7;
    */
   ttlSeconds: number;
-
-  /**
-   * @generated from field: gibson.manifest.v1.TenantContext tenant_context = 10;
-   */
-  tenantContext?: TenantContext | undefined;
 
   /**
    * @generated from field: repeated gibson.manifest.v1.ComponentCapability agents = 11;
@@ -82,24 +71,9 @@ export type CapabilityManifest = Message<"gibson.manifest.v1.CapabilityManifest"
   plugins: ComponentCapability[];
 
   /**
-   * @generated from field: repeated gibson.manifest.v1.CrossComponentRule cross_component_rules = 20;
-   */
-  crossComponentRules: CrossComponentRule[];
-
-  /**
-   * @generated from field: bool cross_component_rules_truncated = 21;
-   */
-  crossComponentRulesTruncated: boolean;
-
-  /**
    * @generated from field: gibson.manifest.v1.LimitsAndQuotas limits = 30;
    */
   limits?: LimitsAndQuotas | undefined;
-
-  /**
-   * @generated from field: repeated string available_llm_slots = 31;
-   */
-  availableLlmSlots: string[];
 
   /**
    * @generated from field: gibson.manifest.v1.MemoryPermissions memory = 32;
@@ -112,11 +86,6 @@ export type CapabilityManifest = Message<"gibson.manifest.v1.CapabilityManifest"
    * @generated from field: bytes signature = 200;
    */
   signature: Uint8Array;
-
-  /**
-   * @generated from field: string signing_key_id = 201;
-   */
-  signingKeyId: string;
 };
 
 /**
@@ -125,41 +94,6 @@ export type CapabilityManifest = Message<"gibson.manifest.v1.CapabilityManifest"
  */
 export const CapabilityManifestSchema: GenMessage<CapabilityManifest> = /*@__PURE__*/
   messageDesc(file_gibson_manifest_v1_manifest, 0);
-
-/**
- * TenantContext surfaces the tenant identity and team memberships that
- * gate the manifest's scope.
- *
- * @generated from message gibson.manifest.v1.TenantContext
- */
-export type TenantContext = Message<"gibson.manifest.v1.TenantContext"> & {
-  /**
-   * @generated from field: string tenant_id = 1;
-   */
-  tenantId: string;
-
-  /**
-   * @generated from field: string tenant_display_name = 2;
-   */
-  tenantDisplayName: string;
-
-  /**
-   * @generated from field: repeated string team_memberships = 3;
-   */
-  teamMemberships: string[];
-
-  /**
-   * @generated from field: bool is_admin = 4;
-   */
-  isAdmin: boolean;
-};
-
-/**
- * Describes the message gibson.manifest.v1.TenantContext.
- * Use `create(TenantContextSchema)` to create a new message.
- */
-export const TenantContextSchema: GenMessage<TenantContext> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 1);
 
 /**
  * ComponentCapability is a single discoverable component (agent, tool, plugin)
@@ -205,11 +139,6 @@ export type ComponentCapability = Message<"gibson.manifest.v1.ComponentCapabilit
   description: string;
 
   /**
-   * @generated from field: bool is_system = 6;
-   */
-  isSystem: boolean;
-
-  /**
    * @generated from field: string owner_tenant = 7;
    */
   ownerTenant: string;
@@ -220,46 +149,9 @@ export type ComponentCapability = Message<"gibson.manifest.v1.ComponentCapabilit
   permissions: string[];
 
   /**
-   * @generated from oneof gibson.manifest.v1.ComponentCapability.contract
-   */
-  contract: {
-    /**
-     * @generated from field: gibson.manifest.v1.AgentContract agent_contract = 20;
-     */
-    value: AgentContract;
-    case: "agentContract";
-  } | {
-    /**
-     * @generated from field: gibson.manifest.v1.ToolContract tool_contract = 21;
-     */
-    value: ToolContract;
-    case: "toolContract";
-  } | {
-    /**
-     * @generated from field: gibson.manifest.v1.PluginContract plugin_contract = 22;
-     */
-    value: PluginContract;
-    case: "pluginContract";
-  } | { case: undefined; value?: undefined };
-
-  /**
    * @generated from field: gibson.manifest.v1.ComponentLiveness liveness = 30;
    */
   liveness?: ComponentLiveness | undefined;
-
-  /**
-   * principal_kind is the typed kind discriminator. Populated by the
-   * daemon at manifest-resolution time; set by the SDK loader when
-   * converting YAML manifests. Must agree with the populated
-   * `contract` oneof (PRINCIPAL_KIND_AGENT ↔ agent_contract, etc.) —
-   * mismatches are rejected by the daemon's RegisterPlugin /
-   * CreateAgentIdentity validators.
-   *
-   * Spec: component-bootstrap-e2e Requirement 12.
-   *
-   * @generated from field: gibson.identity.v1.PrincipalKind principal_kind = 40;
-   */
-  principalKind: PrincipalKind;
 };
 
 /**
@@ -267,195 +159,7 @@ export type ComponentCapability = Message<"gibson.manifest.v1.ComponentCapabilit
  * Use `create(ComponentCapabilitySchema)` to create a new message.
  */
 export const ComponentCapabilitySchema: GenMessage<ComponentCapability> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 2);
-
-/**
- * AgentContract describes an agent's LLM slot surface and declared
- * tool/plugin dependencies. The daemon composes this from the agent's
- * descriptor RPC at registration time.
- *
- * @generated from message gibson.manifest.v1.AgentContract
- */
-export type AgentContract = Message<"gibson.manifest.v1.AgentContract"> & {
-  /**
-   * @generated from field: repeated string llm_slot_names = 1;
-   */
-  llmSlotNames: string[];
-
-  /**
-   * @generated from field: repeated string declared_tool_dependencies = 2;
-   */
-  declaredToolDependencies: string[];
-
-  /**
-   * @generated from field: repeated string declared_plugin_dependencies = 3;
-   */
-  declaredPluginDependencies: string[];
-};
-
-/**
- * Describes the message gibson.manifest.v1.AgentContract.
- * Use `create(AgentContractSchema)` to create a new message.
- */
-export const AgentContractSchema: GenMessage<AgentContract> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 3);
-
-/**
- * ToolContract describes the proto envelope a tool accepts and emits.
- * input_schema_json and output_schema_json are derived from the
- * FileDescriptor and rendered to JSON Schema for SDK/ADK consumption.
- *
- * @generated from message gibson.manifest.v1.ToolContract
- */
-export type ToolContract = Message<"gibson.manifest.v1.ToolContract"> & {
-  /**
-   * @generated from field: string input_proto_name = 1;
-   */
-  inputProtoName: string;
-
-  /**
-   * @generated from field: string output_proto_name = 2;
-   */
-  outputProtoName: string;
-
-  /**
-   * @generated from field: string input_schema_json = 3;
-   */
-  inputSchemaJson: string;
-
-  /**
-   * @generated from field: string output_schema_json = 4;
-   */
-  outputSchemaJson: string;
-
-  /**
-   * see ToolIdempotency enum; UNSPECIFIED is treated as AT_LEAST_ONCE
-   *
-   * @generated from field: gibson.manifest.v1.ToolIdempotency idempotency = 5;
-   */
-  idempotency: ToolIdempotency;
-};
-
-/**
- * Describes the message gibson.manifest.v1.ToolContract.
- * Use `create(ToolContractSchema)` to create a new message.
- */
-export const ToolContractSchema: GenMessage<ToolContract> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 4);
-
-/**
- * PluginContract enumerates a plugin's callable methods with per-method
- * schemas and per-method FGA-derived invocation permission.
- *
- * @generated from message gibson.manifest.v1.PluginContract
- */
-export type PluginContract = Message<"gibson.manifest.v1.PluginContract"> & {
-  /**
-   * @generated from field: repeated gibson.manifest.v1.PluginMethod methods = 1;
-   */
-  methods: PluginMethod[];
-};
-
-/**
- * Describes the message gibson.manifest.v1.PluginContract.
- * Use `create(PluginContractSchema)` to create a new message.
- */
-export const PluginContractSchema: GenMessage<PluginContract> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 5);
-
-/**
- * @generated from message gibson.manifest.v1.PluginMethod
- */
-export type PluginMethod = Message<"gibson.manifest.v1.PluginMethod"> & {
-  /**
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * @generated from field: string params_schema_json = 2;
-   */
-  paramsSchemaJson: string;
-
-  /**
-   * @generated from field: string result_schema_json = 3;
-   */
-  resultSchemaJson: string;
-
-  /**
-   * @generated from field: bool can_invoke = 4;
-   */
-  canInvoke: boolean;
-};
-
-/**
- * Describes the message gibson.manifest.v1.PluginMethod.
- * Use `create(PluginMethodSchema)` to create a new message.
- */
-export const PluginMethodSchema: GenMessage<PluginMethod> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 6);
-
-/**
- * CrossComponentRule expresses an explicit override on the default
- * can_execute evaluation for a (source_component, target_component) pair.
- * Only rules that override the default are emitted, keeping payload bounded.
- *
- * @generated from message gibson.manifest.v1.CrossComponentRule
- */
-export type CrossComponentRule = Message<"gibson.manifest.v1.CrossComponentRule"> & {
-  /**
-   * @generated from field: string source_component_ref = 1;
-   */
-  sourceComponentRef: string;
-
-  /**
-   * @generated from field: string target_component_ref = 2;
-   */
-  targetComponentRef: string;
-
-  /**
-   * @generated from field: gibson.manifest.v1.CrossComponentRule.Effect effect = 3;
-   */
-  effect: CrossComponentRule_Effect;
-
-  /**
-   * @generated from field: string reason = 4;
-   */
-  reason: string;
-};
-
-/**
- * Describes the message gibson.manifest.v1.CrossComponentRule.
- * Use `create(CrossComponentRuleSchema)` to create a new message.
- */
-export const CrossComponentRuleSchema: GenMessage<CrossComponentRule> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 7);
-
-/**
- * @generated from enum gibson.manifest.v1.CrossComponentRule.Effect
- */
-export enum CrossComponentRule_Effect {
-  /**
-   * @generated from enum value: EFFECT_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: EFFECT_ALLOW = 1;
-   */
-  ALLOW = 1,
-
-  /**
-   * @generated from enum value: EFFECT_DENY = 2;
-   */
-  DENY = 2,
-}
-
-/**
- * Describes the enum gibson.manifest.v1.CrossComponentRule.Effect.
- */
-export const CrossComponentRule_EffectSchema: GenEnum<CrossComponentRule_Effect> = /*@__PURE__*/
-  enumDesc(file_gibson_manifest_v1_manifest, 7, 0);
+  messageDesc(file_gibson_manifest_v1_manifest, 1);
 
 /**
  * LimitsAndQuotas carries the tier-derived resource ceilings applied to
@@ -469,21 +173,6 @@ export type LimitsAndQuotas = Message<"gibson.manifest.v1.LimitsAndQuotas"> & {
    * @generated from field: uint64 max_tokens_per_call = 1;
    */
   maxTokensPerCall: bigint;
-
-  /**
-   * @generated from field: uint64 max_tokens_per_session = 2;
-   */
-  maxTokensPerSession: bigint;
-
-  /**
-   * @generated from field: uint32 rate_limit_per_minute = 3;
-   */
-  rateLimitPerMinute: number;
-
-  /**
-   * @generated from field: string max_spend_usd = 4;
-   */
-  maxSpendUsd: string;
 };
 
 /**
@@ -491,7 +180,7 @@ export type LimitsAndQuotas = Message<"gibson.manifest.v1.LimitsAndQuotas"> & {
  * Use `create(LimitsAndQuotasSchema)` to create a new message.
  */
 export const LimitsAndQuotasSchema: GenMessage<LimitsAndQuotas> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 8);
+  messageDesc(file_gibson_manifest_v1_manifest, 2);
 
 /**
  * MemoryPermissions expresses per-tier memory access (e.g. "ro", "rw", "").
@@ -508,11 +197,6 @@ export type MemoryPermissions = Message<"gibson.manifest.v1.MemoryPermissions"> 
    * @generated from field: string mission = 2;
    */
   mission: string;
-
-  /**
-   * @generated from field: string longterm = 3;
-   */
-  longterm: string;
 };
 
 /**
@@ -520,7 +204,7 @@ export type MemoryPermissions = Message<"gibson.manifest.v1.MemoryPermissions"> 
  * Use `create(MemoryPermissionsSchema)` to create a new message.
  */
 export const MemoryPermissionsSchema: GenMessage<MemoryPermissions> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 9);
+  messageDesc(file_gibson_manifest_v1_manifest, 3);
 
 /**
  * ComponentLiveness is a snapshot of the component's runtime health at
@@ -539,11 +223,6 @@ export type ComponentLiveness = Message<"gibson.manifest.v1.ComponentLiveness"> 
    * @generated from field: google.protobuf.Timestamp last_heartbeat = 2;
    */
   lastHeartbeat?: Timestamp | undefined;
-
-  /**
-   * @generated from field: uint32 instance_count = 3;
-   */
-  instanceCount: number;
 };
 
 /**
@@ -551,7 +230,7 @@ export type ComponentLiveness = Message<"gibson.manifest.v1.ComponentLiveness"> 
  * Use `create(ComponentLivenessSchema)` to create a new message.
  */
 export const ComponentLivenessSchema: GenMessage<ComponentLiveness> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 10);
+  messageDesc(file_gibson_manifest_v1_manifest, 4);
 
 /**
  * GetCapabilityManifestRequest identifies the subject whose manifest is
@@ -572,7 +251,7 @@ export type GetCapabilityManifestRequest = Message<"gibson.manifest.v1.GetCapabi
  * Use `create(GetCapabilityManifestRequestSchema)` to create a new message.
  */
 export const GetCapabilityManifestRequestSchema: GenMessage<GetCapabilityManifestRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 11);
+  messageDesc(file_gibson_manifest_v1_manifest, 5);
 
 /**
  * GetCapabilityManifestResponse wraps the signed manifest. Wrapping keeps
@@ -594,7 +273,7 @@ export type GetCapabilityManifestResponse = Message<"gibson.manifest.v1.GetCapab
  * Use `create(GetCapabilityManifestResponseSchema)` to create a new message.
  */
 export const GetCapabilityManifestResponseSchema: GenMessage<GetCapabilityManifestResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 12);
+  messageDesc(file_gibson_manifest_v1_manifest, 6);
 
 /**
  * WatchManifestInvalidationsRequest opens a server-streaming channel
@@ -610,7 +289,7 @@ export type WatchManifestInvalidationsRequest = Message<"gibson.manifest.v1.Watc
  * Use `create(WatchManifestInvalidationsRequestSchema)` to create a new message.
  */
 export const WatchManifestInvalidationsRequestSchema: GenMessage<WatchManifestInvalidationsRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 13);
+  messageDesc(file_gibson_manifest_v1_manifest, 7);
 
 /**
  * WatchManifestInvalidationsResponse wraps a single invalidation event
@@ -630,7 +309,7 @@ export type WatchManifestInvalidationsResponse = Message<"gibson.manifest.v1.Wat
  * Use `create(WatchManifestInvalidationsResponseSchema)` to create a new message.
  */
 export const WatchManifestInvalidationsResponseSchema: GenMessage<WatchManifestInvalidationsResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 14);
+  messageDesc(file_gibson_manifest_v1_manifest, 8);
 
 /**
  * ManifestInvalidationEvent is delivered when the subject's manifest
@@ -654,16 +333,6 @@ export type ManifestInvalidationEvent = Message<"gibson.manifest.v1.ManifestInva
    * @generated from field: string reason = 3;
    */
   reason: string;
-
-  /**
-   * @generated from field: uint64 new_manifest_version = 4;
-   */
-  newManifestVersion: bigint;
-
-  /**
-   * @generated from field: google.protobuf.Timestamp emitted_at = 5;
-   */
-  emittedAt?: Timestamp | undefined;
 };
 
 /**
@@ -671,7 +340,7 @@ export type ManifestInvalidationEvent = Message<"gibson.manifest.v1.ManifestInva
  * Use `create(ManifestInvalidationEventSchema)` to create a new message.
  */
 export const ManifestInvalidationEventSchema: GenMessage<ManifestInvalidationEvent> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 15);
+  messageDesc(file_gibson_manifest_v1_manifest, 9);
 
 /**
  * @generated from enum gibson.manifest.v1.ManifestInvalidationEvent.EventType
@@ -697,46 +366,5 @@ export enum ManifestInvalidationEvent_EventType {
  * Describes the enum gibson.manifest.v1.ManifestInvalidationEvent.EventType.
  */
 export const ManifestInvalidationEvent_EventTypeSchema: GenEnum<ManifestInvalidationEvent_EventType> = /*@__PURE__*/
-  enumDesc(file_gibson_manifest_v1_manifest, 15, 0);
-
-/**
- * ToolIdempotency declares the at-most-once / at-least-once / exactly-once
- * delivery semantics a tool guarantees. Read by the resume-from-checkpoint
- * logic: tools at AT_LEAST_ONCE are safely retried on resume; tools at
- * AT_MOST_ONCE are skipped if their pre-checkpoint invocation status is
- * ambiguous; tools at EXACTLY_ONCE require the orchestrator to consult the
- * idempotency journal before re-issuing. UNSPECIFIED is treated as
- * AT_LEAST_ONCE for backward compatibility.
- *
- * Spec: mission-checkpointing R6.
- *
- * @generated from enum gibson.manifest.v1.ToolIdempotency
- */
-export enum ToolIdempotency {
-  /**
-   * @generated from enum value: TOOL_IDEMPOTENCY_UNSPECIFIED = 0;
-   */
-  UNSPECIFIED = 0,
-
-  /**
-   * @generated from enum value: TOOL_IDEMPOTENCY_AT_MOST_ONCE = 1;
-   */
-  AT_MOST_ONCE = 1,
-
-  /**
-   * @generated from enum value: TOOL_IDEMPOTENCY_AT_LEAST_ONCE = 2;
-   */
-  AT_LEAST_ONCE = 2,
-
-  /**
-   * @generated from enum value: TOOL_IDEMPOTENCY_EXACTLY_ONCE = 3;
-   */
-  EXACTLY_ONCE = 3,
-}
-
-/**
- * Describes the enum gibson.manifest.v1.ToolIdempotency.
- */
-export const ToolIdempotencySchema: GenEnum<ToolIdempotency> = /*@__PURE__*/
-  enumDesc(file_gibson_manifest_v1_manifest, 0);
+  enumDesc(file_gibson_manifest_v1_manifest, 9, 0);
 

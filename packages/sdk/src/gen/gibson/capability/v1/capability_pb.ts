@@ -32,7 +32,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/capability/v1/capability.proto.
  */
 export const file_gibson_capability_v1_capability: GenFile = /*@__PURE__*/
-  fileDesc("CiVnaWJzb24vY2FwYWJpbGl0eS92MS9jYXBhYmlsaXR5LnByb3RvEhRnaWJzb24uY2FwYWJpbGl0eS52MSKpAgoTQ2FwYWJpbGl0eUdyYW50SW5mbxILCgNqdGkYASABKAkSHAoUcmVjaXBpZW50X2luc3RhbGxfaWQYAiABKAkSPQoPcmVjaXBpZW50X2NsYXNzGAMgASgOMiQuZ2lic29uLmNhcGFiaWxpdHkudjEuUmVjaXBpZW50Q2xhc3MSFgoOcmVjaXBpZW50X25hbWUYBCABKAkSFAoMYWxsb3dlZF9ycGNzGAUgAygJEhIKCm1pc3Npb25faWQYBiABKAkSDwoHdGFza19pZBgHIAEoCRIWCg5pc3N1ZWRfYXRfdW5peBgIIAEoAxIXCg9leHBpcmVzX2F0X3VuaXgYCSABKAMSEwoLbmVhcl9leHBpcnkYCiABKAhKBAgLEAxSCWlzb2xhdGlvbiqCAQoOUmVjaXBpZW50Q2xhc3MSHwobUkVDSVBJRU5UX0NMQVNTX1VOU1BFQ0lGSUVEEAASGQoVUkVDSVBJRU5UX0NMQVNTX0FHRU5UEAESGAoUUkVDSVBJRU5UX0NMQVNTX1RPT0wQAhIaChZSRUNJUElFTlRfQ0xBU1NfUExVR0lOEANCXFABWkRnaXRodWIuY29tL3plcm9yb290LWFpL3Nkay9hcGkvZ2VuL2dpYnNvbi9jYXBhYmlsaXR5L3YxO2NhcGFiaWxpdHl2MaoCEUdpYnNvbi5DYXBhYmlsaXR5YgZwcm90bzM");
+  fileDesc("CiVnaWJzb24vY2FwYWJpbGl0eS92MS9jYXBhYmlsaXR5LnByb3RvEhRnaWJzb24uY2FwYWJpbGl0eS52MSKnAgoTQ2FwYWJpbGl0eUdyYW50SW5mbxILCgNqdGkYASABKAkSHAoUcmVjaXBpZW50X2luc3RhbGxfaWQYAiABKAkSPQoPcmVjaXBpZW50X2NsYXNzGAMgASgOMiQuZ2lic29uLmNhcGFiaWxpdHkudjEuUmVjaXBpZW50Q2xhc3MSFgoOcmVjaXBpZW50X25hbWUYBCABKAkSFAoMYWxsb3dlZF9ycGNzGAUgAygJEhIKCm1pc3Npb25faWQYBiABKAkSDwoHdGFza19pZBgHIAEoCRIXCg9leHBpcmVzX2F0X3VuaXgYCSABKAMSEwoLbmVhcl9leHBpcnkYCiABKAhKBAgLEAxKBAgIEAlSCWlzb2xhdGlvblIOaXNzdWVkX2F0X3VuaXgqggEKDlJlY2lwaWVudENsYXNzEh8KG1JFQ0lQSUVOVF9DTEFTU19VTlNQRUNJRklFRBAAEhkKFVJFQ0lQSUVOVF9DTEFTU19BR0VOVBABEhgKFFJFQ0lQSUVOVF9DTEFTU19UT09MEAISGgoWUkVDSVBJRU5UX0NMQVNTX1BMVUdJThADQlxQAVpEZ2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vY2FwYWJpbGl0eS92MTtjYXBhYmlsaXR5djGqAhFHaWJzb24uQ2FwYWJpbGl0eWIGcHJvdG8z");
 
 /**
  * CapabilityGrantInfo is the wire-shape for one active capability
@@ -95,13 +95,6 @@ export type CapabilityGrantInfo = Message<"gibson.capability.v1.CapabilityGrantI
    * @generated from field: string task_id = 7;
    */
   taskId: string;
-
-  /**
-   * issued_at_unix is the iat claim, Unix seconds.
-   *
-   * @generated from field: int64 issued_at_unix = 8;
-   */
-  issuedAtUnix: bigint;
 
   /**
    * expires_at_unix is the exp claim, Unix seconds.

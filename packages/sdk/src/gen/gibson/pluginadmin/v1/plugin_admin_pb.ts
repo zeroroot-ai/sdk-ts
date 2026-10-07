@@ -23,7 +23,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/pluginadmin/v1/plugin_admin.proto.
  */
 export const file_gibson_pluginadmin_v1_plugin_admin: GenFile = /*@__PURE__*/
-  fileDesc("CihnaWJzb24vcGx1Z2luYWRtaW4vdjEvcGx1Z2luX2FkbWluLnByb3RvEhVnaWJzb24ucGx1Z2luYWRtaW4udjEiwwIKFFBsdWdpbkluc3RhbGxTdW1tYXJ5EhIKCmluc3RhbGxfaWQYASABKAkSDAoEbmFtZRgCIAEoCRIPCgd2ZXJzaW9uGAMgASgJEhgKEGRlY2xhcmVkX21ldGhvZHMYBCADKAkSFAoMcnVudGltZV9tb2RlGAUgASgJEhYKDnNldGVjX3JlcXVpcmVkGAYgASgIEg8KB2hvc3RfaWQYByABKAkSOgoGc3RhdHVzGAggASgOMiouZ2lic29uLnBsdWdpbmFkbWluLnYxLlBsdWdpbkluc3RhbGxTdGF0dXMSDwoHYWRkcmVzcxgJIAEoCRIeChZsYXN0X2hlYXJ0YmVhdF9hdF91bml4GAogASgDEhcKD2NyZWF0ZWRfYXRfdW5peBgLIAEoAxIZChFib3VuZF9zZWNyZXRfcmVmcxgMIAMoCSJmChNQbHVnaW5TZWNyZXRCaW5kaW5nEhUKDWRlY2xhcmVkX25hbWUYASABKAkSDAoEbW9kZRgCIAEoCRIUCgxleGlzdGluZ19yZWYYAyABKAkSFAoMY3JlYXRlX3ZhbHVlGAQgASgMIlsKHVBsdWdpbk1hbmlmZXN0VmFsaWRhdGlvbkVycm9yEg0KBWZpZWxkGAEgASgJEgwKBGxpbmUYAiABKAUSDAoEY29kZRgDIAEoCRIPCgdtZXNzYWdlGAQgASgJIt8BChlMaXN0UGx1Z2luSW5zdGFsbHNSZXF1ZXN0Eh0KC25hbWVfZmlsdGVyGAEgASgJQgi6SAVyAxiAIBJLCg1zdGF0dXNfZmlsdGVyGAIgASgOMiouZ2lic29uLnBsdWdpbmFkbWluLnYxLlBsdWdpbkluc3RhbGxTdGF0dXNCCLpIBYIBAhABEh0KCXBhZ2Vfc2l6ZRgFIAEoBUIKukgHGgUY6AcoABIcCgpwYWdlX3Rva2VuGAYgASgJQgi6SAVyAxiACEoECAMQBEoECAQQBVIFbGltaXRSBm9mZnNldCKDAQoaTGlzdFBsdWdpbkluc3RhbGxzUmVzcG9uc2USPQoIaW5zdGFsbHMYASADKAsyKy5naWJzb24ucGx1Z2luYWRtaW4udjEuUGx1Z2luSW5zdGFsbFN1bW1hcnkSDQoFdG90YWwYAiABKAUSFwoPbmV4dF9wYWdlX3Rva2VuGAMgASgJIjkKF0dldFBsdWdpbkluc3RhbGxSZXF1ZXN0Eh4KCmluc3RhbGxfaWQYASABKAlCCrpIB3IFEAEYgAgiWAoYR2V0UGx1Z2luSW5zdGFsbFJlc3BvbnNlEjwKB2luc3RhbGwYASABKAsyKy5naWJzb24ucGx1Z2luYWRtaW4udjEuUGx1Z2luSW5zdGFsbFN1bW1hcnkiiwEKFVJlZ2lzdGVyUGx1Z2luUmVxdWVzdBIVCg1tYW5pZmVzdF95YW1sGAEgASgMEjwKCGJpbmRpbmdzGAIgAygLMiouZ2lic29uLnBsdWdpbmFkbWluLnYxLlBsdWdpblNlY3JldEJpbmRpbmcSDwoHZHJ5X3J1bhgDIAEoCEoECAQQBVIGcmVtb3RlItwBChZSZWdpc3RlclBsdWdpblJlc3BvbnNlEhIKCmluc3RhbGxfaWQYASABKAkSGwoTcGx1Z2luX3ByaW5jaXBhbF9pZBgCIAEoCRIXCg9ib290c3RyYXBfdG9rZW4YAyABKAkSJwofYm9vdHN0cmFwX3Rva2VuX2V4cGlyZXNfYXRfdW5peBgEIAEoAxJPChF2YWxpZGF0aW9uX2Vycm9ycxgFIAMoCzI0LmdpYnNvbi5wbHVnaW5hZG1pbi52MS5QbHVnaW5NYW5pZmVzdFZhbGlkYXRpb25FcnJvciKJAQoeRWRpdFBsdWdpblNlY3JldEJpbmRpbmdSZXF1ZXN0Eh4KCmluc3RhbGxfaWQYASABKAlCCrpIB3IFEAEYgAgSIQoNZGVjbGFyZWRfbmFtZRgCIAEoCUIKukgHcgUQARiACBIkChBuZXdfZXhpc3RpbmdfcmVmGAMgASgJQgq6SAdyBRABGIAIIiEKH0VkaXRQbHVnaW5TZWNyZXRCaW5kaW5nUmVzcG9uc2UiZQogUmV2b2tlUGx1Z2luU2VjcmV0QmluZGluZ1JlcXVlc3QSHgoKaW5zdGFsbF9pZBgBIAEoCUIKukgHcgUQARiACBIhCg1kZWNsYXJlZF9uYW1lGAIgASgJQgq6SAdyBRABGIAIIiMKIVJldm9rZVBsdWdpblNlY3JldEJpbmRpbmdSZXNwb25zZSqqAQoTUGx1Z2luSW5zdGFsbFN0YXR1cxIlCiFQTFVHSU5fSU5TVEFMTF9TVEFUVVNfVU5TUEVDSUZJRUQQABIhCh1QTFVHSU5fSU5TVEFMTF9TVEFUVVNfU0VSVklORxABEiUKIVBMVUdJTl9JTlNUQUxMX1NUQVRVU19VTlJFQUNIQUJMRRACEiIKHlBMVUdJTl9JTlNUQUxMX1NUQVRVU19ERUdSQURFRBADMvUGChJQbHVnaW5BZG1pblNlcnZpY2USpwEKEkxpc3RQbHVnaW5JbnN0YWxscxIwLmdpYnNvbi5wbHVnaW5hZG1pbi52MS5MaXN0UGx1Z2luSW5zdGFsbHNSZXF1ZXN0GjEuZ2lic29uLnBsdWdpbmFkbWluLnYxLkxpc3RQbHVnaW5JbnN0YWxsc1Jlc3BvbnNlIiyKtRgoCgZtZW1iZXISBnRlbmFudBoUdGVuYW50X2Zyb21faWRlbnRpdHkgARKhAQoQR2V0UGx1Z2luSW5zdGFsbBIuLmdpYnNvbi5wbHVnaW5hZG1pbi52MS5HZXRQbHVnaW5JbnN0YWxsUmVxdWVzdBovLmdpYnNvbi5wbHVnaW5hZG1pbi52MS5HZXRQbHVnaW5JbnN0YWxsUmVzcG9uc2UiLIq1GCgKBm1lbWJlchIGdGVuYW50GhR0ZW5hbnRfZnJvbV9pZGVudGl0eSABEpoBCg5SZWdpc3RlclBsdWdpbhIsLmdpYnNvbi5wbHVnaW5hZG1pbi52MS5SZWdpc3RlclBsdWdpblJlcXVlc3QaLS5naWJzb24ucGx1Z2luYWRtaW4udjEuUmVnaXN0ZXJQbHVnaW5SZXNwb25zZSIrirUYJwoFYWRtaW4SBnRlbmFudBoUdGVuYW50X2Zyb21faWRlbnRpdHkgARK1AQoXRWRpdFBsdWdpblNlY3JldEJpbmRpbmcSNS5naWJzb24ucGx1Z2luYWRtaW4udjEuRWRpdFBsdWdpblNlY3JldEJpbmRpbmdSZXF1ZXN0GjYuZ2lic29uLnBsdWdpbmFkbWluLnYxLkVkaXRQbHVnaW5TZWNyZXRCaW5kaW5nUmVzcG9uc2UiK4q1GCcKBWFkbWluEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAESuwEKGVJldm9rZVBsdWdpblNlY3JldEJpbmRpbmcSNy5naWJzb24ucGx1Z2luYWRtaW4udjEuUmV2b2tlUGx1Z2luU2VjcmV0QmluZGluZ1JlcXVlc3QaOC5naWJzb24ucGx1Z2luYWRtaW4udjEuUmV2b2tlUGx1Z2luU2VjcmV0QmluZGluZ1Jlc3BvbnNlIiuKtRgnCgVhZG1pbhIGdGVuYW50GhR0ZW5hbnRfZnJvbV9pZGVudGl0eSABQkhaRmdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL3BsdWdpbmFkbWluL3YxO3BsdWdpbmFkbWludjFiBnByb3RvMw", [file_gibson_auth_v1_options, file_buf_validate_validate]);
+  fileDesc("CihnaWJzb24vcGx1Z2luYWRtaW4vdjEvcGx1Z2luX2FkbWluLnByb3RvEhVnaWJzb24ucGx1Z2luYWRtaW4udjEivwIKFFBsdWdpbkluc3RhbGxTdW1tYXJ5EhIKCmluc3RhbGxfaWQYASABKAkSDAoEbmFtZRgCIAEoCRIPCgd2ZXJzaW9uGAMgASgJEhgKEGRlY2xhcmVkX21ldGhvZHMYBCADKAkSDwoHaG9zdF9pZBgHIAEoCRI6CgZzdGF0dXMYCCABKA4yKi5naWJzb24ucGx1Z2luYWRtaW4udjEuUGx1Z2luSW5zdGFsbFN0YXR1cxIPCgdhZGRyZXNzGAkgASgJEh4KFmxhc3RfaGVhcnRiZWF0X2F0X3VuaXgYCiABKAMSFwoPY3JlYXRlZF9hdF91bml4GAsgASgDEhkKEWJvdW5kX3NlY3JldF9yZWZzGAwgAygJSgQIBRAGSgQIBhAHUgxydW50aW1lX21vZGVSDnNldGVjX3JlcXVpcmVkIt8BChlMaXN0UGx1Z2luSW5zdGFsbHNSZXF1ZXN0Eh0KC25hbWVfZmlsdGVyGAEgASgJQgi6SAVyAxiAIBJLCg1zdGF0dXNfZmlsdGVyGAIgASgOMiouZ2lic29uLnBsdWdpbmFkbWluLnYxLlBsdWdpbkluc3RhbGxTdGF0dXNCCLpIBYIBAhABEh0KCXBhZ2Vfc2l6ZRgFIAEoBUIKukgHGgUY6AcoABIcCgpwYWdlX3Rva2VuGAYgASgJQgi6SAVyAxiACEoECAMQBEoECAQQBVIFbGltaXRSBm9mZnNldCKDAQoaTGlzdFBsdWdpbkluc3RhbGxzUmVzcG9uc2USPQoIaW5zdGFsbHMYASADKAsyKy5naWJzb24ucGx1Z2luYWRtaW4udjEuUGx1Z2luSW5zdGFsbFN1bW1hcnkSDQoFdG90YWwYAiABKAUSFwoPbmV4dF9wYWdlX3Rva2VuGAMgASgJIjkKF0dldFBsdWdpbkluc3RhbGxSZXF1ZXN0Eh4KCmluc3RhbGxfaWQYASABKAlCCrpIB3IFEAEYgAgiWAoYR2V0UGx1Z2luSW5zdGFsbFJlc3BvbnNlEjwKB2luc3RhbGwYASABKAsyKy5naWJzb24ucGx1Z2luYWRtaW4udjEuUGx1Z2luSW5zdGFsbFN1bW1hcnkiiQEKHkVkaXRQbHVnaW5TZWNyZXRCaW5kaW5nUmVxdWVzdBIeCgppbnN0YWxsX2lkGAEgASgJQgq6SAdyBRABGIAIEiEKDWRlY2xhcmVkX25hbWUYAiABKAlCCrpIB3IFEAEYgAgSJAoQbmV3X2V4aXN0aW5nX3JlZhgDIAEoCUIKukgHcgUQARiACCIhCh9FZGl0UGx1Z2luU2VjcmV0QmluZGluZ1Jlc3BvbnNlImUKIFJldm9rZVBsdWdpblNlY3JldEJpbmRpbmdSZXF1ZXN0Eh4KCmluc3RhbGxfaWQYASABKAlCCrpIB3IFEAEYgAgSIQoNZGVjbGFyZWRfbmFtZRgCIAEoCUIKukgHcgUQARiACCIjCiFSZXZva2VQbHVnaW5TZWNyZXRCaW5kaW5nUmVzcG9uc2UqqgEKE1BsdWdpbkluc3RhbGxTdGF0dXMSJQohUExVR0lOX0lOU1RBTExfU1RBVFVTX1VOU1BFQ0lGSUVEEAASIQodUExVR0lOX0lOU1RBTExfU1RBVFVTX1NFUlZJTkcQARIlCiFQTFVHSU5fSU5TVEFMTF9TVEFUVVNfVU5SRUFDSEFCTEUQAhIiCh5QTFVHSU5fSU5TVEFMTF9TVEFUVVNfREVHUkFERUQQAzLYBQoSUGx1Z2luQWRtaW5TZXJ2aWNlEqcBChJMaXN0UGx1Z2luSW5zdGFsbHMSMC5naWJzb24ucGx1Z2luYWRtaW4udjEuTGlzdFBsdWdpbkluc3RhbGxzUmVxdWVzdBoxLmdpYnNvbi5wbHVnaW5hZG1pbi52MS5MaXN0UGx1Z2luSW5zdGFsbHNSZXNwb25zZSIsirUYKAoGbWVtYmVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAESoQEKEEdldFBsdWdpbkluc3RhbGwSLi5naWJzb24ucGx1Z2luYWRtaW4udjEuR2V0UGx1Z2luSW5zdGFsbFJlcXVlc3QaLy5naWJzb24ucGx1Z2luYWRtaW4udjEuR2V0UGx1Z2luSW5zdGFsbFJlc3BvbnNlIiyKtRgoCgZtZW1iZXISBnRlbmFudBoUdGVuYW50X2Zyb21faWRlbnRpdHkgARK1AQoXRWRpdFBsdWdpblNlY3JldEJpbmRpbmcSNS5naWJzb24ucGx1Z2luYWRtaW4udjEuRWRpdFBsdWdpblNlY3JldEJpbmRpbmdSZXF1ZXN0GjYuZ2lic29uLnBsdWdpbmFkbWluLnYxLkVkaXRQbHVnaW5TZWNyZXRCaW5kaW5nUmVzcG9uc2UiK4q1GCcKBWFkbWluEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAESuwEKGVJldm9rZVBsdWdpblNlY3JldEJpbmRpbmcSNy5naWJzb24ucGx1Z2luYWRtaW4udjEuUmV2b2tlUGx1Z2luU2VjcmV0QmluZGluZ1JlcXVlc3QaOC5naWJzb24ucGx1Z2luYWRtaW4udjEuUmV2b2tlUGx1Z2luU2VjcmV0QmluZGluZ1Jlc3BvbnNlIiuKtRgnCgVhZG1pbhIGdGVuYW50GhR0ZW5hbnRfZnJvbV9pZGVudGl0eSABQkhaRmdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL3BsdWdpbmFkbWluL3YxO3BsdWdpbmFkbWludjFiBnByb3RvMw", [file_gibson_auth_v1_options, file_buf_validate_validate]);
 
 /**
  * PluginInstallSummary is the wire-shape returned by ListPluginInstalls and
@@ -51,16 +51,6 @@ export type PluginInstallSummary = Message<"gibson.pluginadmin.v1.PluginInstallS
    * @generated from field: repeated string declared_methods = 4;
    */
   declaredMethods: string[];
-
-  /**
-   * @generated from field: string runtime_mode = 5;
-   */
-  runtimeMode: string;
-
-  /**
-   * @generated from field: bool setec_required = 6;
-   */
-  setecRequired: boolean;
 
   /**
    * @generated from field: string host_id = 7;
@@ -101,88 +91,6 @@ export const PluginInstallSummarySchema: GenMessage<PluginInstallSummary> = /*@_
   messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 0);
 
 /**
- * PluginSecretBinding describes one secret binding in a RegisterPlugin request.
- *
- * @generated from message gibson.pluginadmin.v1.PluginSecretBinding
- */
-export type PluginSecretBinding = Message<"gibson.pluginadmin.v1.PluginSecretBinding"> & {
-  /**
-   * declared_name is the name as declared in the plugin manifest's
-   * spec.secrets[] entry.
-   *
-   * @generated from field: string declared_name = 1;
-   */
-  declaredName: string;
-
-  /**
-   * mode is one of: "existing" (bind to existing secret) or "create" (create
-   * new secret inline).
-   *
-   * @generated from field: string mode = 2;
-   */
-  mode: string;
-
-  /**
-   * existing_ref is the broker-namespaced name of an already-stored secret
-   * to bind to. Set when mode = "existing".
-   *
-   * @generated from field: string existing_ref = 3;
-   */
-  existingRef: string;
-
-  /**
-   * create_value is the plaintext bytes to store under declared_name when
-   * mode = "create". TLS in transit; never logged.
-   *
-   * @generated from field: bytes create_value = 4;
-   */
-  createValue: Uint8Array;
-};
-
-/**
- * Describes the message gibson.pluginadmin.v1.PluginSecretBinding.
- * Use `create(PluginSecretBindingSchema)` to create a new message.
- */
-export const PluginSecretBindingSchema: GenMessage<PluginSecretBinding> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 1);
-
-/**
- * PluginManifestValidationError carries one structured manifest error.
- *
- * @generated from message gibson.pluginadmin.v1.PluginManifestValidationError
- */
-export type PluginManifestValidationError = Message<"gibson.pluginadmin.v1.PluginManifestValidationError"> & {
-  /**
-   * field is the dotted JSONPath into the manifest.
-   *
-   * @generated from field: string field = 1;
-   */
-  field: string;
-
-  /**
-   * @generated from field: int32 line = 2;
-   */
-  line: number;
-
-  /**
-   * @generated from field: string code = 3;
-   */
-  code: string;
-
-  /**
-   * @generated from field: string message = 4;
-   */
-  message: string;
-};
-
-/**
- * Describes the message gibson.pluginadmin.v1.PluginManifestValidationError.
- * Use `create(PluginManifestValidationErrorSchema)` to create a new message.
- */
-export const PluginManifestValidationErrorSchema: GenMessage<PluginManifestValidationError> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 2);
-
-/**
  * @generated from message gibson.pluginadmin.v1.ListPluginInstallsRequest
  */
 export type ListPluginInstallsRequest = Message<"gibson.pluginadmin.v1.ListPluginInstallsRequest"> & {
@@ -218,7 +126,7 @@ export type ListPluginInstallsRequest = Message<"gibson.pluginadmin.v1.ListPlugi
  * Use `create(ListPluginInstallsRequestSchema)` to create a new message.
  */
 export const ListPluginInstallsRequestSchema: GenMessage<ListPluginInstallsRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 3);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 1);
 
 /**
  * @generated from message gibson.pluginadmin.v1.ListPluginInstallsResponse
@@ -248,7 +156,7 @@ export type ListPluginInstallsResponse = Message<"gibson.pluginadmin.v1.ListPlug
  * Use `create(ListPluginInstallsResponseSchema)` to create a new message.
  */
 export const ListPluginInstallsResponseSchema: GenMessage<ListPluginInstallsResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 4);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 2);
 
 /**
  * @generated from message gibson.pluginadmin.v1.GetPluginInstallRequest
@@ -265,7 +173,7 @@ export type GetPluginInstallRequest = Message<"gibson.pluginadmin.v1.GetPluginIn
  * Use `create(GetPluginInstallRequestSchema)` to create a new message.
  */
 export const GetPluginInstallRequestSchema: GenMessage<GetPluginInstallRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 5);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 3);
 
 /**
  * @generated from message gibson.pluginadmin.v1.GetPluginInstallResponse
@@ -282,77 +190,7 @@ export type GetPluginInstallResponse = Message<"gibson.pluginadmin.v1.GetPluginI
  * Use `create(GetPluginInstallResponseSchema)` to create a new message.
  */
 export const GetPluginInstallResponseSchema: GenMessage<GetPluginInstallResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 6);
-
-/**
- * @generated from message gibson.pluginadmin.v1.RegisterPluginRequest
- */
-export type RegisterPluginRequest = Message<"gibson.pluginadmin.v1.RegisterPluginRequest"> & {
-  /**
-   * manifest_yaml is the plugin manifest YAML bytes.
-   *
-   * @generated from field: bytes manifest_yaml = 1;
-   */
-  manifestYaml: Uint8Array;
-
-  /**
-   * @generated from field: repeated gibson.pluginadmin.v1.PluginSecretBinding bindings = 2;
-   */
-  bindings: PluginSecretBinding[];
-
-  /**
-   * dry_run, when true, validates manifest + bindings without creating any state.
-   *
-   * @generated from field: bool dry_run = 3;
-   */
-  dryRun: boolean;
-};
-
-/**
- * Describes the message gibson.pluginadmin.v1.RegisterPluginRequest.
- * Use `create(RegisterPluginRequestSchema)` to create a new message.
- */
-export const RegisterPluginRequestSchema: GenMessage<RegisterPluginRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 7);
-
-/**
- * @generated from message gibson.pluginadmin.v1.RegisterPluginResponse
- */
-export type RegisterPluginResponse = Message<"gibson.pluginadmin.v1.RegisterPluginResponse"> & {
-  /**
-   * @generated from field: string install_id = 1;
-   */
-  installId: string;
-
-  /**
-   * @generated from field: string plugin_principal_id = 2;
-   */
-  pluginPrincipalId: string;
-
-  /**
-   * bootstrap_token is the single-use enrollment token. Empty when dry_run.
-   *
-   * @generated from field: string bootstrap_token = 3;
-   */
-  bootstrapToken: string;
-
-  /**
-   * @generated from field: int64 bootstrap_token_expires_at_unix = 4;
-   */
-  bootstrapTokenExpiresAtUnix: bigint;
-
-  /**
-   * @generated from field: repeated gibson.pluginadmin.v1.PluginManifestValidationError validation_errors = 5;
-   */
-  validationErrors: PluginManifestValidationError[];
-};
-
-/**
- * Describes the message gibson.pluginadmin.v1.RegisterPluginResponse.
- * Use `create(RegisterPluginResponseSchema)` to create a new message.
- */
-export const RegisterPluginResponseSchema: GenMessage<RegisterPluginResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 8);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 4);
 
 /**
  * @generated from message gibson.pluginadmin.v1.EditPluginSecretBindingRequest
@@ -379,7 +217,7 @@ export type EditPluginSecretBindingRequest = Message<"gibson.pluginadmin.v1.Edit
  * Use `create(EditPluginSecretBindingRequestSchema)` to create a new message.
  */
 export const EditPluginSecretBindingRequestSchema: GenMessage<EditPluginSecretBindingRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 9);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 5);
 
 /**
  * @generated from message gibson.pluginadmin.v1.EditPluginSecretBindingResponse
@@ -392,7 +230,7 @@ export type EditPluginSecretBindingResponse = Message<"gibson.pluginadmin.v1.Edi
  * Use `create(EditPluginSecretBindingResponseSchema)` to create a new message.
  */
 export const EditPluginSecretBindingResponseSchema: GenMessage<EditPluginSecretBindingResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 10);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 6);
 
 /**
  * @generated from message gibson.pluginadmin.v1.RevokePluginSecretBindingRequest
@@ -414,7 +252,7 @@ export type RevokePluginSecretBindingRequest = Message<"gibson.pluginadmin.v1.Re
  * Use `create(RevokePluginSecretBindingRequestSchema)` to create a new message.
  */
 export const RevokePluginSecretBindingRequestSchema: GenMessage<RevokePluginSecretBindingRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 11);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 7);
 
 /**
  * @generated from message gibson.pluginadmin.v1.RevokePluginSecretBindingResponse
@@ -427,7 +265,7 @@ export type RevokePluginSecretBindingResponse = Message<"gibson.pluginadmin.v1.R
  * Use `create(RevokePluginSecretBindingResponseSchema)` to create a new message.
  */
 export const RevokePluginSecretBindingResponseSchema: GenMessage<RevokePluginSecretBindingResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 12);
+  messageDesc(file_gibson_pluginadmin_v1_plugin_admin, 8);
 
 /**
  * PluginInstallStatus mirrors the daemon's transient runtime status for a
@@ -497,19 +335,6 @@ export const PluginAdminService: GenService<{
     methodKind: "unary";
     input: typeof GetPluginInstallRequestSchema;
     output: typeof GetPluginInstallResponseSchema;
-  },
-  /**
-   * RegisterPlugin atomically registers a plugin per Spec 2 R3.1: validates
-   * manifest, creates the Zitadel plugin_principal SA, writes per-binding
-   * FGA can_resolve tuples (creating any inline secrets in the broker),
-   * returns the bootstrap token. Any partial failure rolls back all created state.
-   *
-   * @generated from rpc gibson.pluginadmin.v1.PluginAdminService.RegisterPlugin
-   */
-  registerPlugin: {
-    methodKind: "unary";
-    input: typeof RegisterPluginRequestSchema;
-    output: typeof RegisterPluginResponseSchema;
   },
   /**
    * EditPluginSecretBinding modifies an existing binding (rebind to a different

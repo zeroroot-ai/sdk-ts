@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.5.0...gibson-mcp-v0.5.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* **gen:** regenerate the bindings from buf.build/zeroroot-ai/sdk ([#88](https://github.com/zeroroot-ai/sdk-ts/issues/88)) ([f5585c2](https://github.com/zeroroot-ai/sdk-ts/commit/f5585c21ae925b3c9731077ef204e01239a00ef9)), closes [#87](https://github.com/zeroroot-ai/sdk-ts/issues/87)
+
 ## [0.5.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.4.0...gibson-mcp-v0.5.0) (2026-10-07)
 
 

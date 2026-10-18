@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.19.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.18.1...v0.19.0) (2026-10-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **gen:** the generated AgentService no longer has getSlotSchema, and the AgentSlotDefinition, AgentSlotConfig, AgentSlotConstraints, GetSlotSchemaRequest and GetSlotSchemaResponse types are gone.
+
+### Bug Fixes
+
+* **gen:** regenerate the bindings for sdk v0.207.0 ([#96](https://github.com/zeroroot-ai/sdk-ts/issues/96)) ([4854a15](https://github.com/zeroroot-ai/sdk-ts/commit/4854a15581f4ab2f4a6bb7b9455a39a30d322eae)), closes [#95](https://github.com/zeroroot-ai/sdk-ts/issues/95)
+
 ## [0.18.1](https://github.com/zeroroot-ai/sdk-ts/compare/v0.18.0...v0.18.1) (2026-10-13)
 
 

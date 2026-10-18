@@ -18,7 +18,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/agent/v1/agent.proto.
  */
 export const file_gibson_agent_v1_agent: GenFile = /*@__PURE__*/
-  fileDesc("ChtnaWJzb24vYWdlbnQvdjEvYWdlbnQucHJvdG8SD2dpYnNvbi5hZ2VudC52MSIWChRHZXREZXNjcmlwdG9yUmVxdWVzdCJcChFUYXJnZXRTY2hlbWFQcm90bxIMCgR0eXBlGAEgASgJEg8KB3ZlcnNpb24YAiABKAkSEwoLc2NoZW1hX2pzb24YAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAki0AEKFUdldERlc2NyaXB0b3JSZXNwb25zZRIMCgRuYW1lGAEgASgJEg8KB3ZlcnNpb24YAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSFAoMY2FwYWJpbGl0aWVzGAQgAygJEjoKDnRhcmdldF9zY2hlbWFzGAUgAygLMiIuZ2lic29uLmFnZW50LnYxLlRhcmdldFNjaGVtYVByb3RvEhcKD3RlY2huaXF1ZV90eXBlcxgGIAMoCRIYCgx0YXJnZXRfdHlwZXMYByADKAlCAhgBIsABChNBZ2VudFNsb3REZWZpbml0aW9uEgwKBG5hbWUYASABKAkSEwoLZGVzY3JpcHRpb24YAiABKAkSEAoIcmVxdWlyZWQYAyABKAgSOAoOZGVmYXVsdF9jb25maWcYBCABKAsyIC5naWJzb24uYWdlbnQudjEuQWdlbnRTbG90Q29uZmlnEjoKC2NvbnN0cmFpbnRzGAUgASgLMiUuZ2lic29uLmFnZW50LnYxLkFnZW50U2xvdENvbnN0cmFpbnRzIlsKD0FnZW50U2xvdENvbmZpZxIQCghwcm92aWRlchgBIAEoCRINCgVtb2RlbBgCIAEoCRITCgt0ZW1wZXJhdHVyZRgDIAEoARISCgptYXhfdG9rZW5zGAQgASgFIk0KFEFnZW50U2xvdENvbnN0cmFpbnRzEhoKEm1pbl9jb250ZXh0X3dpbmRvdxgBIAEoBRIZChFyZXF1aXJlZF9mZWF0dXJlcxgCIAMoCSIWChRHZXRTbG90U2NoZW1hUmVxdWVzdCJMChVHZXRTbG90U2NoZW1hUmVzcG9uc2USMwoFc2xvdHMYASADKAsyJC5naWJzb24uYWdlbnQudjEuQWdlbnRTbG90RGVmaW5pdGlvbiKZAwoORXhlY3V0ZVJlcXVlc3QSIwoEdGFzaxgBIAEoCzIVLmdpYnNvbi50eXBlcy52MS5UYXNrEhIKCnRpbWVvdXRfbXMYAiABKAMSIwoRY2FsbGJhY2tfZW5kcG9pbnQYAyABKAlCCLpIBXIDGIAgEiIKDmNhbGxiYWNrX3Rva2VuGAQgASgJQgq6SAdyBRiAgIAIEisKB21pc3Npb24YBSABKAsyGi5naWJzb24uY29tbW9uLnYxLlR5cGVkTWFwEioKBnRhcmdldBgGIAEoCzIaLmdpYnNvbi5jb21tb24udjEuVHlwZWRNYXASGgoIdHJhY2VfaWQYByABKAlCCLpIBXIDGIAIEiAKDnBhcmVudF9zcGFuX2lkGAggASgJQgi6SAVyAxiACBIgCg5taXNzaW9uX3J1bl9pZBgJIAEoCUIIukgFcgMYgAgSHgoMYWdlbnRfcnVuX2lkGAogASgJQgi6SAVyAxiACBISCgpydW5fbnVtYmVyGAsgASgFEhgKBmpvYl9pZBgMIAEoCUIIukgFcgMYgAgirwEKD0V4ZWN1dGVSZXNwb25zZRInCgZyZXN1bHQYASABKAsyFy5naWJzb24udHlwZXMudjEuUmVzdWx0EiYKBWVycm9yGAIgASgLMhcuZ2lic29uLmNvbW1vbi52MS5FcnJvchIwCgxkZWxpdmVyYWJsZXMYAyADKAsyGi5naWJzb24uam9iLnYxLkRlbGl2ZXJhYmxlEhkKEWNsYXVkZV9zZXNzaW9uX2lkGAQgASgJIg8KDUhlYWx0aFJlcXVlc3QiQAoOSGVhbHRoUmVzcG9uc2USLgoGc3RhdHVzGAEgASgLMh4uZ2lic29uLmNvbW1vbi52MS5IZWFsdGhTdGF0dXMyoQQKDEFnZW50U2VydmljZRKMAQoNR2V0RGVzY3JpcHRvchIlLmdpYnNvbi5hZ2VudC52MS5HZXREZXNjcmlwdG9yUmVxdWVzdBomLmdpYnNvbi5hZ2VudC52MS5HZXREZXNjcmlwdG9yUmVzcG9uc2UiLIq1GCgKBm1lbWJlchIGdGVuYW50GhR0ZW5hbnRfZnJvbV9pZGVudGl0eSAEEowBCg1HZXRTbG90U2NoZW1hEiUuZ2lic29uLmFnZW50LnYxLkdldFNsb3RTY2hlbWFSZXF1ZXN0GiYuZ2lic29uLmFnZW50LnYxLkdldFNsb3RTY2hlbWFSZXNwb25zZSIsirUYKAoGbWVtYmVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAQSegoHRXhlY3V0ZRIfLmdpYnNvbi5hZ2VudC52MS5FeGVjdXRlUmVxdWVzdBogLmdpYnNvbi5hZ2VudC52MS5FeGVjdXRlUmVzcG9uc2UiLIq1GCgKBm1lbWJlchIGdGVuYW50GhR0ZW5hbnRfZnJvbV9pZGVudGl0eSAEEncKBkhlYWx0aBIeLmdpYnNvbi5hZ2VudC52MS5IZWFsdGhSZXF1ZXN0Gh8uZ2lic29uLmFnZW50LnYxLkhlYWx0aFJlc3BvbnNlIiyKtRgoCgZtZW1iZXISBnRlbmFudBoUdGVuYW50X2Zyb21faWRlbnRpdHkgBEJNUAFaOmdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL2FnZW50L3YxO2FnZW50cGKqAgxHaWJzb24uQWdlbnRiBnByb3RvMw", [file_gibson_common_v1_gibson_common, file_gibson_job_v1_job, file_gibson_types_v1_types, file_gibson_auth_v1_options, file_buf_validate_validate]);
+  fileDesc("ChtnaWJzb24vYWdlbnQvdjEvYWdlbnQucHJvdG8SD2dpYnNvbi5hZ2VudC52MSIWChRHZXREZXNjcmlwdG9yUmVxdWVzdCJcChFUYXJnZXRTY2hlbWFQcm90bxIMCgR0eXBlGAEgASgJEg8KB3ZlcnNpb24YAiABKAkSEwoLc2NoZW1hX2pzb24YAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAki0AEKFUdldERlc2NyaXB0b3JSZXNwb25zZRIMCgRuYW1lGAEgASgJEg8KB3ZlcnNpb24YAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSFAoMY2FwYWJpbGl0aWVzGAQgAygJEjoKDnRhcmdldF9zY2hlbWFzGAUgAygLMiIuZ2lic29uLmFnZW50LnYxLlRhcmdldFNjaGVtYVByb3RvEhcKD3RlY2huaXF1ZV90eXBlcxgGIAMoCRIYCgx0YXJnZXRfdHlwZXMYByADKAlCAhgBIpkDCg5FeGVjdXRlUmVxdWVzdBIjCgR0YXNrGAEgASgLMhUuZ2lic29uLnR5cGVzLnYxLlRhc2sSEgoKdGltZW91dF9tcxgCIAEoAxIjChFjYWxsYmFja19lbmRwb2ludBgDIAEoCUIIukgFcgMYgCASIgoOY2FsbGJhY2tfdG9rZW4YBCABKAlCCrpIB3IFGICAgAgSKwoHbWlzc2lvbhgFIAEoCzIaLmdpYnNvbi5jb21tb24udjEuVHlwZWRNYXASKgoGdGFyZ2V0GAYgASgLMhouZ2lic29uLmNvbW1vbi52MS5UeXBlZE1hcBIaCgh0cmFjZV9pZBgHIAEoCUIIukgFcgMYgAgSIAoOcGFyZW50X3NwYW5faWQYCCABKAlCCLpIBXIDGIAIEiAKDm1pc3Npb25fcnVuX2lkGAkgASgJQgi6SAVyAxiACBIeCgxhZ2VudF9ydW5faWQYCiABKAlCCLpIBXIDGIAIEhIKCnJ1bl9udW1iZXIYCyABKAUSGAoGam9iX2lkGAwgASgJQgi6SAVyAxiACCKvAQoPRXhlY3V0ZVJlc3BvbnNlEicKBnJlc3VsdBgBIAEoCzIXLmdpYnNvbi50eXBlcy52MS5SZXN1bHQSJgoFZXJyb3IYAiABKAsyFy5naWJzb24uY29tbW9uLnYxLkVycm9yEjAKDGRlbGl2ZXJhYmxlcxgDIAMoCzIaLmdpYnNvbi5qb2IudjEuRGVsaXZlcmFibGUSGQoRY2xhdWRlX3Nlc3Npb25faWQYBCABKAkiDwoNSGVhbHRoUmVxdWVzdCJACg5IZWFsdGhSZXNwb25zZRIuCgZzdGF0dXMYASABKAsyHi5naWJzb24uY29tbW9uLnYxLkhlYWx0aFN0YXR1czKSAwoMQWdlbnRTZXJ2aWNlEowBCg1HZXREZXNjcmlwdG9yEiUuZ2lic29uLmFnZW50LnYxLkdldERlc2NyaXB0b3JSZXF1ZXN0GiYuZ2lic29uLmFnZW50LnYxLkdldERlc2NyaXB0b3JSZXNwb25zZSIsirUYKAoGbWVtYmVyEgZ0ZW5hbnQaFHRlbmFudF9mcm9tX2lkZW50aXR5IAQSegoHRXhlY3V0ZRIfLmdpYnNvbi5hZ2VudC52MS5FeGVjdXRlUmVxdWVzdBogLmdpYnNvbi5hZ2VudC52MS5FeGVjdXRlUmVzcG9uc2UiLIq1GCgKBm1lbWJlchIGdGVuYW50GhR0ZW5hbnRfZnJvbV9pZGVudGl0eSAEEncKBkhlYWx0aBIeLmdpYnNvbi5hZ2VudC52MS5IZWFsdGhSZXF1ZXN0Gh8uZ2lic29uLmFnZW50LnYxLkhlYWx0aFJlc3BvbnNlIiyKtRgoCgZtZW1iZXISBnRlbmFudBoUdGVuYW50X2Zyb21faWRlbnRpdHkgBEJNUAFaOmdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL2FnZW50L3YxO2FnZW50cGKqAgxHaWJzb24uQWdlbnRiBnByb3RvMw", [file_gibson_common_v1_gibson_common, file_gibson_job_v1_job, file_gibson_types_v1_types, file_gibson_auth_v1_options, file_buf_validate_validate]);
 
 /**
  * @generated from message gibson.agent.v1.GetDescriptorRequest
@@ -114,127 +114,6 @@ export type GetDescriptorResponse = Message<"gibson.agent.v1.GetDescriptorRespon
  */
 export const GetDescriptorResponseSchema: GenMessage<GetDescriptorResponse> = /*@__PURE__*/
   messageDesc(file_gibson_agent_v1_agent, 2);
-
-/**
- * @generated from message gibson.agent.v1.AgentSlotDefinition
- */
-export type AgentSlotDefinition = Message<"gibson.agent.v1.AgentSlotDefinition"> & {
-  /**
-   * @generated from field: string name = 1;
-   */
-  name: string;
-
-  /**
-   * @generated from field: string description = 2;
-   */
-  description: string;
-
-  /**
-   * @generated from field: bool required = 3;
-   */
-  required: boolean;
-
-  /**
-   * @generated from field: gibson.agent.v1.AgentSlotConfig default_config = 4;
-   */
-  defaultConfig?: AgentSlotConfig | undefined;
-
-  /**
-   * @generated from field: gibson.agent.v1.AgentSlotConstraints constraints = 5;
-   */
-  constraints?: AgentSlotConstraints | undefined;
-};
-
-/**
- * Describes the message gibson.agent.v1.AgentSlotDefinition.
- * Use `create(AgentSlotDefinitionSchema)` to create a new message.
- */
-export const AgentSlotDefinitionSchema: GenMessage<AgentSlotDefinition> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 3);
-
-/**
- * @generated from message gibson.agent.v1.AgentSlotConfig
- */
-export type AgentSlotConfig = Message<"gibson.agent.v1.AgentSlotConfig"> & {
-  /**
-   * @generated from field: string provider = 1;
-   */
-  provider: string;
-
-  /**
-   * @generated from field: string model = 2;
-   */
-  model: string;
-
-  /**
-   * @generated from field: double temperature = 3;
-   */
-  temperature: number;
-
-  /**
-   * @generated from field: int32 max_tokens = 4;
-   */
-  maxTokens: number;
-};
-
-/**
- * Describes the message gibson.agent.v1.AgentSlotConfig.
- * Use `create(AgentSlotConfigSchema)` to create a new message.
- */
-export const AgentSlotConfigSchema: GenMessage<AgentSlotConfig> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 4);
-
-/**
- * @generated from message gibson.agent.v1.AgentSlotConstraints
- */
-export type AgentSlotConstraints = Message<"gibson.agent.v1.AgentSlotConstraints"> & {
-  /**
-   * @generated from field: int32 min_context_window = 1;
-   */
-  minContextWindow: number;
-
-  /**
-   * @generated from field: repeated string required_features = 2;
-   */
-  requiredFeatures: string[];
-};
-
-/**
- * Describes the message gibson.agent.v1.AgentSlotConstraints.
- * Use `create(AgentSlotConstraintsSchema)` to create a new message.
- */
-export const AgentSlotConstraintsSchema: GenMessage<AgentSlotConstraints> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 5);
-
-/**
- * @generated from message gibson.agent.v1.GetSlotSchemaRequest
- */
-export type GetSlotSchemaRequest = Message<"gibson.agent.v1.GetSlotSchemaRequest"> & {
-};
-
-/**
- * Describes the message gibson.agent.v1.GetSlotSchemaRequest.
- * Use `create(GetSlotSchemaRequestSchema)` to create a new message.
- */
-export const GetSlotSchemaRequestSchema: GenMessage<GetSlotSchemaRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 6);
-
-/**
- * @generated from message gibson.agent.v1.GetSlotSchemaResponse
- */
-export type GetSlotSchemaResponse = Message<"gibson.agent.v1.GetSlotSchemaResponse"> & {
-  /**
-   * @generated from field: repeated gibson.agent.v1.AgentSlotDefinition slots = 1;
-   */
-  slots: AgentSlotDefinition[];
-};
-
-/**
- * Describes the message gibson.agent.v1.GetSlotSchemaResponse.
- * Use `create(GetSlotSchemaResponseSchema)` to create a new message.
- */
-export const GetSlotSchemaResponseSchema: GenMessage<GetSlotSchemaResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 7);
 
 /**
  * @generated from message gibson.agent.v1.ExecuteRequest
@@ -334,7 +213,7 @@ export type ExecuteRequest = Message<"gibson.agent.v1.ExecuteRequest"> & {
  * Use `create(ExecuteRequestSchema)` to create a new message.
  */
 export const ExecuteRequestSchema: GenMessage<ExecuteRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 8);
+  messageDesc(file_gibson_agent_v1_agent, 3);
 
 /**
  * @generated from message gibson.agent.v1.ExecuteResponse
@@ -373,7 +252,7 @@ export type ExecuteResponse = Message<"gibson.agent.v1.ExecuteResponse"> & {
  * Use `create(ExecuteResponseSchema)` to create a new message.
  */
 export const ExecuteResponseSchema: GenMessage<ExecuteResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 9);
+  messageDesc(file_gibson_agent_v1_agent, 4);
 
 /**
  * @generated from message gibson.agent.v1.HealthRequest
@@ -386,7 +265,7 @@ export type HealthRequest = Message<"gibson.agent.v1.HealthRequest"> & {
  * Use `create(HealthRequestSchema)` to create a new message.
  */
 export const HealthRequestSchema: GenMessage<HealthRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 10);
+  messageDesc(file_gibson_agent_v1_agent, 5);
 
 /**
  * @generated from message gibson.agent.v1.HealthResponse
@@ -403,7 +282,7 @@ export type HealthResponse = Message<"gibson.agent.v1.HealthResponse"> & {
  * Use `create(HealthResponseSchema)` to create a new message.
  */
 export const HealthResponseSchema: GenMessage<HealthResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_agent_v1_agent, 11);
+  messageDesc(file_gibson_agent_v1_agent, 6);
 
 /**
  * @generated from service gibson.agent.v1.AgentService
@@ -416,14 +295,6 @@ export const AgentService: GenService<{
     methodKind: "unary";
     input: typeof GetDescriptorRequestSchema;
     output: typeof GetDescriptorResponseSchema;
-  },
-  /**
-   * @generated from rpc gibson.agent.v1.AgentService.GetSlotSchema
-   */
-  getSlotSchema: {
-    methodKind: "unary";
-    input: typeof GetSlotSchemaRequestSchema;
-    output: typeof GetSlotSchemaResponseSchema;
   },
   /**
    * @generated from rpc gibson.agent.v1.AgentService.Execute

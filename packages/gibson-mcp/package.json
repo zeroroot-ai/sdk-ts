@@ -31,7 +31,7 @@
     "@connectrpc/connect-node": "^2.2.0",
     "@modelcontextprotocol/sdk": "^1.32.1",
     "@zeroroot-ai/sdk": "workspace:^",
-    "zod": "^4.6.5"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

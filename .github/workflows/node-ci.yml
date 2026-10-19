@@ -28,12 +28,12 @@ permissions:
 jobs:
   fast:
     if: github.event_name == 'pull_request'
-    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@534026f4a8ed977a3c04ad1a69e572fd7d92e7a2 # v0.18.0
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@58931387de5d0f2925ee29fa9781822b1e3a100d # v0.20.0
     with:
       tier: fast
 
   heavy:
     if: github.event_name == 'merge_group'
-    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@534026f4a8ed977a3c04ad1a69e572fd7d92e7a2 # v0.18.0
+    uses: zeroroot-ai/.github/.github/workflows/reusable-node-ci.yml@58931387de5d0f2925ee29fa9781822b1e3a100d # v0.20.0
     with:
       tier: heavy

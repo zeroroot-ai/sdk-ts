@@ -3,7 +3,7 @@
 
 import assert from "node:assert/strict"
 import test from "node:test"
-import { create, toJson } from "@bufbuild/protobuf"
+import { create } from "@bufbuild/protobuf"
 import { hostname } from "node:os"
 import { Code, ConnectError, createRouterTransport } from "@connectrpc/connect"
 

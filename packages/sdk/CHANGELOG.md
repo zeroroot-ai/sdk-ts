@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.20.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.19.0...v0.20.0) (2026-10-20)
+
+
+### Features
+
+* **sdk:** read the mission run from the task grant, and require it ([#103](https://github.com/zeroroot-ai/sdk-ts/issues/103)) ([0c62b6e](https://github.com/zeroroot-ai/sdk-ts/commit/0c62b6e5ec264910d41e51b555f1ad2ec24e0ea2))
+
+
+### Bug Fixes
+
+* **rework:** refuse a live mission work item with no task grant ([#106](https://github.com/zeroroot-ai/sdk-ts/issues/106)) ([d79ab50](https://github.com/zeroroot-ai/sdk-ts/commit/d79ab503e3e7801206284b834ed9ae770ec1b9d0))
+
 ## [0.19.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.18.1...v0.19.0) (2026-10-18)
 
 

@@ -163,18 +163,24 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
     const dispatchMission = res.context?.mission_id ?? ""
     if (res.workType === "agent_execute" && (grantMission === missionId || dispatchMission === missionId)) {
       const workId = res.workId
+      const request = decodeAgentExecute(res.payload ?? new Uint8Array())
+      // A harness with no run would send callbacks that the daemon refuses
+      // (gibson#1235). The request names the run, and the grant may too.
+      if (!grant && !request.missionRunId) {
+        throw new Error(`gibson-sdk: work ${workId} carries no grant and its request names no mission run`)
+      }
       const harness = grant
         ? openTaskHarness({
             ...opts.harness,
-            endpoint: decodeAgentExecute(res.payload ?? new Uint8Array()).callbackEndpoint || res.context?.callback_endpoint || "",
+            endpoint: request.callbackEndpoint || res.context?.callback_endpoint || "",
             token: grant,
+            ...(request.missionRunId ? { missionRunId: request.missionRunId } : {}),
           })
         : sessionHarness(session, {
             missionId,
             taskId: workId,
             agentName: opts.agentName,
-            // A work item with no grant names the run in its request (gibson#1235).
-            missionRunId: decodeAgentExecute(res.payload ?? new Uint8Array()).missionRunId,
+            missionRunId: request.missionRunId,
           })
       return {
         missionId,

@@ -185,3 +185,23 @@ test("startLiveMission gives up when its dispatch never arrives", async () => {
     /no agent_execute dispatch for it reached instance inst-1/,
   )
 })
+
+test("a work item with no grant and no run in its request is refused", async () => {
+  const { session } = fakeSession([
+    async () => ({
+      workId: "w-n",
+      workType: "agent_execute",
+      context: { mission_id: "m-n", authz_context: "{}", agent: "zerocool-claude" },
+      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" } })),
+    }),
+  ])
+  await assert.rejects(
+    startLiveMission(session, {
+      agentName: "zerocool-claude",
+      targetId: "tgt-1",
+      originate: async () => "m-n",
+      harness: { transport: createRouterTransport(() => {}), renew: false },
+    }),
+    /names no mission run/,
+  )
+})

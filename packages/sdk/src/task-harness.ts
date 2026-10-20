@@ -410,12 +410,18 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): ForkableHarness {
     applyClaim: (claim: Claim): void => {
       if (!claim.grant) throw new Error("gibson-sdk: the claim has no grant")
       const next = decodeGrantClaims(claim.grant)
+      // Check the run before any change, so a refused claim leaves the harness as it was.
+      if (claim.missionRunId && next.missionRunId && claim.missionRunId !== next.missionRunId) {
+        throw new Error(
+          `gibson-sdk: the claim names run ${JSON.stringify(claim.missionRunId)} and its grant names run ${JSON.stringify(next.missionRunId)}`,
+        )
+      }
+      const run = claim.missionRunId || next.missionRunId
+      if (!run) throw new Error("gibson-sdk: neither the claim nor its grant names a mission run")
       current = claim.grant
       claims = next
       context.missionId = claim.missionId || next.missionId
       context.taskId = claim.task?.id || next.taskId
-      const run = claim.missionRunId || next.missionRunId
-      if (!run) throw new Error("gibson-sdk: neither the claim nor its grant names a mission run")
       context.missionRunId = run
       if (timer !== undefined) timers.clearTimeout(timer)
       timer = undefined

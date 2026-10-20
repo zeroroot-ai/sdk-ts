@@ -22,7 +22,7 @@ function fakeJwt(payload: Record<string, unknown>): string {
 }
 
 const PARENT = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "parent-1", task_id: "task-a", mrid: "run-p", exp: 0 })
-const FORK = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "child-1", task_id: "task-b", mrid: "run-f", exp: 0 })
+const FORK = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "child-1", task_id: "task-b", mrid: "child-run-1", exp: 0 })
 
 /** A fake setec identity socket. Each request gets a new token of the current generation. */
 async function identitySocket() {
@@ -161,7 +161,7 @@ test("applyClaim moves the context and the grant, and refuses a claim with no gr
   h.applyClaim({ sandboxId: "s", grant: FORK, missionId: "child-1", missionRunId: "", agentRunId: "a", nodeId: "n", model: "", task: undefined })
   assert.equal(h.token(), FORK)
   assert.equal(ctx, h.context, "the context changes in place")
-  assert.deepEqual(h.context, { missionId: "child-1", taskId: "task-b", agentName: "zerocool", missionRunId: "run-f" })
+  assert.deepEqual(h.context, { missionId: "child-1", taskId: "task-b", agentName: "zerocool", missionRunId: "child-run-1" })
   h.stop()
 })
 
@@ -189,5 +189,22 @@ test("applyClaim refuses a claim whose grant names no run when the claim names n
   )
   h.applyClaim({ sandboxId: "s", grant: NORUN, missionId: "child-1", missionRunId: "run-claim", agentRunId: "a", nodeId: "n", model: "", task: undefined })
   assert.equal(h.context.missionRunId, "run-claim", "the claim names the run when its grant does not")
+  h.stop()
+})
+
+test("applyClaim refuses a claim and a grant that name two runs, and leaves the harness as it was", () => {
+  const h = openTaskHarness({ endpoint: "d:443", token: PARENT, insecure: true, renew: false })
+  const before = { ...h.context }
+  const token = h.token()
+  assert.throws(
+    () => h.applyClaim({ sandboxId: "s", grant: FORK, missionId: "child-1", missionRunId: "run-other", agentRunId: "a", nodeId: "n", model: "", task: undefined }),
+    /claim names run/,
+  )
+  assert.equal(h.token(), token, "the grant did not change")
+  assert.deepEqual(h.context, before, "the context did not change")
+  const NORUN = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "child-1", task_id: "task-b", exp: 0 })
+  assert.throws(() => h.applyClaim({ sandboxId: "s", grant: NORUN, missionId: "child-1", missionRunId: "", agentRunId: "a", nodeId: "n", model: "", task: undefined }))
+  assert.equal(h.token(), token)
+  assert.deepEqual(h.context, before)
   h.stop()
 })

@@ -15,7 +15,7 @@ function fakeJwt(payload: Record<string, unknown>): string {
   const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64url")
   return `${b64({ alg: "EdDSA" })}.${b64(payload)}.sig`
 }
-const GRANT = fakeJwt({ sub: "component:agent:zerocool-claude", mission_id: "m-1", task_id: "run-1" })
+const GRANT = fakeJwt({ sub: "component:agent:zerocool-claude", mission_id: "m-1", task_id: "run-1", mrid: "run-1" })
 
 function harnessWith(handler: (req: ObserveRequest) => { error?: { code: ErrorCode; message: string } }) {
   const transport = createRouterTransport(({ service }) => {

@@ -15,7 +15,7 @@ function fakeJwt(payload: Record<string, unknown>): string {
   return `${b64({ alg: "EdDSA" })}.${b64(payload)}.sig`
 }
 const grantFor = (missionId: string) =>
-  fakeJwt({ sub: "component:agent:zerocool-claude", tenant: "t", mission_id: missionId, task_id: "run-1", exp: 4_000 })
+  fakeJwt({ sub: "component:agent:zerocool-claude", tenant: "t", mission_id: missionId, task_id: "run-1", mrid: "run-1", exp: 4_000 })
 
 test("the live mission is one AGENT node that names this component, with a long timeout", () => {
   const def = liveMissionDefinition({ agentName: "zerocool-claude", targetId: "tgt-1" }) as {
@@ -82,7 +82,7 @@ test("startLiveMission creates, runs, claims its own dispatch and ends it", asyn
 
   assert.equal(live.missionId, "m-live")
   assert.equal(live.workId, "w-live")
-  assert.deepEqual(live.harness.context, { missionId: "m-live", taskId: "run-1", agentName: "zerocool-claude" })
+  assert.deepEqual(live.harness.context, { missionId: "m-live", taskId: "run-1", agentName: "zerocool-claude", missionRunId: "run-1" })
   const created = calls.createMission![0] as { targetId: string; missionDefinitionJson: Uint8Array }
   assert.equal(created.targetId, "tgt-1")
   assert.match(dec.decode(created.missionDefinitionJson), /"agentName":"zerocool-claude"/)
@@ -129,7 +129,7 @@ test("a queue dispatch without a task grant is claimed by context.mission_id and
       workId: "w-q",
       workType: "agent_execute",
       context: { mission_id: "m-q", authz_context: "{}", agent: "zerocool-claude" },
-      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" } })),
+      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" }, missionRunId: "run-q" })),
     }),
   ])
   const live = await startLiveMission(session, {
@@ -140,7 +140,7 @@ test("a queue dispatch without a task grant is claimed by context.mission_id and
   })
   assert.equal(live.missionId, "m-q")
   assert.equal(live.workId, "w-q")
-  assert.deepEqual(live.harness.context, { missionId: "m-q", taskId: "w-q", agentName: "zerocool-claude" })
+  assert.deepEqual(live.harness.context, { missionId: "m-q", taskId: "w-q", agentName: "zerocool-claude", missionRunId: "run-q" })
   assert.equal(live.harness.client, (session as unknown as { clients: { harness: unknown } }).clients.harness)
   assert.equal(live.harness.token(), "")
 })
@@ -183,5 +183,25 @@ test("startLiveMission gives up when its dispatch never arrives", async () => {
       clock: () => (now += 600),
     }),
     /no agent_execute dispatch for it reached instance inst-1/,
+  )
+})
+
+test("a work item with no grant and no run in its request is refused", async () => {
+  const { session } = fakeSession([
+    async () => ({
+      workId: "w-n",
+      workType: "agent_execute",
+      context: { mission_id: "m-n", authz_context: "{}", agent: "zerocool-claude" },
+      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" } })),
+    }),
+  ])
+  await assert.rejects(
+    startLiveMission(session, {
+      agentName: "zerocool-claude",
+      targetId: "tgt-1",
+      originate: async () => "m-n",
+      harness: { transport: createRouterTransport(() => {}), renew: false },
+    }),
+    /names no mission run/,
   )
 })

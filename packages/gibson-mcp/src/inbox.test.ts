@@ -45,7 +45,7 @@ function inboxHarness(script: {
       },
     } as never,
     endpoint: "daemon:50001",
-    context: script.context ?? { missionId: "m-1", taskId: "t-1", agentName: "claude" },
+    context: script.context ?? { missionId: "m-1", taskId: "t-1", agentName: "claude", missionRunId: "run-1" },
     token: () => "base",
     expiresAt: () => 0,
     stop: () => {},

@@ -41,7 +41,7 @@ const harness = (): TaskHarness => ({
   transport: createRouterTransport(() => {}),
   client: {} as never,
   endpoint: "daemon:50001",
-  context: { missionId: "m-1", taskId: "t-1", agentName: "gibson-mcp" },
+  context: { missionId: "m-1", taskId: "t-1", agentName: "gibson-mcp", missionRunId: "run-1" },
   token: () => "tok",
   expiresAt: () => 0,
   stop: () => {},

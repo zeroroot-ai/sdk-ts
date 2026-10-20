@@ -37,7 +37,7 @@ function recordingHarness(seen: string[], token = "base-grant"): TaskHarness {
     transport: wrapped,
     client: {} as never,
     endpoint: "daemon:50001",
-    context: { missionId: "m-1", taskId: "t-1", agentName: "claude" },
+    context: { missionId: "m-1", taskId: "t-1", agentName: "claude", missionRunId: "run-1" },
     token: () => token,
     expiresAt: () => 0,
     stop: () => {},

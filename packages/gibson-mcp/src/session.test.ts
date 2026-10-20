@@ -38,7 +38,7 @@ function fakeHarness(agentName = "gibson-mcp"): TaskHarness & { stopped: number 
     transport: createRouterTransport(() => {}),
     client: {} as never,
     endpoint: "d:50001",
-    context: { missionId: "m-1", taskId: "t-1", agentName },
+    context: { missionId: "m-1", taskId: "t-1", agentName, missionRunId: "run-1" },
     token: () => "tok",
     expiresAt: () => 0,
     stop: () => {

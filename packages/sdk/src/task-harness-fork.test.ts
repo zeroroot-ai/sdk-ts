@@ -21,8 +21,8 @@ function fakeJwt(payload: Record<string, unknown>): string {
   return `${b64({ alg: "EdDSA", typ: "JWT" })}.${b64(payload)}.sig`
 }
 
-const PARENT = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "parent-1", task_id: "task-a", exp: 0 })
-const FORK = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "child-1", task_id: "task-b", exp: 0 })
+const PARENT = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "parent-1", task_id: "task-a", mrid: "run-p", exp: 0 })
+const FORK = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "child-1", task_id: "task-b", mrid: "run-f", exp: 0 })
 
 /** A fake setec identity socket. Each request gets a new token of the current generation. */
 async function identitySocket() {
@@ -132,7 +132,7 @@ test("a fork restored days later claims with an expired source grant, because th
   const d = await daemon()
   try {
     await withSocketEnv(sock.path, async () => {
-      const expired = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "parent-1", task_id: "task-a", exp: 1 })
+      const expired = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "parent-1", task_id: "task-a", mrid: "run-p", exp: 1 })
       const h = openTaskHarness({ endpoint: d.endpoint, token: expired, insecure: true, renew: false })
       const claim = await h.claimFork("sbx-restore-1")
       h.applyClaim(claim)
@@ -161,7 +161,7 @@ test("applyClaim moves the context and the grant, and refuses a claim with no gr
   h.applyClaim({ sandboxId: "s", grant: FORK, missionId: "child-1", missionRunId: "", agentRunId: "a", nodeId: "n", model: "", task: undefined })
   assert.equal(h.token(), FORK)
   assert.equal(ctx, h.context, "the context changes in place")
-  assert.deepEqual(h.context, { missionId: "child-1", taskId: "task-b", agentName: "zerocool" })
+  assert.deepEqual(h.context, { missionId: "child-1", taskId: "task-b", agentName: "zerocool", missionRunId: "run-f" })
   h.stop()
 })
 
@@ -179,3 +179,15 @@ test("claimFork with no identity socket is refused before the call", async () =>
   }
 })
 
+
+test("applyClaim refuses a claim whose grant names no run when the claim names none", () => {
+  const NORUN = fakeJwt({ sub: "component:agent:zerocool", tenant: "t-1", mission_id: "child-1", task_id: "task-b", exp: 0 })
+  const h = openTaskHarness({ endpoint: "d:443", token: PARENT, insecure: true, renew: false })
+  assert.throws(
+    () => h.applyClaim({ sandboxId: "s", grant: NORUN, missionId: "child-1", missionRunId: "", agentRunId: "a", nodeId: "n", model: "", task: undefined }),
+    /names a mission run/,
+  )
+  h.applyClaim({ sandboxId: "s", grant: NORUN, missionId: "child-1", missionRunId: "run-claim", agentRunId: "a", nodeId: "n", model: "", task: undefined })
+  assert.equal(h.context.missionRunId, "run-claim", "the claim names the run when its grant does not")
+  h.stop()
+})

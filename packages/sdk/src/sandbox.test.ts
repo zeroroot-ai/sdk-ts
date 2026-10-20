@@ -57,9 +57,9 @@ function fakeJwt(payload: Record<string, unknown>): string {
   return `${b64({ alg: "EdDSA", typ: "JWT" })}.${b64(payload)}.sig`
 }
 
-test("sandboxHarness carries GIBSON_MISSION_RUN_ID into the context, and leaves it out when the launch set none", () => {
+test("sandboxHarness carries GIBSON_MISSION_RUN_ID into the context, and takes the run of the grant when the launch set none", () => {
   const env = {
-    GIBSON_CG_JWT: fakeJwt({ sub: "component:agent:zerocool", mission_id: "m-1", task_id: "t-1" }),
+    GIBSON_CG_JWT: fakeJwt({ sub: "component:agent:zerocool", mission_id: "m-1", task_id: "t-1", mrid: "run-1" }),
     GIBSON_CALLBACK_ENDPOINT: "gibson:50001",
     GIBSON_AGENT_TASK_B64: taskB64("go"),
   }
@@ -70,7 +70,7 @@ test("sandboxHarness carries GIBSON_MISSION_RUN_ID into the context, and leaves 
   named.stop()
 
   const unnamed = sandboxHarness(readSandboxDispatch(env), opts)
-  assert.deepEqual(unnamed.context, { missionId: "m-1", taskId: "t-1", agentName: "zerocool" })
+  assert.deepEqual(unnamed.context, { missionId: "m-1", taskId: "t-1", agentName: "zerocool", missionRunId: "run-1" }, "the grant names the run")
   unnamed.stop()
 })
 

@@ -169,7 +169,13 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
             endpoint: decodeAgentExecute(res.payload ?? new Uint8Array()).callbackEndpoint || res.context?.callback_endpoint || "",
             token: grant,
           })
-        : sessionHarness(session, { missionId, taskId: workId, agentName: opts.agentName })
+        : sessionHarness(session, {
+            missionId,
+            taskId: workId,
+            agentName: opts.agentName,
+            // A work item with no grant names the run in its request (gibson#1235).
+            missionRunId: decodeAgentExecute(res.payload ?? new Uint8Array()).missionRunId,
+          })
       return {
         missionId,
         workId,

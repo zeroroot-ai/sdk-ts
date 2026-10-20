@@ -31,11 +31,11 @@ function fakeJwt(payload: Record<string, unknown>): string {
   return `${b64({ alg: "EdDSA", typ: "JWT" })}.${b64(payload)}.sig`
 }
 
-const CLAIMS = { sub: "component:agent:zerocool", tenant: "t-1", mission_id: "m-1", task_id: "run-1", exp: 1_000 }
+const CLAIMS = { sub: "component:agent:zerocool", tenant: "t-1", mission_id: "m-1", task_id: "run-1", mrid: "run-1", exp: 1_000 }
 
 test("decodeGrantClaims reads the addressing claims the daemon mints", () => {
   const c = decodeGrantClaims(fakeJwt(CLAIMS))
-  assert.deepEqual(c, { sub: "component:agent:zerocool", tenant: "t-1", missionId: "m-1", taskId: "run-1", exp: 1_000, callingAgent: "" })
+  assert.deepEqual(c, { sub: "component:agent:zerocool", tenant: "t-1", missionId: "m-1", taskId: "run-1", exp: 1_000, callingAgent: "", missionRunId: "run-1" })
 })
 
 test("decodeGrantClaims refuses a token that is not a JWT", () => {
@@ -45,13 +45,13 @@ test("decodeGrantClaims refuses a token that is not a JWT", () => {
 
 test("contextFromGrant derives agent_name from the component subject", () => {
   const ctx = contextFromGrant(decodeGrantClaims(fakeJwt(CLAIMS)))
-  assert.deepEqual(ctx, { missionId: "m-1", taskId: "run-1", agentName: "zerocool" })
+  assert.deepEqual(ctx, { missionId: "m-1", taskId: "run-1", agentName: "zerocool", missionRunId: "run-1" })
 })
 
 test("contextFromGrant names the dispatching agent of a tool or plugin grant", () => {
   const tool = { ...CLAIMS, sub: "component:tool:nmap", cag: "zerocool" }
   assert.equal(decodeGrantClaims(fakeJwt(tool)).callingAgent, "zerocool")
-  assert.deepEqual(contextFromGrant(decodeGrantClaims(fakeJwt(tool))), { missionId: "m-1", taskId: "run-1", agentName: "zerocool" })
+  assert.deepEqual(contextFromGrant(decodeGrantClaims(fakeJwt(tool))), { missionId: "m-1", taskId: "run-1", agentName: "zerocool", missionRunId: "run-1" })
   // A grant of an agent names the agent in its subject, whatever a claim says.
   const agent = { ...CLAIMS, cag: "other" }
   assert.equal(contextFromGrant(decodeGrantClaims(fakeJwt(agent))).agentName, "zerocool")
@@ -194,28 +194,26 @@ test("a grant with a far-future exp renews at Node's timer ceiling, not at once"
   h.stop()
 })
 
-test("the mission run from the launch rides in ContextInfo, and only when the launch named one", () => {
-  const open = (missionRunId?: string) =>
+test("the mission run rides in ContextInfo: the launch wins, the grant is the fallback, and neither refuses", () => {
+  const open = (claims: Record<string, unknown>, missionRunId?: string) =>
     openTaskHarness({
       endpoint: "d:443",
-      token: fakeJwt(CLAIMS),
+      token: fakeJwt(claims),
       transport: createRouterTransport(() => {}),
       renew: false,
       ...(missionRunId ? { missionRunId } : {}),
     })
 
-  const withRun = open("mr-7")
-  assert.deepEqual(withRun.context, { missionId: "m-1", taskId: "run-1", agentName: "zerocool", missionRunId: "mr-7" })
-  const onWire = create(ContextInfoSchema, withRun.context)
+  const launched = open(CLAIMS, "mr-7")
+  assert.deepEqual(launched.context, { missionId: "m-1", taskId: "run-1", agentName: "zerocool", missionRunId: "mr-7" })
+  const onWire = create(ContextInfoSchema, launched.context)
   assert.equal(onWire.missionRunId, "mr-7", "the daemon identifies the calling member by mission_run_id")
 
-  const withoutRun = open()
-  assert.deepEqual(withoutRun.context, { missionId: "m-1", taskId: "run-1", agentName: "zerocool" })
-  const bare = create(ContextInfoSchema, withoutRun.context)
-  assert.equal(bare.missionRunId, "", "no run named, the field stays empty")
-  const bareJson = { missionId: "m-1", taskId: "run-1", agentName: "zerocool" }
-  assert.deepEqual(toJson(ContextInfoSchema, bare), bareJson)
-  assert.deepEqual(toJson(ContextInfoSchema, onWire), { ...bareJson, missionRunId: "mr-7" }, "nothing else on the wire changes")
+  const fromGrant = open(CLAIMS)
+  assert.equal(fromGrant.context.missionRunId, "run-1", "the grant names the run when the launch names none")
+
+  const { mrid: _run, ...noRun } = CLAIMS
+  assert.throws(() => open(noRun), /names a mission run/)
 })
 
 /**

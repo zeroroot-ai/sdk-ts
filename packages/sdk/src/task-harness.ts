@@ -57,6 +57,12 @@ export interface GrantClaims {
    * Empty for the grant of an agent.
    */
   callingAgent: string
+  /**
+   * The mission run the grant serves (the signed claim `mrid`). A mission id is
+   * the same for every run of a record, so a callback names its run. Empty for
+   * a grant minted before the claim existed.
+   */
+  missionRunId: string
 }
 
 /** The header ext-authz reads a capability-grant JWT from. */
@@ -80,7 +86,7 @@ export function decodeGrantClaims(token: string): GrantClaims {
   }
   const str = (k: string): string => (typeof payload[k] === "string" ? (payload[k] as string) : "")
   const exp = typeof payload.exp === "number" ? (payload.exp as number) : 0
-  return { sub: str("sub"), tenant: str("tenant"), missionId: str("mission_id"), taskId: str("task_id"), exp, callingAgent: str("cag") }
+  return { sub: str("sub"), tenant: str("tenant"), missionId: str("mission_id"), taskId: str("task_id"), exp, callingAgent: str("cag"), missionRunId: str("mrid") }
 }
 
 /**
@@ -89,7 +95,7 @@ export function decodeGrantClaims(token: string): GrantClaims {
  * (gibson `internal/engine/harness/implementation.go:2636`) and registers the
  * harness under that same name.
  */
-export function contextFromGrant(claims: GrantClaims): TaskContext {
+export function contextFromGrant(claims: GrantClaims): Omit<TaskContext, "missionRunId"> & { missionRunId?: string } {
   const m = /^component:[^:]+:(.+)$/.exec(claims.sub)
   if (!m) {
     throw new Error(
@@ -104,15 +110,20 @@ export function contextFromGrant(claims: GrantClaims): TaskContext {
   // daemon refuses a callback whose agent_name is any other name. The grant of
   // an agent carries no claim, and the subject names the agent.
   const agentName = !claims.sub.startsWith("component:agent:") && claims.callingAgent ? claims.callingAgent : m[1]
-  return { missionId: claims.missionId, taskId: claims.taskId, agentName }
+  return {
+    missionId: claims.missionId,
+    taskId: claims.taskId,
+    agentName,
+    ...(claims.missionRunId ? { missionRunId: claims.missionRunId } : {}),
+  }
 }
 
 /**
  * The subset of `ContextInfo` a dispatch fixes. Spread into every request.
- * `missionRunId` is set when the launch named the run, and absent otherwise,
- * so a request from a run that has none carries the proto default.
+ * `missionRunId` is required: the daemon refuses a callback that names no run
+ * (gibson#1235). A harness reads it from the launch or from the grant.
  */
-export type TaskContext = Pick<ContextInfo, "missionId" | "taskId" | "agentName"> & Partial<Pick<ContextInfo, "missionRunId">>
+export type TaskContext = Pick<ContextInfo, "missionId" | "taskId" | "agentName" | "missionRunId">
 
 export interface TaskHarness {
   /**
@@ -160,9 +171,9 @@ export interface ForkableHarness extends TaskHarness, Claimer {
 
 export interface OpenTaskHarnessOptions extends TaskHarnessConfig {
   /**
-   * The mission run this dispatch belongs to, as the launch named it. The
-   * grant does not carry it. When set, every request carries it as
-   * `ContextInfo.mission_run_id`.
+   * The mission run this dispatch belongs to, as the launch named it. It wins
+   * over the run in the grant. Without it the harness takes the run from the
+   * grant (the claim `mrid`), and it refuses to open when neither names one.
    */
   missionRunId?: string
   /** Renew the grant before it expires. Default `true`. */
@@ -314,7 +325,13 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): ForkableHarness {
   }
   let current = opts.token
   let claims = decodeGrantClaims(current)
-  const context: TaskContext = { ...contextFromGrant(claims), ...(opts.missionRunId ? { missionRunId: opts.missionRunId } : {}) }
+  const missionRunId = opts.missionRunId || claims.missionRunId
+  if (!missionRunId) {
+    throw new Error(
+      "gibson-sdk: neither the launch nor the task grant names a mission run; callback RPCs would be refused",
+    )
+  }
+  const context: TaskContext = { ...contextFromGrant(claims), missionRunId }
   const clock = opts.clock ?? (() => Date.now())
   const timers = opts.timers ?? globalThis
 
@@ -397,8 +414,9 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): ForkableHarness {
       claims = next
       context.missionId = claim.missionId || next.missionId
       context.taskId = claim.task?.id || next.taskId
-      if (claim.missionRunId) context.missionRunId = claim.missionRunId
-      else delete context.missionRunId
+      const run = claim.missionRunId || next.missionRunId
+      if (!run) throw new Error("gibson-sdk: neither the claim nor its grant names a mission run")
+      context.missionRunId = run
       if (timer !== undefined) timers.clearTimeout(timer)
       timer = undefined
       schedule()

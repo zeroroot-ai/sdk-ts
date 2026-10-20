@@ -184,3 +184,27 @@ test("startLiveMission gives up when its dispatch never arrives", async () => {
     /no agent_execute dispatch for it reached instance inst-1/,
   )
 })
+
+test("a failed answer to a work item with no task grant does not hide the missing grant", async () => {
+  const { session } = fakeSession([
+    async () => ({
+      workId: "w-f",
+      workType: "agent_execute",
+      context: { mission_id: "m-f", authz_context: "{}", agent: "zerocool-claude" },
+      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" }, missionRunId: "run-f" })),
+    }),
+  ])
+  const transportFailure = new Error("transport down")
+  ;(session as unknown as { clients: { component: { submitResult: () => Promise<never> } } }).clients.component.submitResult = async () => {
+    throw transportFailure
+  }
+  await assert.rejects(
+    startLiveMission(session, {
+      agentName: "zerocool-claude",
+      targetId: "tgt-1",
+      originate: async () => "m-f",
+      harness: { transport: createRouterTransport(() => {}), renew: false },
+    }),
+    (e: unknown) => e instanceof NoTaskGrantError && e.workId === "w-f" && e.cause === transportFailure,
+  )
+})

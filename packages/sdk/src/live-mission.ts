@@ -124,8 +124,9 @@ function missionIdOf(info: Record<string, unknown>): string {
  */
 export class NoTaskGrantError extends Error {
   readonly workId: string
-  constructor(workId: string) {
-    super(`gibson-sdk: work ${workId} carries no task grant, so it cannot open a harness`)
+  /** @param cause The failure of the error result that answered the dispatch, when it failed. */
+  constructor(workId: string, cause?: unknown) {
+    super(`gibson-sdk: work ${workId} carries no task grant, so it cannot open a harness`, cause === undefined ? undefined : { cause })
     this.name = "NoTaskGrantError"
     this.workId = workId
   }
@@ -159,11 +160,18 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
       const workId = res.workId
       if (!grant) {
         // Answer the dispatch, so the node does not wait for its full timeout.
-        await component.submitResult({
-          workId,
-          result: encodeAgentError(`work item ${workId} carries no task grant`),
-        })
-        throw new NoTaskGrantError(workId)
+        // A failed answer must not hide the cause: the error is always
+        // NoTaskGrantError, and the failure of the answer rides as its cause.
+        let answerFailure: unknown
+        try {
+          await component.submitResult({
+            workId,
+            result: encodeAgentError(`work item ${workId} carries no task grant`),
+          })
+        } catch (e) {
+          answerFailure = e
+        }
+        throw new NoTaskGrantError(workId, answerFailure)
       }
       const request = decodeAgentExecute(res.payload ?? new Uint8Array())
       const harness = openTaskHarness({

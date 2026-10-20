@@ -7,7 +7,7 @@ import type { ComponentService } from "./clients.js"
 import type { GibsonSession } from "./connect.js"
 import { createMission, runMission } from "./delegate.js"
 import { MissionDefinitionSchema, NodeType } from "./gen/gibson/mission/v1/mission_definition_pb.js"
-import { decodeGrantClaims, openTaskHarness, type OpenTaskHarnessOptions, type TaskContext, type TaskHarness } from "./task-harness.js"
+import { decodeGrantClaims, openTaskHarness, type OpenTaskHarnessOptions, type TaskHarness } from "./task-harness.js"
 import { decodeAgentExecute, encodeAgentError, encodeAgentResult, type AgentOutcome } from "./work.js"
 
 /**
@@ -116,24 +116,19 @@ function missionIdOf(info: Record<string, unknown>): string {
  * and a silent drop stalls that mission's node for its full timeout.
  */
 /**
- * A harness on the component's own grant, over the session transport. A
- * work item that the daemon dispatched through the work queue (an
- * off-cluster, poll-mode agent) carries `context.mission_id` but no task
- * grant and no callback endpoint (gibson#1633), so there is no task token
- * to dial the harness with. The component's own grant is the credential the
- * component posture already uses for reads and findings; this makes the
- * mission's Observe/SubmitFinding calls run on the same one. No renewal:
- * the session's grant is renewed by the session itself.
+ * The work item of a live mission carried no task grant. The daemon mints a task
+ * grant for every dispatch, and a harness with no grant has no run, so its
+ * callbacks would be refused (gibson#1235). There is no fallback to the grant of
+ * the component: the dispatch is answered with an error result and this error
+ * is thrown before any harness opens.
  */
-export function sessionHarness(session: GibsonSession, context: TaskContext): TaskHarness {
-  return {
-    transport: session.transport,
-    client: session.clients.harness,
-    endpoint: "",
-    context,
-    token: () => "",
-    expiresAt: () => Number.POSITIVE_INFINITY,
-    stop: () => {},
+export class NoTaskGrantError extends Error {
+  readonly workId: string
+  /** @param cause The failure of the error result that answered the dispatch, when it failed. */
+  constructor(workId: string, cause?: unknown) {
+    super(`gibson-sdk: work ${workId} carries no task grant, so it cannot open a harness`, cause === undefined ? undefined : { cause })
+    this.name = "NoTaskGrantError"
+    this.workId = workId
   }
 }
 
@@ -163,25 +158,28 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
     const dispatchMission = res.context?.mission_id ?? ""
     if (res.workType === "agent_execute" && (grantMission === missionId || dispatchMission === missionId)) {
       const workId = res.workId
-      const request = decodeAgentExecute(res.payload ?? new Uint8Array())
-      // A harness with no run would send callbacks that the daemon refuses
-      // (gibson#1235). The request names the run, and the grant may too.
-      if (!grant && !request.missionRunId) {
-        throw new Error(`gibson-sdk: work ${workId} carries no grant and its request names no mission run`)
+      if (!grant) {
+        // Answer the dispatch, so the node does not wait for its full timeout.
+        // A failed answer must not hide the cause: the error is always
+        // NoTaskGrantError, and the failure of the answer rides as its cause.
+        let answerFailure: unknown
+        try {
+          await component.submitResult({
+            workId,
+            result: encodeAgentError(`work item ${workId} carries no task grant`),
+          })
+        } catch (e) {
+          answerFailure = e
+        }
+        throw new NoTaskGrantError(workId, answerFailure)
       }
-      const harness = grant
-        ? openTaskHarness({
-            ...opts.harness,
-            endpoint: request.callbackEndpoint || res.context?.callback_endpoint || "",
-            token: grant,
-            ...(request.missionRunId ? { missionRunId: request.missionRunId } : {}),
-          })
-        : sessionHarness(session, {
-            missionId,
-            taskId: workId,
-            agentName: opts.agentName,
-            missionRunId: request.missionRunId,
-          })
+      const request = decodeAgentExecute(res.payload ?? new Uint8Array())
+      const harness = openTaskHarness({
+        ...opts.harness,
+        endpoint: request.callbackEndpoint || res.context?.callback_endpoint || "",
+        token: grant,
+        ...(request.missionRunId ? { missionRunId: request.missionRunId } : {}),
+      })
       return {
         missionId,
         workId,

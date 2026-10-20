@@ -97,7 +97,7 @@ const NOT_A_TOOL: Record<string, string> = {
   sandboxId: "reads the hostname of the sandbox",
   dispatchEnvFromClaim: "the launch of a fork, read at start",
   parkAfterResult: "the end of a forkable run; this server is never one",
-  sessionHarness: "the component-grant harness, chosen at start",
+  NoTaskGrantError: "the error of a work item with no task grant, thrown at start",
   readSandboxDispatch: "reads the dispatch contract off the environment at start",
   taskFromB64: "decodes the dispatched task at start",
   taskKnowledge: "chooses which grant recall reads over",

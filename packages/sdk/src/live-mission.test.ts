@@ -5,7 +5,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { createRouterTransport } from "@connectrpc/connect"
 
-import { liveMissionDefinition, startLiveMission } from "./live-mission.js"
+import { liveMissionDefinition, NoTaskGrantError, startLiveMission } from "./live-mission.js"
 
 const enc = new TextEncoder()
 const dec = new TextDecoder()
@@ -123,8 +123,8 @@ test("a given originator creates and runs the mission; the component does not", 
   assert.deepEqual(calls.runMission, [])
 })
 
-test("a queue dispatch without a task grant is claimed by context.mission_id and runs on the session harness", async () => {
-  const { session } = fakeSession([
+test("a queue dispatch without a task grant is answered with an error and refused before any harness opens", async () => {
+  const { session, calls } = fakeSession([
     async () => ({
       workId: "w-q",
       workType: "agent_execute",
@@ -132,17 +132,16 @@ test("a queue dispatch without a task grant is claimed by context.mission_id and
       payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" }, missionRunId: "run-q" })),
     }),
   ])
-  const live = await startLiveMission(session, {
-    agentName: "zerocool-claude",
-    targetId: "tgt-1",
-    originate: async () => "m-q",
-    harness: { transport: createRouterTransport(() => {}), renew: false },
-  })
-  assert.equal(live.missionId, "m-q")
-  assert.equal(live.workId, "w-q")
-  assert.deepEqual(live.harness.context, { missionId: "m-q", taskId: "w-q", agentName: "zerocool-claude", missionRunId: "run-q" })
-  assert.equal(live.harness.client, (session as unknown as { clients: { harness: unknown } }).clients.harness)
-  assert.equal(live.harness.token(), "")
+  await assert.rejects(
+    startLiveMission(session, {
+      agentName: "zerocool-claude",
+      targetId: "tgt-1",
+      originate: async () => "m-q",
+      harness: { transport: createRouterTransport(() => {}), renew: false },
+    }),
+    (e: unknown) => e instanceof NoTaskGrantError && e.workId === "w-q",
+  )
+  assert.equal(calls.submitResult!.length, 1, "the dispatch is answered, so the node does not wait for its timeout")
 })
 
 test("work for another mission is answered with an error result, not swallowed", async () => {
@@ -186,22 +185,26 @@ test("startLiveMission gives up when its dispatch never arrives", async () => {
   )
 })
 
-test("a work item with no grant and no run in its request is refused", async () => {
+test("a failed answer to a work item with no task grant does not hide the missing grant", async () => {
   const { session } = fakeSession([
     async () => ({
-      workId: "w-n",
+      workId: "w-f",
       workType: "agent_execute",
-      context: { mission_id: "m-n", authz_context: "{}", agent: "zerocool-claude" },
-      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" } })),
+      context: { mission_id: "m-f", authz_context: "{}", agent: "zerocool-claude" },
+      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" }, missionRunId: "run-f" })),
     }),
   ])
+  const transportFailure = new Error("transport down")
+  ;(session as unknown as { clients: { component: { submitResult: () => Promise<never> } } }).clients.component.submitResult = async () => {
+    throw transportFailure
+  }
   await assert.rejects(
     startLiveMission(session, {
       agentName: "zerocool-claude",
       targetId: "tgt-1",
-      originate: async () => "m-n",
+      originate: async () => "m-f",
       harness: { transport: createRouterTransport(() => {}), renew: false },
     }),
-    /names no mission run/,
+    (e: unknown) => e instanceof NoTaskGrantError && e.workId === "w-f" && e.cause === transportFailure,
   )
 })

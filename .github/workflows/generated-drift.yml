@@ -8,7 +8,7 @@ name: generated-drift
 # needs no BSR access, because it reads the bindings already committed in
 # packages/sdk/src/gen. The sibling bindings-drift workflow is the one that
 # asks the BSR whether those bindings are themselves current, and it runs on
-# a schedule because that drift is caused by an upstream release, not by the
+# dispatch because that drift is caused by an upstream release, not by the
 # PR in front of you.
 
 on:

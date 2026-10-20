@@ -1,6 +1,6 @@
 name: bindings-drift
 
-# Checks daily that the committed bindings AND the MCP tool table generated
+# Checks on dispatch that the committed bindings AND the MCP tool table generated
 # from them still match what the BSR module `buf.build/zeroroot-ai/sdk`
 # produces today.
 #
@@ -20,16 +20,13 @@ name: bindings-drift
 # session surface. Nothing here could tell, because a frozen label generates
 # clean every time.
 #
-# A schedule rather than a PR gate: drift is caused by an upstream release, not
+# A dispatch run rather than a PR gate (no schedule, owner order 2026-10-19): drift is caused by an upstream release, not
 # by the PR in front of you, so failing unrelated PRs would be noise. This files
 # one tracked issue instead, the same pattern the SDK's buf-push uses.
 #
 # It reads a public BSR module, so it needs no BUF_TOKEN.
 
 on:
-  schedule:
-    # Daily 07:31 UTC. SDK releases are frequent; a week of drift is too much.
-    - cron: '31 7 * * *'
   workflow_dispatch:
 
 permissions:

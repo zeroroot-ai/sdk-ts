@@ -121,6 +121,7 @@ full RPC tier as well; see the tool surface below.
 | `POST /mcp` | starts an MCP session with `initialize`; later requests carry `mcp-session-id` |
 | `GET /mcp` | the session's notification stream |
 | `DELETE /mcp` | ends a session |
+| `POST /answer` | the member driver hands an answer to an open `ask`. Requires the turn token. |
 | `GET /healthz` | liveness, plus the check-in source, the posture, the listed tool count, the reachable RPC count and the open job |
 | `POST /turn` | puts a dispatch's grant in force. Requires the turn token. |
 | `GET /turn` | reports the turn in force |
@@ -147,6 +148,15 @@ turn in force; that is how a driver runs two turns at once.
 
 Both `job_id` and `grant` are required. A grant with no job attributes the
 work to nothing.
+
+The daemon allows one `SubscribeInput` stream for each member (ADR-0119), and
+the driver holds it. A server started with `GIBSON_TURN_TOKEN` never
+subscribes. The driver hands each answer to an open `ask` with
+`POST /answer {"job_id": "job-1", "message": "..."}`, and the server answers
+409 when no question is open for that job. A server started without the token
+has no driver, so it is the one reader and subscribes itself. `AlreadyExists`
+from `SubscribeInput` means a second reader. The server logs one line and does
+not retry.
 
 `/turn` exists only where there is a task grant to swap. Elsewhere it is a
 404.

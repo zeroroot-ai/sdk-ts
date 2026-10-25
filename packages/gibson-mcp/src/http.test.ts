@@ -212,3 +212,23 @@ test("/turn is absent where there is no task grant to swap", async () => {
   assert.equal(res.status, 404)
   await s.close()
 })
+
+test("POST /answer needs the turn token, and reaches an open question only", async () => {
+  const delivered: unknown[] = []
+  const surface = {
+    attach: async () => ({}),
+    health: () => ({}),
+    answer: { deliver: (a: { jobId: string }) => (delivered.push(a), a.jobId === "j-1") },
+  }
+  const http = await serveHttp(surface, { host: "127.0.0.1", port: 0 }, quiet, { turnToken: TURN_TOKEN })
+  const url = new URL("/answer", http.url)
+  const post = (body: unknown, headers: Record<string, string>) =>
+    fetch(url, { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) })
+  assert.equal((await post({ job_id: "j-1", message: "yes" }, {})).status, 401)
+  assert.equal((await post({ job_id: "j-1", message: "yes" }, bearer("wrong"))).status, 401)
+  assert.deepEqual(delivered, [], "an unauthenticated caller reaches nothing")
+  assert.equal((await post({ job_id: "j-1" }, bearer(TURN_TOKEN))).status, 400)
+  assert.equal((await post({ job_id: "j-2", message: "yes" }, bearer(TURN_TOKEN))).status, 409)
+  assert.equal((await post({ job_id: "j-1", message: "yes" }, bearer(TURN_TOKEN))).status, 200)
+  await http.close()
+})

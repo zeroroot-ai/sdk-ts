@@ -19,6 +19,7 @@ import { TAG, type Log } from "./log.js"
  *                    carry `mcp-session-id`
  *   GET  /mcp        the session's notification stream
  *   DELETE /mcp      ends a session
+ *   POST /answer     the member driver hands an answer to an open `ask`. Needs the turn token.
  *   GET  /healthz    liveness and the current posture, as JSON
  *
  * DNS-rebinding protection is on: only the loopback host names are accepted.
@@ -40,6 +41,17 @@ export interface HttpSurface {
    * sandbox, and then `/turn` answers 404 like any other unknown route.
    */
   turn?: TurnRoute
+  /**
+   * Where the member driver hands an answer to an open `ask`. The driver is
+   * the one reader of the inbox stream (ADR-0119), so this is the only way an
+   * answer reaches the server. Absent unless the driver owns the inbox.
+   */
+  answer?: AnswerRoute
+}
+
+/** `POST /answer {job_id, message, id?, sender?}`. Delivered only to a question that is open. */
+export interface AnswerRoute {
+  deliver(answer: { jobId: string; message: string; id?: string; sender?: string }): boolean
 }
 
 /**
@@ -116,18 +128,18 @@ export async function serveHttp(surface: HttpSurface, listen: Listen, log: Log, 
   }
 
   /** True when the request carries the per-process turn token. Logs the refusal otherwise. */
-  const turnAuthorized = (req: IncomingMessage): boolean => {
+  const turnAuthorized = (req: IncomingMessage, route = "/turn"): boolean => {
     if (!turnToken) {
-      log(`${TAG} http: ${req.method} /turn refused: ${TURN_TOKEN_ENV} is not set, so no caller can drive a turn`)
+      log(`${TAG} http: ${req.method} ${route} refused: ${TURN_TOKEN_ENV} is not set, so no caller can drive a turn`)
       return false
     }
     const presented = bearerOf(req)
     if (presented === undefined) {
-      log(`${TAG} http: ${req.method} /turn refused: no bearer token`)
+      log(`${TAG} http: ${req.method} ${route} refused: no bearer token`)
       return false
     }
     if (!tokenMatches(presented, turnToken)) {
-      log(`${TAG} http: ${req.method} /turn refused: the bearer token does not match ${TURN_TOKEN_ENV}`)
+      log(`${TAG} http: ${req.method} ${route} refused: the bearer token does not match ${TURN_TOKEN_ENV}`)
       return false
     }
     return true
@@ -202,11 +214,32 @@ export async function serveHttp(surface: HttpSurface, listen: Listen, log: Log, 
     return sendJson(res, 200, { job_id: jobId, endpoint: current?.endpoint ?? endpoint ?? "" })
   }
 
+  const handleAnswer = async (answer: AnswerRoute, req: IncomingMessage, res: ServerResponse): Promise<void> => {
+    if (req.method !== "POST") return sendJson(res, 405, { error: "POST an answer" })
+    if (!turnAuthorized(req, "/answer")) {
+      res.setHeader("www-authenticate", "Bearer")
+      return sendJson(res, 401, { error: `POST /answer requires the bearer token the server was started with in ${TURN_TOKEN_ENV}` })
+    }
+    const body = (await readJsonBody(req)) as Record<string, unknown> | undefined
+    const jobId = typeof body?.job_id === "string" ? body.job_id : ""
+    const message = typeof body?.message === "string" ? body.message : ""
+    if (!jobId || !message) return sendJson(res, 400, { error: "job_id and message are both required" })
+    const delivered = answer.deliver({
+      jobId,
+      message,
+      ...(typeof body?.id === "string" ? { id: body.id } : {}),
+      ...(typeof body?.sender === "string" ? { sender: body.sender } : {}),
+    })
+    if (!delivered) return sendJson(res, 409, { error: `no question is open for job ${jobId}` })
+    return sendJson(res, 200, { delivered: true })
+  }
+
   const server = createServer((req, res) => {
     void (async () => {
       const url = new URL(req.url ?? "/", `http://${listen.host}:${listen.port || 0}`)
       try {
         if (url.pathname === "/turn" && surface.turn) return await handleTurn(surface.turn, req, res)
+        if (url.pathname === "/answer" && surface.answer) return await handleAnswer(surface.answer, req, res)
         if (url.pathname === "/mcp") return await handleMcp(req, res)
         if (url.pathname === "/healthz" && req.method === "GET") return sendJson(res, 200, { ok: true, sessions: sessions.size, ...surface.health() })
         sendJson(res, 404, { error: `no route ${req.method} ${url.pathname}` })

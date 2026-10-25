@@ -12,7 +12,8 @@ import type { TurnRoute } from "./http.js"
 import { attachServer } from "./server.js"
 import { AnswerRouter, askTool } from "./ask.js"
 import { startDiscovery, type Discovery } from "./discovery.js"
-import { inboxAvailable, openInbox, routeAnswers, type Inbox } from "./inbox.js"
+import { driverOwnedInbox, inboxAvailable, InputKind, openInbox, routeAnswers, type Inbox, type JobInput } from "./inbox.js"
+import { TURN_TOKEN_ENV, type AnswerRoute } from "./http.js"
 import { helperToolsFor } from "./helpers/index.js"
 import { apiTools } from "./api.js"
 import { rpcCatalog, type RpcChannels, type RpcEntry } from "./rpc.js"
@@ -61,6 +62,11 @@ export interface Surface {
   turn?: TurnRoute
   /** The member inbox, when this posture holds a task grant. */
   inbox?: Inbox
+  /**
+   * Where the member driver hands an answer, when the driver owns the inbox
+   * stream. The HTTP transport serves it at `/answer`.
+   */
+  answer?: AnswerRoute
   /** End the mission, stop the heartbeat, drop the state file. Idempotent. */
   close(): Promise<void>
 }
@@ -98,9 +104,16 @@ export async function buildSurface(env: NodeJS.ProcessEnv, cwd: string, deps: Bu
    * transport the launch opened, never under a turn's. It exists only where
    * the daemon carries the inbox RPCs, so a member sandbox has an `ask` tool
    * and an ordinary dispatched run does not.
+   *
+   * The daemon allows one `SubscribeInput` stream for each member (ADR-0119).
+   * A member driver starts this server with its turn token, and the driver
+   * holds that stream. Then this server never subscribes: the driver hands
+   * each answer to `/answer`. Without a turn token no driver exists, so this
+   * process is the one reader.
    */
+  const driverOwnsInbox = Boolean(env[TURN_TOKEN_ENV])
   if (gibson.live && inboxAvailable(gibson.live.harness)) {
-    inbox = routeAnswers(openInbox({ harness: gibson.live.harness, log }), answers, log)
+    inbox = driverOwnsInbox ? driverOwnedInbox(gibson.live.harness) : routeAnswers(openInbox({ harness: gibson.live.harness, log }), answers, log)
   }
 
   const postureCtx = (): PostureContext => ({
@@ -155,6 +168,16 @@ export async function buildSurface(env: NodeJS.ProcessEnv, cwd: string, deps: Bu
       ...(turns?.current() ? { job: turns.current()!.jobId } : {}),
     }),
     ...(inbox ? { inbox } : {}),
+    ...(inbox && driverOwnsInbox
+      ? {
+          answer: {
+            deliver: (a) => {
+              const input: JobInput = { id: a.id ?? "", jobId: a.jobId, message: a.message, grant: "", sender: a.sender ?? "", kind: InputKind.ANSWER, sentAt: 0 }
+              return answers.offer(input)
+            },
+          } satisfies AnswerRoute,
+        }
+      : {}),
     ...(turns
       ? {
           turn: {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.7.0...gibson-mcp-v0.7.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* **gibson-mcp:** the member driver owns the inbox stream, the server never subscribes ([#107](https://github.com/zeroroot-ai/sdk-ts/issues/107)) ([458b55b](https://github.com/zeroroot-ai/sdk-ts/commit/458b55bdbfeffdeba47e773355f1372afb8345d3))
+
 ## [0.7.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.6.0...gibson-mcp-v0.7.0) (2026-10-21)
 
 

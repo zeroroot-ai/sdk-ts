@@ -5,10 +5,12 @@
 // `gibson-mcp` (main.ts); a host adapter or a member driver embeds this.
 export { buildSurface, type BuildDeps, type Surface } from "./build.js"
 export { parseFlags, parseListen, usage, DEFAULT_LISTEN, DEFAULT_STREAM_LIMIT, type Flags, type Listen, type TransportKind } from "./flags.js"
-export { serveHttp, type HttpHandle, type HttpSurface, type TurnRoute } from "./http.js"
+export { serveHttp, type HttpHandle, type HttpSurface, type TurnRoute, type AnswerRoute } from "./http.js"
 export { createTurnController, dynamicTransport, TURN_GRANT_HEADER, type Turn, type TurnController } from "./turn.js"
 export {
   openInbox,
+  driverOwnedInbox,
+  InboxConflictError,
   routeAnswers,
   inboxAvailable,
   toJobInput,

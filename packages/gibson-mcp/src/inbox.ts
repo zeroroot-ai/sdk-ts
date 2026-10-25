@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
+import { Code, ConnectError } from "@connectrpc/connect"
 import type { TaskHarness } from "@zeroroot-ai/sdk"
 import type { Principal } from "@zeroroot-ai/sdk/gen/gibson/common/v1/gibson_common_pb.js"
 import type { Input } from "@zeroroot-ai/sdk/gen/gibson/job/v1/job_pb.js"
@@ -84,6 +85,22 @@ export interface InboxOptions {
   sleep?: (ms: number) => Promise<void>
 }
 
+/**
+ * A second reader of one member's inbox. The daemon allows one
+ * `SubscribeInput` stream for each member (ADR-0119), and the member driver
+ * holds it. A second reader is a bug in the process layout, never a transient
+ * fault, so it ends the stream and is never retried.
+ */
+export class InboxConflictError extends Error {
+  constructor(detail: string) {
+    super(
+      `a second process reads this member's inbox (${detail}). The member driver is the one reader and ` +
+        "it hands each answer to this server over POST /answer. Start this server with GIBSON_TURN_TOKEN so it does not subscribe.",
+    )
+    this.name = "InboxConflictError"
+  }
+}
+
 export const MIN_BACKOFF_MS = 500
 export const MAX_BACKOFF_MS = 30_000
 
@@ -135,6 +152,11 @@ export function openInbox(opts: InboxOptions): Inbox {
         // member's life.
       } catch (e) {
         if (stopped || controller.signal.aborted) return
+        if (ConnectError.from(e).code === Code.AlreadyExists) {
+          const conflict = new InboxConflictError(ConnectError.from(e).rawMessage)
+          opts.log?.(`${TAG} inbox: ${conflict.message}`)
+          throw conflict
+        }
         opts.log?.(`${TAG} inbox: ${(e as Error).message}; reconnecting in ${backoff}ms`)
       }
       if (stopped || controller.signal.aborted) return
@@ -143,8 +165,15 @@ export function openInbox(opts: InboxOptions): Inbox {
     }
   }
 
+  return { messages, ...inboxCalls(harness), stop: () => {
+    stopped = true
+    controller.abort()
+  } }
+}
+
+/** The unary inbox RPCs. They open no stream, so any process may call them. */
+function inboxCalls(harness: TaskHarness): Pick<Inbox, "send" | "reportState"> {
   return {
-    messages,
     send: async (jobId, message, kind) => {
       const res = await inboxClient(harness).sendInput({ context: harness.context, jobId, message, kind })
       if (res.error) throw new Error(`SendInput refused: ${res.error.message}`)
@@ -154,10 +183,23 @@ export function openInbox(opts: InboxOptions): Inbox {
       const res = await inboxClient(harness).reportJobState({ context: harness.context, jobId, state, claudeSessionId: claudeSessionId ?? "" })
       if (res.error) throw new Error(`ReportJobState refused: ${res.error.message}`)
     },
-    stop: () => {
-      stopped = true
-      controller.abort()
+  }
+}
+
+/**
+ * The inbox of a server whose member driver owns the stream (ADR-0119).
+ *
+ * It sends and reports through the unary RPCs and never subscribes. The
+ * driver hands each answer to the server over `POST /answer`. Reading
+ * `messages()` here is a bug, so it throws.
+ */
+export function driverOwnedInbox(harness: TaskHarness): Inbox {
+  return {
+    ...inboxCalls(harness),
+    messages: () => {
+      throw new Error("gibson-mcp: the member driver owns the inbox stream, so this server never subscribes")
     },
+    stop: () => {},
   }
 }
 

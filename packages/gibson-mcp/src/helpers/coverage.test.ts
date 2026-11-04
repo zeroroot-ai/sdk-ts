@@ -60,6 +60,7 @@ const NOT_A_TOOL: Record<string, string> = {
   // Check-in and identity. The source is decided at start and the server
   // never mints identity (ADR-0045), so no tool may reach these.
   CapabilityGrantClient: "the check-in client; the credential source is decided at start, never by a tool",
+  HostRegistrationError: "the typed register failure connect reads to self-heal a stale host key (sdk-ts#120); not a tool",
   connectGibson: "the check-in itself, done once at start",
   createGibsonClients: "builds the service clients at start",
   discover: "reads the platform discovery document at check-in",

@@ -4,7 +4,7 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import { createRouterTransport } from "@connectrpc/connect"
-import type { GibsonSession, LiveMission, OpenTaskHarnessOptions, TaskHarness } from "@zeroroot-ai/sdk"
+import { HostRegistrationError, type GibsonSession, type LiveMission, type OpenTaskHarnessOptions, type TaskHarness } from "@zeroroot-ai/sdk"
 import type { Settings } from "./config.js"
 import { openGibson } from "./session.js"
 
@@ -135,6 +135,41 @@ test("a connect failure falls back to standalone and says why", async () => {
   assert.equal(g.mode, "standalone")
   assert.match(g.reason, /edge unreachable/)
   assert.ok(lines.some((l) => /continuing standalone/.test(l)))
+})
+
+test("a 401 re-registration tags the standalone result as a stale host key", async () => {
+  const g = await openGibson({
+    settings: settings({ platformURL: "https://p", targetId: "t" }),
+    log: quiet,
+    connect: async () => {
+      throw new HostRegistrationError(401, "Unauthorized", true)
+    },
+    hostKeyExists: () => true,
+  })
+  assert.equal(g.mode, "standalone")
+  assert.equal(g.staleHostKey, true)
+})
+
+test("a 5xx or a first-registration 401 does not tag a stale host key", async () => {
+  const outage = await openGibson({
+    settings: settings({ platformURL: "https://p", targetId: "t" }),
+    log: quiet,
+    connect: async () => {
+      throw new HostRegistrationError(503, "Service Unavailable", true)
+    },
+    hostKeyExists: () => true,
+  })
+  assert.equal(outage.staleHostKey, undefined, "an outage must not throw away a good key")
+
+  const firstReg = await openGibson({
+    settings: settings({ platformURL: "https://p", targetId: "t", bootstrapToken: "bad" }),
+    log: quiet,
+    connect: async () => {
+      throw new HostRegistrationError(401, "Unauthorized", false)
+    },
+    hostKeyExists: () => false,
+  })
+  assert.equal(firstReg.staleHostKey, undefined, "a bad bootstrap token is not a stale key")
 })
 
 test("the bootstrap token is passed only when no host key exists", async () => {

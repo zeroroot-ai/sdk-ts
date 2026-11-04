@@ -7,7 +7,7 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { chmodSync, existsSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { CapabilityGrantClient, normalizePlatformURL } from "./client.js"
+import { CapabilityGrantClient, HostRegistrationError, normalizePlatformURL } from "./client.js"
 import { loadOrGenerateHostKey } from "./keys.js"
 
 /**
@@ -136,6 +136,50 @@ test("a checked-in host re-registers with the host key and never replays the tok
     assert.equal(seen[1].replace("Bearer ", "").split(".").length, 3)
   })
 })
+
+/** Stub fetch that rejects the register POST with a status; discovery still works. */
+function stubFetchStatus(status: number, statusText: string) {
+  return async (url: unknown) => {
+    if (String(url).includes(".well-known/agent-configuration")) {
+      return { ok: true, json: async () => DISCOVERY } as never
+    }
+    return { ok: false, status, statusText } as never
+  }
+}
+
+test("a 401 on re-registration throws a HostRegistrationError flagged as a re-registration", async () => {
+  await withTempDir(async (dir) => {
+    const hostKeyPath = join(dir, "host.key")
+    // Make the key exist first, so this register is a re-registration (host+jwt).
+    loadOrGenerateHostKey(hostKeyPath)
+    globalThis.fetch = stubFetchStatus(401, "Unauthorized") as never
+
+    const err = await client401(hostKeyPath, undefined)
+    assert.ok(err instanceof HostRegistrationError)
+    assert.equal(err.status, 401)
+    assert.equal(err.wasReRegistration, true, "the daemon has no record of a key the client thinks is enrolled")
+  })
+})
+
+test("a 401 on first registration throws a HostRegistrationError not flagged as a re-registration", async () => {
+  await withTempDir(async (dir) => {
+    globalThis.fetch = stubFetchStatus(401, "Unauthorized") as never
+    const err = await client401(join(dir, "host.key"), "bad-token")
+    assert.ok(err instanceof HostRegistrationError)
+    assert.equal(err.status, 401)
+    assert.equal(err.wasReRegistration, false, "a bad bootstrap token is a first registration, not a stale key")
+  })
+})
+
+/** Run register() and return the thrown error. */
+async function client401(hostKeyPath: string, bootstrapToken: string | undefined): Promise<HostRegistrationError> {
+  try {
+    await new CapabilityGrantClient({ platformURL: "https://api.example.test", agentName: "zerocool", hostKeyPath, bootstrapToken }).register()
+  } catch (e) {
+    return e as HostRegistrationError
+  }
+  throw new Error("register() did not throw")
+}
 
 test("the environment token is ignored once the host has checked in", async () => {
   await withTempDir(async (dir) => {

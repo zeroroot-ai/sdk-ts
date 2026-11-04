@@ -5,6 +5,7 @@ import { existsSync } from "node:fs"
 import {
   componentKnowledge,
   connectGibson,
+  HostRegistrationError,
   openTaskHarness,
   SANDBOX_ENV,
   startLiveMission,
@@ -36,6 +37,12 @@ export interface Gibson {
   session?: GibsonSession
   live?: LiveMission
   knowledge?: KnowledgeSource
+  /**
+   * Set when connect fell to standalone because the platform holds no record
+   * of this host key (a 401 on a host+jwt re-registration). The caller can
+   * rotate the stale key and re-enroll (sdk-ts#120).
+   */
+  staleHostKey?: boolean
   /** The mission run this dispatched process belongs to, when the launch named one. */
   runId?: string
   /** Release the mission and the component registration. Idempotent. */
@@ -112,7 +119,13 @@ export async function openGibson(opts: OpenGibsonOptions): Promise<Gibson> {
   } catch (e) {
     const reason = `Gibson connect failed: ${(e as Error).message}`
     log(`${TAG} ${reason}; continuing standalone`)
-    return standalone(reason)
+    const s = standalone(reason)
+    // A 401 on a re-registration means the daemon has no record of this host
+    // key id. Signal the caller so it can rotate the stale key and re-enroll
+    // (sdk-ts#120). A 5xx or a network error is a different error type and
+    // leaves the key in place.
+    if (e instanceof HostRegistrationError && e.status === 401 && e.wasReRegistration) s.staleHostKey = true
+    return s
   }
   log(`${TAG} checked in via ${source === "bootstrap" ? "the bootstrap token (first check-in)" : "the registered host key"} as ${agentName} (component_scope=${session.componentScope})`)
   if (source === "bootstrap") log(`${TAG} host key written to ${hostKeyPath}; the bootstrap token is spent`)

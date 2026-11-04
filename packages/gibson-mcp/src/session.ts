@@ -141,7 +141,7 @@ export async function openGibson(opts: OpenGibsonOptions): Promise<Gibson> {
       // The person originates the session mission through the CLI login
       // session; the component only claims its dispatch (gibson ADR-0063,
       // ADR-0157: one live mission per session).
-      originate: opts.originate ?? ((definition, targetId) => submitMission(definition, targetId, { env, gibsonURL: settings.platformURL, tenant: settings.tenant })),
+      originate: opts.originate ?? ((definition, targetId) => submitMission(definition, targetId, { env, gibsonURL: settings.platformURL })),
       harness: { insecure: settings.callbackInsecure },
     })
   } catch (e) {

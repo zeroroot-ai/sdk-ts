@@ -25,19 +25,21 @@ function fakeSpawn(script: { stdout?: string; stderr?: string; code?: number; ha
   }) as Spawn
 }
 
-test("enrollIdentity reads the one-time token off the CLI output and passes url and tenant", async () => {
+test("enrollIdentity reads the one-time token off the CLI output and passes the url", async () => {
   const seen: string[][] = []
   const token = await enrollIdentity("gibson-mcp", {
     spawn: fakeSpawn({ stdout: "principal_id:  p-1\nbootstrap_token: tok-abc\ngibson_url:    https://api\n" }, seen),
     gibsonURL: "https://api",
-    tenant: "primary",
   })
   assert.equal(token, "tok-abc")
   assert.deepEqual(seen[0], [
     "agent", "enroll", "--name", "gibson-mcp", "--kind", "agent",
     "--capability", "mission:originate", "--capability", "mission:delegate",
-    "--gibson-url", "https://api", "--tenant", "primary",
+    "--gibson-url", "https://api",
   ])
+  // The CLI resolves the tenant from the login session and rejects --tenant
+  // as an unknown flag (sdk-ts#119). The plugin never passes it.
+  assert.ok(!seen[0]!.includes("--tenant"), "enroll must not pass --tenant")
 })
 
 test("enrollIdentity asks for the ceiling an interactive agent needs, unless told otherwise", async () => {
@@ -87,13 +89,13 @@ test("submitMission writes the definition to a file, submits it as the person, a
   const id = await submitMission({ name: "s" }, "tgt-1", {
     spawn: fakeSpawn({ stdout: "  status\n  node.started\n0f1e2d3c-4b5a-4687-8a9b-0c1d2e3f4a5b\n" }, seen),
     gibsonURL: "https://api",
-    tenant: "primary",
   })
   assert.equal(id, "0f1e2d3c-4b5a-4687-8a9b-0c1d2e3f4a5b")
   const args = seen[0]!
   assert.deepEqual(args.slice(0, 2), ["mission", "submit"])
   assert.match(args[2]!, /gibson-mcp-mission-.*session\.json$/)
-  assert.deepEqual(args.slice(3), ["--format", "json", "--target", "tgt-1", "--detach", "--gibson-url", "https://api", "--tenant", "primary"])
+  assert.deepEqual(args.slice(3), ["--format", "json", "--target", "tgt-1", "--detach", "--gibson-url", "https://api"])
+  assert.ok(!args.includes("--tenant"), "submit must not pass --tenant")
 })
 
 test("submitMission names gibson_login when the CLI has no session", async () => {

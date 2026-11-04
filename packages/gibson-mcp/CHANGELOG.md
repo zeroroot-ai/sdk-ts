@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.2](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.7.1...gibson-mcp-v0.7.2) (2026-11-04)
+
+
+### Bug Fixes
+
+* **gibson-mcp:** self-heal a stale host key instead of wedging on a 401 ([#122](https://github.com/zeroroot-ai/sdk-ts/issues/122)) ([eaf305d](https://github.com/zeroroot-ai/sdk-ts/commit/eaf305d0631168d5ccae009ecbf31934ec6f991f)), closes [#120](https://github.com/zeroroot-ai/sdk-ts/issues/120)
+* **gibson-mcp:** stop passing --tenant to the gibson CLI ([#121](https://github.com/zeroroot-ai/sdk-ts/issues/121)) ([478748e](https://github.com/zeroroot-ai/sdk-ts/commit/478748e695ef479e59fa97a01d0cb08c9ad7c913)), closes [#119](https://github.com/zeroroot-ai/sdk-ts/issues/119)
+
 ## [0.7.1](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.7.0...gibson-mcp-v0.7.1) (2026-10-25)
 
 

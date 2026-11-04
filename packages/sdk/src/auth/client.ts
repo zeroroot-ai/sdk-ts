@@ -6,6 +6,26 @@ import { discover, type DiscoveryDocument } from "./discover.js"
 import { generateAgentKey, loadOrGenerateHostKey, publicKeyJWK, type AgentKey, type HostKey } from "./keys.js"
 import { signAgentJWT, signHostJWT } from "./jwt.js"
 
+/**
+ * The register endpoint rejected the credential. It carries the HTTP status
+ * and whether the call was a RE-registration (a host+jwt, not a bootstrap
+ * token). A caller sees `status === 401 && wasReRegistration === true` when
+ * the daemon holds no record of this host key id — for example after the
+ * platform was rebuilt. The caller can then rotate the stale key and
+ * re-enroll (sdk-ts#120). A 5xx or a network error is a different Error type,
+ * so a platform outage never reads as a stale key.
+ */
+export class HostRegistrationError extends Error {
+  constructor(
+    readonly status: number,
+    readonly statusText: string,
+    readonly wasReRegistration: boolean,
+  ) {
+    super(`gibson-client: registration failed: ${status} ${statusText}`)
+    this.name = "HostRegistrationError"
+  }
+}
+
 export interface CapabilityGrantConfig {
   /** Base HTTPS URL of the Gibson platform (dashboard). */
   platformURL: string
@@ -126,7 +146,7 @@ export class CapabilityGrantClient {
         agent_key_jwk: publicKeyJWK(this.agentKey.publicKey),
       }),
     })
-    if (!res.ok) throw new Error(`gibson-client: registration failed: ${res.status} ${res.statusText}`)
+    if (!res.ok) throw new HostRegistrationError(res.status, res.statusText, !this.hostKey.firstCheckIn)
     const out = (await res.json()) as RegistrationResponse
     if (!out.component_scope) throw new Error("gibson-client: registration returned no component_scope")
 

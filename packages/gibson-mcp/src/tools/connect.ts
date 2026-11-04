@@ -2,7 +2,7 @@
 // Copyright 2026 Zero Root AI
 
 import { execFile } from "node:child_process"
-import { existsSync } from "node:fs"
+import { existsSync, renameSync } from "node:fs"
 import { promisify } from "node:util"
 import { z } from "zod"
 import { createTarget, enrollIdentity, listTargets, startLogin, type CliOptions } from "../cli.js"
@@ -122,7 +122,25 @@ export function connectTool(target: ConnectTarget, env: NodeJS.ProcessEnv, cwd: 
 
       const previous = target.current()
       await previous.close().catch(() => {})
-      const next = await openGibson({ settings: s, log, env, ...deps.open })
+      let next = await openGibson({ settings: s, log, env, ...deps.open })
+
+      // Self-heal a stale host key. The platform holds no record of this key
+      // (for example after it was rebuilt), so a host+jwt re-registration got
+      // 401. Rotate the key aside, mint a fresh bootstrap token through the
+      // CLI, and register anew (sdk-ts#120). Done once: a second 401 is a real
+      // failure and falls through to the standalone result.
+      if (next.mode === "standalone" && next.staleHostKey) {
+        log(`gibson_connect: the platform does not know the host key at ${s.hostKeyPath}; rotating it and re-enrolling`)
+        try {
+          await next.close().catch(() => {})
+          if (existsSync(s.hostKeyPath)) renameSync(s.hostKeyPath, `${s.hostKeyPath}.stale-${Date.now()}`)
+          s.bootstrapToken = await enrollIdentity(s.agentName, cli(s))
+          next = await openGibson({ settings: s, log, env, ...deps.open })
+        } catch (e) {
+          return failure("re-enrollment failed", `The host key at ${s.hostKeyPath} is stale and re-enrollment failed: ${(e as Error).message}`)
+        }
+      }
+
       await target.upgrade(next)
       const body = describeGibson(next)
       return next.mode === "live" ? text("connected", body) : failure("connected, but not live", body)

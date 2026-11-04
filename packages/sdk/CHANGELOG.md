@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.20.1](https://github.com/zeroroot-ai/sdk-ts/compare/v0.20.0...v0.20.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **gibson-mcp:** self-heal a stale host key instead of wedging on a 401 ([#122](https://github.com/zeroroot-ai/sdk-ts/issues/122)) ([eaf305d](https://github.com/zeroroot-ai/sdk-ts/commit/eaf305d0631168d5ccae009ecbf31934ec6f991f)), closes [#120](https://github.com/zeroroot-ai/sdk-ts/issues/120)
+
 ## [0.20.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.19.0...v0.20.0) (2026-10-20)
 
 

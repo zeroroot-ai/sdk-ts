@@ -56,7 +56,9 @@ export function loginTool(target: ConnectTarget, env: NodeJS.ProcessEnv, deps: C
 }
 
 export function connectTool(target: ConnectTarget, env: NodeJS.ProcessEnv, cwd: string, deps: ConnectDeps): ToolDefinition {
-  const cli = (s: Settings): CliOptions & { gibsonURL?: string; tenant?: string } => ({ ...deps.cli, env, gibsonURL: s.platformURL, tenant: s.tenant })
+  // No --tenant here. The gibson CLI resolves the tenant from the login
+  // session, not a flag, and rejects --tenant as an unknown flag (sdk-ts#119).
+  const cli = (s: Settings): CliOptions & { gibsonURL?: string } => ({ ...deps.cli, env, gibsonURL: s.platformURL })
   return defineTool({
     name: "gibson_connect",
     description:

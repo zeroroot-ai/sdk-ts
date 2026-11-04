@@ -66,11 +66,10 @@ export function needsLogin(r: CliResult): boolean {
  */
 export const INTERACTIVE_AGENT_CAPABILITIES = ["mission:originate", "mission:delegate"] as const
 
-export async function enrollIdentity(name: string, opts: CliOptions & { gibsonURL?: string; tenant?: string; capabilities?: readonly string[] } = {}): Promise<string> {
+export async function enrollIdentity(name: string, opts: CliOptions & { gibsonURL?: string; capabilities?: readonly string[] } = {}): Promise<string> {
   const args = ["agent", "enroll", "--name", name, "--kind", "agent"]
   for (const c of opts.capabilities ?? INTERACTIVE_AGENT_CAPABILITIES) args.push("--capability", c)
   if (opts.gibsonURL) args.push("--gibson-url", opts.gibsonURL)
-  if (opts.tenant) args.push("--tenant", opts.tenant)
   const r = await runGibson(args, opts)
   const m = /^bootstrap_token:\s*(\S+)/m.exec(r.stdout)
   if (r.code !== 0 || !m) {
@@ -102,10 +101,9 @@ export function parseTargetList(stdout: string): Target[] {
     .map(([id, name, type, status]) => ({ id: id!, name: name ?? "", type: type ?? "", status: status ?? "" }))
 }
 
-export async function listTargets(opts: CliOptions & { gibsonURL?: string; tenant?: string } = {}): Promise<Target[]> {
+export async function listTargets(opts: CliOptions & { gibsonURL?: string } = {}): Promise<Target[]> {
   const args = ["target", "list"]
   if (opts.gibsonURL) args.push("--gibson-url", opts.gibsonURL)
-  if (opts.tenant) args.push("--tenant", opts.tenant)
   const r = await runGibson(args, opts)
   if (r.code !== 0) {
     const why = (r.stderr || r.stdout).trim()
@@ -119,10 +117,9 @@ export async function listTargets(opts: CliOptions & { gibsonURL?: string; tenan
  * target with neither a URL nor connection parameters, so the URL is
  * required here: for a coding workspace it names the repository.
  */
-export async function createTarget(name: string, url: string, opts: CliOptions & { gibsonURL?: string; tenant?: string; type?: string } = {}): Promise<string> {
+export async function createTarget(name: string, url: string, opts: CliOptions & { gibsonURL?: string; type?: string } = {}): Promise<string> {
   const args = ["target", "create", "--name", name, "--url", url, "--type", opts.type ?? "custom"]
   if (opts.gibsonURL) args.push("--gibson-url", opts.gibsonURL)
-  if (opts.tenant) args.push("--tenant", opts.tenant)
   const r = await runGibson(args, opts)
   const id = r.stdout.trim().split("\n").pop()?.trim() ?? ""
   if (r.code !== 0 || !id) {
@@ -195,7 +192,7 @@ const UUID = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g
 export async function submitMission(
   definition: unknown,
   targetId: string,
-  opts: CliOptions & { gibsonURL?: string; tenant?: string; dir?: string } = {},
+  opts: CliOptions & { gibsonURL?: string; dir?: string } = {},
 ): Promise<string> {
   const dir = await mkdtemp(join(opts.dir ?? tmpdir(), "gibson-mcp-mission-"))
   const file = join(dir, "session.json")
@@ -207,7 +204,6 @@ export async function submitMission(
     // dispatch, and the CLI's own deadline fires first.
     const args = ["mission", "submit", file, "--format", "json", "--target", targetId, "--detach"]
     if (opts.gibsonURL) args.push("--gibson-url", opts.gibsonURL)
-    if (opts.tenant) args.push("--tenant", opts.tenant)
     const r = await runGibson(args, { ...opts, timeoutMs: opts.timeoutMs ?? 120_000 })
     if (r.code !== 0) {
       if (needsLogin(r)) throw new Error("the gibson CLI has no session; run gibson_login first")

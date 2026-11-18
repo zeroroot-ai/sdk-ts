@@ -35,7 +35,7 @@ export const PartType = {
 } as const
 
 /** Role names of a message. */
-export type Role = "user" | "assistant" | "system" | "developer"
+export type MessageRole = "user" | "assistant" | "system" | "developer"
 
 /** Status names of an item and of a response. */
 export type Status = "in_progress" | "incomplete" | "completed" | "failed"
@@ -77,7 +77,7 @@ export interface MessageItem {
   type: "message"
   /** Set on a message of the model. Absent on an input message. */
   id?: string
-  role: Role
+  role: MessageRole
   status?: Status
   content: ContentPart[]
 }

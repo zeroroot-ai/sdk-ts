@@ -5,6 +5,7 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import {
   calculateRiskScore,
+  citeToolCalls,
   encodeFinding,
   newFinding,
   submitFinding,
@@ -157,4 +158,33 @@ test("workId defaults to empty for an off-cluster agent with no work item", asyn
     newFinding({ title: "t", description: "d", category: "c", severity: "info" }),
   )
   assert.equal(captured?.workId, "")
+})
+
+test("a finding names tool call IDs, and citeToolCalls skips an empty or repeated ID", () => {
+  const f = newFinding({ title: "t", description: "d", category: "c", severity: "low", toolCallIds: ["a", "a", ""] })
+  assert.deepEqual(f.tool_call_ids, ["a"])
+  citeToolCalls(f, "a", "b", "", "b")
+  assert.deepEqual(f.tool_call_ids, ["a", "b"])
+  const decoded = JSON.parse(new TextDecoder().decode(encodeFinding(f))) as { tool_call_ids: string[] }
+  assert.deepEqual(decoded.tool_call_ids, ["a", "b"])
+})
+
+test("a finding with no tool call IDs has no tool_call_ids key", () => {
+  const f = newFinding({ title: "t", description: "d", category: "c", severity: "low" })
+  assert.equal("tool_call_ids" in f, false)
+  assert.equal("tool_call_ids" in (JSON.parse(new TextDecoder().decode(encodeFinding(f))) as object), false)
+})
+
+test("an agent cannot set the tier or the tool call of an evidence item", () => {
+  const f = newFinding({
+    title: "t",
+    description: "d",
+    category: "c",
+    severity: "low",
+    evidence: [
+      { type: "http", title: "r", content: "c", timestamp: "2026-01-01T00:00:00Z", tier: 1, tool_call_id: "x" } as never,
+    ],
+  })
+  const decoded = JSON.parse(new TextDecoder().decode(encodeFinding(f))) as { evidence: Record<string, unknown>[] }
+  assert.deepEqual(Object.keys(decoded.evidence[0] ?? {}).sort(), ["content", "timestamp", "title", "type"])
 })

@@ -113,16 +113,57 @@ const NOT_A_TOOL: Record<string, string> = {
   // Serving work. This server is a client of the platform, not a worker.
   startWorker: "a served tool's own poll loop; this server serves no work",
   startAgentWorker: "a served agent's own poll loop; this server serves no work",
-  decodeAgentExecute: "decodes a work payload inside a worker loop",
+  decodeAgentWork: "decodes the A2A message of a work payload inside a worker loop",
+  decodeWorkMessage: "decodes the A2A message of a work payload inside a worker loop",
   decodeToolInput: "decodes a work payload inside a worker loop",
-  encodeAgentError: "encodes a worker's result",
-  encodeAgentResult: "encodes a worker's result",
+  encodeTask: "encodes the A2A Task of a worker's result",
+  resultToTask: "builds the A2A Task of a worker's result",
+  taskFromMessage: "builds the task of a worker from its A2A message",
+  loadPinnedSkills: "loads the Agent Skills that a mission pins, inside a worker loop before the first model call",
   encodeToolError: "encodes a worker's result",
   encodeToolOutput: "encodes a worker's result",
 
-  // The model stays on the host's own provider (ADR-0157). The LLM shim is
-  // the opencode adapter's business and never a tool.
-  startCompletionsShim: "the local OpenAI-compatible shim; a host adapter starts it, and the model never routes through this server",
+  // The model stays on the host's own provider (ADR-0157). The model client
+  // is for an agent that runs on the platform, and it is never a tool.
+  ModelClient: "the Open Responses client of an agent; the model never routes through this server",
+  ModelStream: "the stream of one model call; the model never routes through this server",
+  ModelAPIError: "the error of a model call; the model never routes through this server",
+  modelClientFrom: "builds the model client from the answer of ResolveModel; the model never routes through this server",
+  buildRequestBody: "builds the body of a model call; the model never routes through this server",
+  parseItem: "decodes an Open Responses item of a model call",
+  parseResponse: "decodes the response of a model call",
+  serializeItem: "encodes an Open Responses item of a model call",
+  assistantMessage: "builds an Open Responses item of a model call",
+  userMessage: "builds an Open Responses item of a model call",
+  systemMessage: "builds an Open Responses item of a model call",
+  functionCallOutput: "builds an Open Responses item of a model call",
+  toolChoiceFunction: "builds the tool choice of a model call",
+  isFunctionCall: "narrows an Open Responses item",
+  isFunctionCallOutput: "narrows an Open Responses item",
+  isMessage: "narrows an Open Responses item",
+  isReasoning: "narrows an Open Responses item",
+  messageText: "reads the text of an Open Responses message",
+  responseText: "reads the text of a model response",
+  responseFunctionCalls: "reads the function calls of a model response",
+
+  // The gateway trust rule and A2A plumbing of an agent on the platform.
+  checkGatewayUrl: "the https rule of a gateway call, inside the clients",
+  gatewayFetch: "the fetch of a gateway call with the trust rule, inside the clients",
+  parseCaBundle: "checks the CA bundle of a gateway, inside the clients",
+  staticGrantHeaders: "puts the task grant on a gateway call, inside the clients",
+  delegateToResolvedAgent: "the A2A call of an agent on the platform; this server delegates with the delegate tool",
+  isSettled: "tells when an A2A delegation can stop waiting, inside the client",
+  newMessage: "builds an A2A message for an agent on the platform",
+  textPart: "builds an A2A part for an agent on the platform",
+  rawPart: "builds an A2A part for an agent on the platform",
+  dataPart: "builds an A2A part for an agent on the platform",
+  messageTextOf: "reads the text of an A2A message",
+  WorkMessageError: "the error of a bad A2A work message, inside a worker loop",
+
+  // Mission state names and the evidence of a finding.
+  isMissionState: "checks a state name; the status tools return the names themselves",
+  isTerminalMissionState: "checks a state name; the status tools return the names themselves",
+  citeToolCalls: "adds tool call IDs to a finding; submit_finding has no such argument until the callback finding carries them",
 
   // Encoding and formatting the tools already do for the caller.
   calculateRiskScore: "arithmetic on a severity and a confidence; no round trip is worth it",

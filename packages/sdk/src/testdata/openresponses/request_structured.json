@@ -1,0 +1,38 @@
+{
+  "input": [
+    {
+      "content": [
+        {
+          "text": "who?",
+          "type": "input_text"
+        }
+      ],
+      "role": "user",
+      "type": "message"
+    }
+  ],
+  "model": "claude-test-1",
+  "text": {
+    "format": {
+      "name": "person",
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "age": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "age"
+        ],
+        "type": "object"
+      },
+      "strict": true,
+      "type": "json_schema"
+    }
+  }
+}

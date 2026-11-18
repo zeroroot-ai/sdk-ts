@@ -1,0 +1,58 @@
+{
+  "input": [
+    {
+      "content": [
+        {
+          "text": "weather in Oslo?",
+          "type": "input_text"
+        }
+      ],
+      "role": "user",
+      "type": "message"
+    },
+    {
+      "encrypted_content": "abc",
+      "id": "rs_1",
+      "summary": [
+        {
+          "text": "I need the weather.",
+          "type": "summary_text"
+        }
+      ],
+      "type": "reasoning"
+    },
+    {
+      "arguments": "{\"city\":\"Oslo\"}",
+      "call_id": "call_1",
+      "id": "fc_1",
+      "name": "get_weather",
+      "status": "completed",
+      "type": "function_call"
+    },
+    {
+      "call_id": "call_1",
+      "output": "{\"temp_c\":3}",
+      "type": "function_call_output"
+    }
+  ],
+  "model": "claude-test-1",
+  "tool_choice": "auto",
+  "tools": [
+    {
+      "description": "Get the weather.",
+      "name": "get_weather",
+      "parameters": {
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "type": "object"
+      },
+      "type": "function"
+    }
+  ]
+}

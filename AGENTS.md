@@ -58,6 +58,7 @@ dashboard).
   daemon is the Go SDK branch `epic/aaif-alignment` (gibson#1366). The golden
   request bodies in `packages/sdk/src/testdata/openresponses` are copies of
   `openresponses/testdata` in the Go SDK. Change both or neither.
+- **The SDK protos are pinned to a BSR commit on this branch (temporary).** `pnpm generate` uses the commit id in `packages/sdk/package.json`. Before the branch merges, change the pin to the release version of the Go SDK.
 - **A2A types come from `@a2a-js/sdk`** (Apache-2.0, A2A v1.0). `src/a2a.ts` is
   the one place that converts an agent task and result to A2A types.
 - **The gateway trust rule is in `src/gateway.ts`.** A client trusts exactly the

@@ -348,9 +348,19 @@ export function resultToTask(task: AgentTask, result: AgentResult): A2ATask {
   return out
 }
 
+/** Return an A2A Task as a plain A2A JSON value. */
+export function taskToJson(task: A2ATask): unknown {
+  return Task.toJSON(task)
+}
+
 /** Encode an A2A Task as A2A JSON, for `SubmitResult`. */
 export function encodeTask(task: A2ATask): Uint8Array {
-  return new TextEncoder().encode(JSON.stringify(Task.toJSON(task)))
+  return new TextEncoder().encode(JSON.stringify(taskToJson(task)))
+}
+
+/** Return the name of the state of a Task, for example `TASK_STATE_COMPLETED`. */
+export function taskStateName(task: A2ATask): string {
+  return String((taskToJson(task) as { status?: { state?: unknown } }).status?.state ?? "TASK_STATE_UNSPECIFIED")
 }
 
 /** The name of the meta-tool that loads one Agent Skill. */

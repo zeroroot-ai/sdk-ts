@@ -67,3 +67,78 @@ test("a later renewal still works after an in-flight one settles", async () => {
   await ref.renew()
   assert.equal(ref.current(), "inst-3")
 })
+
+test("an agent registers with the fields of the Agent Card", async () => {
+  const seen: Record<string, unknown>[] = []
+  const client = {
+    registerComponent: async (req: Record<string, unknown>) => {
+      seen.push(req)
+      return { instanceId: "i", heartbeatIntervalMs: 1000 }
+    },
+  } as never
+  await registerInstance(client, "agent", {
+    name: "scanner",
+    version: "1",
+    capabilities: ["port-scan", "web-scan"],
+    description: "Scans hosts.",
+    targetTypes: ["host"],
+    techniqueTypes: ["recon"],
+  })
+  const req = seen[0] as {
+    cardSkills: { id: string; name: string; description: string; tags: string[] }[]
+    defaultInputModes: string[]
+    defaultOutputModes: string[]
+  }
+  assert.deepEqual(req.cardSkills.map((k) => k.id), ["port-scan", "web-scan"])
+  assert.equal(req.cardSkills[0]?.name, "port-scan")
+  assert.equal(req.cardSkills[0]?.description, "Scans hosts.")
+  assert.deepEqual(req.cardSkills[0]?.tags, ["host", "recon"])
+  assert.deepEqual(req.defaultInputModes, ["text/plain", "application/json"])
+  assert.deepEqual(req.defaultOutputModes, ["text/plain", "application/json"])
+})
+
+test("an agent with no capability gets one card skill named after the agent", async () => {
+  const seen: { cardSkills: { id: string }[] }[] = []
+  const client = {
+    registerComponent: async (req: { cardSkills: { id: string }[] }) => {
+      seen.push(req)
+      return { instanceId: "i", heartbeatIntervalMs: 1000 }
+    },
+  } as never
+  await registerInstance(client, "agent", { name: "solo", version: "1" })
+  assert.deepEqual(seen[0]?.cardSkills.map((k) => k.id), ["solo"])
+})
+
+test("an author card skill and the author modes win over the derived ones", async () => {
+  const seen: Record<string, unknown>[] = []
+  const client = {
+    registerComponent: async (req: Record<string, unknown>) => {
+      seen.push(req)
+      return { instanceId: "i", heartbeatIntervalMs: 1000 }
+    },
+  } as never
+  await registerInstance(client, "agent", {
+    name: "a",
+    version: "1",
+    capabilities: ["x"],
+    cardSkills: [{ id: "k", name: "K", examples: ["do k"] }],
+    defaultInputModes: ["text/markdown"],
+  })
+  const req = seen[0] as { cardSkills: { id: string; examples: string[] }[]; defaultInputModes: string[]; defaultOutputModes: string[] }
+  assert.deepEqual(req.cardSkills.map((k) => k.id), ["k"])
+  assert.deepEqual(req.cardSkills[0]?.examples, ["do k"])
+  assert.deepEqual(req.defaultInputModes, ["text/markdown"])
+  assert.deepEqual(req.defaultOutputModes, ["text/plain", "application/json"])
+})
+
+test("a tool or plugin registration sends no card", async () => {
+  const seen: Record<string, unknown>[] = []
+  const client = {
+    registerComponent: async (req: Record<string, unknown>) => {
+      seen.push(req)
+      return { instanceId: "i", heartbeatIntervalMs: 1000 }
+    },
+  } as never
+  await registerInstance(client, "tool", { name: "t", version: "1" })
+  assert.equal("cardSkills" in (seen[0] ?? {}), false)
+})

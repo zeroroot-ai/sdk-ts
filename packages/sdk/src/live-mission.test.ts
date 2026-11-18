@@ -82,7 +82,7 @@ test("startLiveMission creates, runs, claims its own dispatch and ends it", asyn
     async () => ({
       workId: "w-live",
       workType: "execute",
-      context: { capability_grant: grantFor("m-live"), callback_endpoint: "daemon.example:443" },
+      taskGrant: grantFor("m-live"), context: { callback_endpoint: "daemon.example:443" },
       payload: a2aPayload("Interactive session"),
     }),
   ])
@@ -115,7 +115,7 @@ test("a given originator creates and runs the mission; the component does not", 
     async () => ({
       workId: "w-h",
       workType: "execute",
-      context: { capability_grant: grantFor("m-human"), callback_endpoint: "daemon.example:443" },
+      taskGrant: grantFor("m-human"), context: { callback_endpoint: "daemon.example:443" },
       payload: a2aPayload("Interactive session"),
     }),
   ])
@@ -164,13 +164,13 @@ test("work for another mission is answered with an error result, not swallowed",
     async () => ({
       workId: "w-other",
       workType: "execute",
-      context: { capability_grant: grantFor("m-other") },
+      taskGrant: grantFor("m-other"), context: {},
       payload: a2aPayload("someone else's"),
     }),
     async () => ({
       workId: "w-live",
       workType: "execute",
-      context: { capability_grant: grantFor("m-live"), callback_endpoint: "d:443" },
+      taskGrant: grantFor("m-live"), context: { callback_endpoint: "d:443" },
       payload: a2aPayload(),
     }),
   ])
@@ -223,4 +223,24 @@ test("a failed answer to a work item with no task grant does not hide the missin
     }),
     (e: unknown) => e instanceof NoTaskGrantError && e.workId === "w-f" && e.cause === transportFailure,
   )
+})
+
+test("only the work type execute is an agent dispatch", async () => {
+  let now = 0
+  const { session, calls } = fakeSession([
+    async () => ({
+      workId: "w-old",
+      workType: "agent_execute",
+      taskGrant: grantFor("m-live"),
+      context: { callback_endpoint: "d:443" },
+      payload: a2aPayload(),
+    }),
+  ])
+  await assert.rejects(
+    startLiveMission(session, { agentName: "zerocool-claude", targetId: "tgt-1", claimTimeoutMs: 1_000, clock: () => (now += 600) }),
+    /no agent dispatch for it reached/,
+  )
+  const refused = calls.submitResult![0] as { workId: string; error: { code: string } }
+  assert.equal(refused.workId, "w-old")
+  assert.equal(refused.error.code, "EXECUTION_ERROR")
 })

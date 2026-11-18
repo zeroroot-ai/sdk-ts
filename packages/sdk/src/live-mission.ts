@@ -70,12 +70,8 @@ export interface LiveMission {
   end(outcome?: AgentOutcome): Promise<void>
 }
 
-/**
- * The work types that carry an agent dispatch. The payload is an A2A message
- * (gibson#1366). The contract says the type stays `execute`. Older daemons
- * sent `agent_execute`.
- */
-const AGENT_WORK_TYPES: ReadonlySet<string> = new Set(["execute", "agent_execute"])
+/** The work type of an agent dispatch. The payload is an A2A message (gibson#1366). */
+const AGENT_WORK_TYPE = "execute"
 
 const DEFAULT_TIMEOUT_SECONDS = 8 * 60 * 60
 const DEFAULT_CLAIM_TIMEOUT_MS = 60_000
@@ -164,7 +160,7 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
     const grant = grantOf(res)
     const grantMission = grant ? decodeGrantClaims(grant).missionId : ""
     const dispatchMission = res.context?.mission_id ?? ""
-    if (AGENT_WORK_TYPES.has(res.workType) && (grantMission === missionId || dispatchMission === missionId)) {
+    if (res.workType === AGENT_WORK_TYPE && (grantMission === missionId || dispatchMission === missionId)) {
       const workId = res.workId
       if (!grant) {
         // Answer the dispatch, so the node does not wait for its full timeout.
@@ -216,7 +212,7 @@ function failedWork(workId: string, message: string) {
   return { workId, result: new Uint8Array(), error: { code: "EXECUTION_ERROR", message, retryable: false } }
 }
 
-/** The task grant a work item carries. The A2A message has no grant. It comes in the context map. */
-function grantOf(res: { context?: Record<string, string> }): string {
-  return res.context?.capability_grant ?? ""
+/** The task grant a work item carries. The A2A message has no grant. It is a field of the poll reply. */
+function grantOf(res: { taskGrant?: string }): string {
+  return res.taskGrant ?? ""
 }

@@ -25,6 +25,14 @@ export type HeaderFunc = (route: string) => Record<string, string> | Promise<Rec
 /** The header that carries the grant on a call to a gateway. */
 export const GATEWAY_GRANT_HEADER = "x-capability-grant"
 
+/** The error of a gateway call with no task grant. The call fails before it is sent. */
+export class NoGatewayGrantError extends Error {
+  constructor() {
+    super("no task grant: the agent has no task grant to send to the gateway")
+    this.name = "NoGatewayGrantError"
+  }
+}
+
 /** Send the same grant on each call. The task grant of a callback agent works this way. */
 export function staticGrantHeaders(token: () => string): HeaderFunc {
   return () => ({ [GATEWAY_GRANT_HEADER]: token() })

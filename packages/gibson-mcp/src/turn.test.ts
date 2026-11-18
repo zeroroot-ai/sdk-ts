@@ -7,6 +7,7 @@ import { createRouterTransport, type Transport } from "@connectrpc/connect"
 import { CAPABILITY_GRANT_HEADER, HarnessCallbackService, type TaskHarness } from "@zeroroot-ai/sdk"
 import { rpcCatalog } from "./rpc.js"
 import { createTurnController, TURN_GRANT_HEADER } from "./turn.js"
+import { gatewayStub } from "./gateway-stub.test.js"
 
 /**
  * A harness whose transport records the grant header of every call, so a
@@ -34,6 +35,7 @@ function recordingHarness(seen: string[], token = "base-grant"): TaskHarness {
     },
   }
   return {
+    ...gatewayStub,
     transport: wrapped,
     client: {} as never,
     endpoint: "daemon:50001",

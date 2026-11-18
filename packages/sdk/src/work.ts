@@ -14,6 +14,8 @@ import {
 } from "./a2a.js"
 import type { ComponentService } from "./clients.js"
 import type { InstanceRef } from "./component.js"
+import { gatewayCalls, resolvedAgentOf, resolvedModelOf, type GatewayCalls } from "./gateway-harness.js"
+import { TaskGrant, type GrantRenewer } from "./task-grant.js"
 
 /**
  * Dispatched work — the pull side of the component contract.
@@ -113,7 +115,17 @@ export interface AgentInvocation {
   timeoutMs: number
   /** Aborts when the deadline of the run ends. Unset when the caller set no deadline. */
   signal?: AbortSignal
+  /**
+   * The model and Agent gateway calls of this run: `resolveModel`, `model`,
+   * `resolveAgent` and `delegate`. They send the task grant of the work item
+   * and renew it. A work item with no grant fails each gateway call before it
+   * is sent.
+   */
+  harness: AgentHarness
 }
+
+/** The harness of an agent that polls for work (pull mode). */
+export type AgentHarness = GatewayCalls
 
 /**
  * What an agent handler returns. The SDK turns it into the A2A Task of the
@@ -163,6 +175,8 @@ interface WorkCodec<TInvocation, TOutcome> {
     context: Record<string, string>
     payload: Uint8Array
     timeoutMs: number
+    taskGrant: string
+    component: Client<typeof ComponentService>
   }): TInvocation
   /** Runs after `decode` and before the handler. It throws {@link PrepareFailure}. */
   prepare?(invocation: TInvocation, component: Client<typeof ComponentService>): Promise<void>
@@ -181,9 +195,12 @@ const toolCodec: WorkCodec<ToolInvocation, unknown> = {
   fail: (message) => ({ result: encodeToolError(message) }),
 }
 
-const agentCodec: WorkCodec<AgentInvocation, AgentOutcome> = {
+const agentCodec = (renewGrant?: GrantRenewer): WorkCodec<AgentInvocation, AgentOutcome> => ({
   decode: (raw) => {
     const { task } = decodeAgentWork(raw.payload)
+    const grant = new TaskGrant(raw.taskGrant, renewGrant)
+    const component = raw.component
+    const workId = raw.workId
     return {
       workId: raw.workId,
       workType: raw.workType,
@@ -192,6 +209,14 @@ const agentCodec: WorkCodec<AgentInvocation, AgentOutcome> = {
       goal: task.goal,
       timeoutMs: raw.timeoutMs,
       ...(raw.timeoutMs > 0 ? { signal: AbortSignal.timeout(raw.timeoutMs) } : {}),
+      harness: gatewayCalls(
+        {
+          resolveModel: async (slot) => resolvedModelOf(await component.resolveModel({ workId, slot })),
+          resolveAgent: async (name, bankId) =>
+            resolvedAgentOf(await component.resolveAgent({ workId, name, ...(bankId ? { bankId } : {}) })),
+        },
+        grant.headers(),
+      ),
     }
   },
   prepare: async (inv, component) => {
@@ -215,7 +240,7 @@ const agentCodec: WorkCodec<AgentInvocation, AgentOutcome> = {
     result: new Uint8Array(),
     error: { code, message, retryable: false },
   }),
-}
+})
 
 interface LoopOptions<TInvocation, TOutcome> {
   handler: (invocation: TInvocation) => Promise<TOutcome>
@@ -255,6 +280,8 @@ function runWorker<TInvocation, TOutcome>(
             context: res.context ?? {},
             payload: res.payload ?? new Uint8Array(),
             timeoutMs: Number(res.timeoutMs ?? 0n),
+            taskGrant: res.taskGrant ?? "",
+            component,
           })
         } catch (e) {
           opts.onError?.(e)
@@ -339,6 +366,13 @@ export function startWorker(
 export interface AgentWorkerOptions {
   /** Handles a claimed agent invocation. */
   handler: AgentHandler
+  /**
+   * Gets a new task grant. The SDK calls it within 2 minutes of the expiry of
+   * the grant of a work item. Use `daemonGrantRenewer(session.transport)`.
+   * Without it, the SDK does not renew, and a gateway call fails after the
+   * grant has ended.
+   */
+  renewGrant?: GrantRenewer
   /** Called on transport errors; polling continues regardless. */
   onError?: (e: unknown) => void
   /** Called when a work item is claimed, before the handler runs. */
@@ -359,5 +393,5 @@ export function startAgentWorker(
   ref: InstanceRef,
   opts: AgentWorkerOptions,
 ): () => void {
-  return runWorker(component, ref, agentCodec, opts)
+  return runWorker(component, ref, agentCodec(opts.renewGrant), opts)
 }

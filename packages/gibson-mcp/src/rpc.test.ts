@@ -190,21 +190,21 @@ test("a malformed request is a tool error naming the proto type, not a thrown fa
 test("a server-streaming RPC returns an array and says when it truncated", async () => {
   const transport = createRouterTransport(({ service }) => {
     service(HarnessCallbackService, {
-      lLMStream: async function* () {
-        for (let i = 0; i < 5; i += 1) yield { delta: `chunk-${i}`, finishReason: "" }
+      toolResults: async function* () {
+        for (let i = 0; i < 5; i += 1) yield { toolCallId: `chunk-${i}` }
       },
     })
   })
   const task = { transport, context: { missionId: "m", taskId: "t", agentName: "a" } } as TaskHarness
-  const build = (limit: number) => rpcTools({ channels: { task }, streamLimit: limit }).find((t) => t.name === "harness_callback_service_llm_stream")!
+  const build = (limit: number) => rpcTools({ channels: { task }, streamLimit: limit }).find((t) => t.name === "harness_callback_service_tool_results")!
 
   const all = build(10)
   assert.match(all.description, /up to 10 messages/)
-  const whole = JSON.parse(((await all.handler({ messages: [] }, {})).content as { text: string }[])[0]!.text) as { messages: unknown[]; truncated: boolean }
+  const whole = JSON.parse(((await all.handler({}, {})).content as { text: string }[])[0]!.text) as { messages: unknown[]; truncated: boolean }
   assert.equal(whole.messages.length, 5)
   assert.equal(whole.truncated, false)
 
-  const capped = JSON.parse(((await build(2).handler({ messages: [] }, {})).content as { text: string }[])[0]!.text) as { messages: unknown[]; truncated: boolean }
+  const capped = JSON.parse(((await build(2).handler({}, {})).content as { text: string }[])[0]!.text) as { messages: unknown[]; truncated: boolean }
   assert.equal(capped.messages.length, 2)
   assert.equal(capped.truncated, true)
 })

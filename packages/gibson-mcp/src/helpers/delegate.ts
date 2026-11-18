@@ -5,14 +5,17 @@ import {
   cancelMission,
   createMission,
   createTaskMission,
-  delegateToAgent,
+  EXTENSION_KEY,
   getMissionResults,
   getMissionStatus,
   isSeamUnavailable,
-  listAgents,
   listMissions,
-  newTask,
+  newMessage,
+  Role,
   runMission,
+  taskStateName,
+  taskToJson,
+  textPart,
   waitMission,
 } from "@zeroroot-ai/sdk"
 import { z } from "zod"
@@ -21,9 +24,13 @@ import { defineTool } from "../tool.js"
 import { failure, json, text } from "../tools/result.js"
 import type { HelperContext } from "./context.js"
 
-const UNWIRED = "This daemon has no agent delegation or mission management wired (gibson#1186). Complete the work directly instead."
+const UNWIRED = "This daemon has no mission management wired (gibson#1186). Complete the work directly instead."
 
-/** Delegation and missions: the network of agents in the tenant. */
+/**
+ * Delegation and missions: the network of agents in the tenant. Delegation
+ * needs the task grant of a live mission, because the Agent gateway takes only
+ * that grant (gibson#1366).
+ */
 export function delegationTools(ctx: HelperContext): ToolDefinition[] {
   const out: ToolDefinition[] = []
   const live = ctx.gibson.live
@@ -57,6 +64,48 @@ export function delegationTools(ctx: HelperContext): ToolDefinition[] {
         },
       }),
     )
+    out.push(
+      defineTool({
+        name: "delegate",
+        description:
+          "Delegate a sub-task to another Gibson agent and wait for its result. The message goes to " +
+          "the agent through the Agent gateway over A2A. The result is the A2A task of the agent, " +
+          "with a state such as TASK_STATE_COMPLETED or TASK_STATE_INPUT_REQUIRED. Name an agent " +
+          "that you know. This server has no tool to list agents.",
+        input: {
+          agent: z.string().describe("Name of the agent to delegate to."),
+          goal: z.string().describe("What the delegate should accomplish."),
+          context: z.record(z.string(), z.unknown()).optional().describe("Target details, prior findings, or other context the delegate needs."),
+          max_turns: z.number().int().min(1).optional().describe("Cap on the delegate's model turns."),
+          allowed_tools: z.array(z.string()).optional().describe("Restrict the delegate to these tools."),
+          bank_id: z.string().optional().describe("Send the task to a bank of always-on agents."),
+        },
+        handler: async (args) => {
+          try {
+            const envelope = {
+              ...(args.context ? { context: args.context } : {}),
+              ...(args.max_turns || args.allowed_tools
+                ? {
+                    constraints: {
+                      ...(args.max_turns ? { max_turns: args.max_turns } : {}),
+                      ...(args.allowed_tools ? { allowed_tools: args.allowed_tools } : {}),
+                    },
+                  }
+                : {}),
+            }
+            const message = newMessage(
+              Role.ROLE_USER,
+              [textPart(args.goal)],
+              Object.keys(envelope).length > 0 ? { metadata: { [EXTENSION_KEY]: envelope } } : {},
+            )
+            const task = await live.harness.delegate(args.agent, message, args.bank_id ? { bankId: args.bank_id } : {})
+            return text(`${args.agent}: ${taskStateName(task)}`, JSON.stringify(taskToJson(task), null, 2))
+          } catch (e) {
+            return failure("delegation failed", (e as Error).message)
+          }
+        },
+      }),
+    )
   }
 
   if (!ctx.gibson.session) return out
@@ -64,50 +113,6 @@ export function delegationTools(ctx: HelperContext): ToolDefinition[] {
   const seam = (e: unknown, what: string) => (isSeamUnavailable(e) ? text(`${what} unavailable`, UNWIRED) : failure(`${what} failed`, (e as Error).message))
 
   out.push(
-    defineTool({
-      name: "list_agents",
-      description: "List the Gibson agents in this tenant that work can be delegated to, with their capabilities and the target types they handle.",
-      input: {},
-      annotations: { readOnlyHint: true },
-      handler: async () => {
-        const { agents, unavailable } = await listAgents(component)
-        if (unavailable) return text("delegation unavailable", UNWIRED)
-        if (agents.length === 0) return text("no agents", "No agents are registered for this tenant.")
-        const lines = agents.map((a) => {
-          const caps = a.capabilities.length > 0 ? `, capabilities: ${a.capabilities.join(", ")}` : ""
-          const targets = a.targetTypes.length > 0 ? `, targets: ${a.targetTypes.join(", ")}` : ""
-          return `- ${a.name} (${a.version}) ${a.description}${caps}${targets}`
-        })
-        return text(`${agents.length} agent${agents.length === 1 ? "" : "s"}`, lines.join("\n"))
-      },
-    }),
-    defineTool({
-      name: "delegate",
-      description:
-        "Delegate a sub-task to another Gibson agent and wait for its result. Use list_agents " +
-        "first to pick an agent whose capabilities match the task.",
-      input: {
-        agent: z.string().describe("Name of the agent to delegate to."),
-        goal: z.string().describe("What the delegate should accomplish."),
-        context: z.record(z.string(), z.unknown()).optional().describe("Target details, prior findings, or other context the delegate needs."),
-        max_turns: z.number().int().min(1).optional().describe("Cap on the delegate's LLM turns."),
-        allowed_tools: z.array(z.string()).optional().describe("Restrict the delegate to these tools."),
-      },
-      handler: async (args) => {
-        try {
-          const task = newTask(args.goal, {
-            ...(args.context ? { Context: args.context } : {}),
-            ...(args.max_turns || args.allowed_tools
-              ? { Constraints: { ...(args.max_turns ? { MaxTurns: args.max_turns } : {}), ...(args.allowed_tools ? { AllowedTools: args.allowed_tools } : {}) } }
-              : {}),
-          })
-          const result = await delegateToAgent(component, args.agent, task)
-          return text(`${args.agent}: ${result.Status}`, JSON.stringify(result, null, 2))
-        } catch (e) {
-          return seam(e, "delegation")
-        }
-      },
-    }),
     defineTool({
       name: "create_mission",
       description: "Create a Gibson mission from a mission definition, bound to a target. The mission is not started; call run_mission to queue it.",

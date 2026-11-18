@@ -8,6 +8,7 @@ import { createRouterTransport } from "@connectrpc/connect"
 import type { GibsonSession, LiveMission, TaskHarness } from "@zeroroot-ai/sdk"
 import type { Gibson } from "../session.js"
 import { helperToolsFor } from "./index.js"
+import { gatewayStub } from "../gateway-stub.test.js"
 
 /**
  * Which SDK export each helper tool comes from, and why the rest are not
@@ -30,7 +31,10 @@ const HELPER_TOOL_FOR_EXPORT: Record<string, string> = {
   cancelMission: "cancel_mission",
   createMission: "create_mission",
   createTaskMission: "create_task_mission",
-  delegateToAgent: "delegate",
+  delegateToResolvedAgent: "delegate",
+  taskStateName: "delegate",
+  taskToJson: "delegate",
+  gatewayCalls: "delegate",
   enrollComponent: "enroll_component",
   findSimilarAttacks: "similar_attacks",
   findSimilarFindings: "similar_findings",
@@ -39,7 +43,6 @@ const HELPER_TOOL_FOR_EXPORT: Record<string, string> = {
   getMissionResults: "mission_results",
   getMissionStatus: "mission_status",
   getRelatedFindings: "related_findings",
-  listAgents: "list_agents",
   listGibsonPlugins: "list_gibson_plugins",
   listGibsonTools: "list_gibson_tools",
   listMissions: "list_missions",
@@ -151,7 +154,6 @@ const NOT_A_TOOL: Record<string, string> = {
   gatewayFetch: "the fetch of a gateway call with the trust rule, inside the clients",
   parseCaBundle: "checks the CA bundle of a gateway, inside the clients",
   staticGrantHeaders: "puts the task grant on a gateway call, inside the clients",
-  delegateToResolvedAgent: "the A2A call of an agent on the platform; this server delegates with the delegate tool",
   isSettled: "tells when an A2A delegation can stop waiting, inside the client",
   newMessage: "builds an A2A message for an agent on the platform",
   textPart: "builds an A2A part for an agent on the platform",
@@ -163,7 +165,16 @@ const NOT_A_TOOL: Record<string, string> = {
   // Mission state names and the evidence of a finding.
   isMissionState: "checks a state name; the status tools return the names themselves",
   isTerminalMissionState: "checks a state name; the status tools return the names themselves",
-  citeToolCalls: "adds tool call IDs to a finding; submit_finding has no such argument until the callback finding carries them",
+  citeToolCalls: "adds tool call IDs to a finding; submit_finding takes them as the argument tool_call_ids",
+  missionStateOfStatus: "maps the status enum to a state name; the status tools return the names themselves",
+
+  // The task grant and the model of an agent on the platform.
+  TaskGrant: "the task grant of a work item with its renewal, inside the harness of a worker",
+  NoGatewayGrantError: "the error of a gateway call with no task grant, inside the clients",
+  daemonGrantRenewer: "renews a task grant with RenewCapabilityGrant, inside a worker",
+  agentCardOf: "builds the fields of the Agent Card at registration, inside the registration",
+  resolvedAgentOf: "copies the answer of ResolveAgent, inside the harness",
+  resolvedModelOf: "copies the answer of ResolveModel, inside the harness",
 
   // Encoding and formatting the tools already do for the caller.
   calculateRiskScore: "arithmetic on a severity and a confidence; no round trip is worth it",
@@ -173,7 +184,6 @@ const NOT_A_TOOL: Record<string, string> = {
   encodeFinding: "submit_finding encodes the finding for you",
   formatKnowledgeForPrompt: "recall already formats its own hits",
   validateFinding: "submit_finding validates before it submits",
-  newTask: "builds delegate's argument",
   buildCreateMissionRequest: "shapes the request create_task_mission sends",
   isSeamUnavailable: "classifies a daemon error inside other helpers",
   seamReason: "reads the daemon's own explanation inside other helpers",
@@ -207,6 +217,7 @@ function sdkFunctionExports(): string[] {
 
 function fakeHarness(): TaskHarness {
   return {
+    ...gatewayStub,
     transport: createRouterTransport(() => {}),
     client: {} as never,
     endpoint: "d:50001",
@@ -309,6 +320,7 @@ test("a posture registers only the helpers its grant can reach", () => {
   ).map((t) => t.name)
   assert.ok(dispatched.includes("remember"), "a dispatched run holds a mission, so it can write memories")
   assert.ok(dispatched.includes("world_view"))
-  assert.ok(!dispatched.includes("delegate"), "delegation is a ComponentService call and a dispatched run has no component client")
+  assert.ok(dispatched.includes("delegate"), "delegation sends the task grant of the run to the Agent gateway")
+  assert.ok(!dispatched.includes("list_agents"), "no RPC lists agents for a component or a task grant")
   assert.ok(!dispatched.includes("enroll_component"))
 })

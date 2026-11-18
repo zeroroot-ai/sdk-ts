@@ -6,6 +6,7 @@ import test from "node:test"
 import type { TaskHarness } from "@zeroroot-ai/sdk"
 import { AnswerRouter, askTool, decisionFrom } from "./ask.js"
 import { inboxAvailable, InputKind, JobState, openInbox, principalName, routeAnswers, toJobInput, type Inbox, type JobInput } from "./inbox.js"
+import { gatewayStub } from "./gateway-stub.test.js"
 
 /** A harness whose client carries the inbox RPCs, with a scripted stream. */
 function inboxHarness(script: {
@@ -20,6 +21,7 @@ function inboxHarness(script: {
   let attempt = -1
   let nextId = 0
   return {
+    ...gatewayStub,
     transport: {} as never,
     client: {
       subscribeInput: (req: { context?: unknown }) => {

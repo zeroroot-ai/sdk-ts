@@ -4,11 +4,75 @@
 import type { Client } from "@connectrpc/connect"
 import type { ComponentService } from "./clients.js"
 
+/**
+ * One A2A `AgentSkill`: a capability entry of the Agent Card of an agent. It
+ * is NOT an Agent Skill in the SKILL.md format.
+ */
+export interface CardSkillInput {
+  id: string
+  name: string
+  description?: string
+  tags?: string[]
+  examples?: string[]
+  inputModes?: string[]
+  outputModes?: string[]
+}
+
+/** The media types of a card when the agent names none. */
+export const DEFAULT_CARD_MODES: readonly string[] = ["text/plain", "application/json"]
+
 export interface AgentRegistration {
   name: string
   version: string
   capabilities?: string[]
   metadata?: Record<string, string>
+  /** What the Agent Card says about the agent. The fields below apply to `kind` `agent` only. */
+  description?: string
+  targetTypes?: string[]
+  techniqueTypes?: string[]
+  /**
+   * The skills of the Agent Card. When it is empty, the SDK builds one card
+   * skill for each capability: the id and the name are the capability, the
+   * description is the description of the agent, and the tags are the target
+   * types and the technique types. With no capability, it builds one card skill
+   * named after the agent.
+   */
+  cardSkills?: CardSkillInput[]
+  /** The default media types of the card. They default to `text/plain` and `application/json`. */
+  defaultInputModes?: string[]
+  defaultOutputModes?: string[]
+}
+
+/** What the Agent Card of an agent needs at registration. */
+export function agentCardOf(reg: AgentRegistration): {
+  cardSkills: Required<CardSkillInput>[]
+  defaultInputModes: string[]
+  defaultOutputModes: string[]
+} {
+  const tags = [...(reg.targetTypes ?? []), ...(reg.techniqueTypes ?? [])]
+  const description = reg.description ?? ""
+  const skills: CardSkillInput[] =
+    reg.cardSkills && reg.cardSkills.length > 0
+      ? reg.cardSkills
+      : (reg.capabilities && reg.capabilities.length > 0 ? reg.capabilities : [reg.name]).map((c) => ({
+          id: c,
+          name: c,
+          description,
+          tags,
+        }))
+  return {
+    cardSkills: skills.map((k) => ({
+      id: k.id,
+      name: k.name,
+      description: k.description ?? "",
+      tags: k.tags ?? [],
+      examples: k.examples ?? [],
+      inputModes: k.inputModes ?? [],
+      outputModes: k.outputModes ?? [],
+    })),
+    defaultInputModes: reg.defaultInputModes && reg.defaultInputModes.length > 0 ? reg.defaultInputModes : [...DEFAULT_CARD_MODES],
+    defaultOutputModes: reg.defaultOutputModes && reg.defaultOutputModes.length > 0 ? reg.defaultOutputModes : [...DEFAULT_CARD_MODES],
+  }
 }
 
 export interface RegisteredComponent { instanceId: string; heartbeatIntervalMs: number }
@@ -17,9 +81,8 @@ export interface RegisteredComponent { instanceId: string; heartbeatIntervalMs: 
  * RegisterComponent under an explicit kind.
  *
  * Kind is not cosmetic — it decides whether the daemon will ever send this
- * component work. The harness enqueues for `tool` and `plugin`; agent mission
- * nodes resolve against an in-process registry and never reach the work queue
- * (gibson#1197). Register as `tool` to serve mission nodes.
+ * component work. For `agent` the registration also sends the fields of the
+ * A2A Agent Card: `card_skills` and the default modes.
  */
 export async function registerComponentAs(
   component: Client<typeof ComponentService>,
@@ -32,6 +95,7 @@ export async function registerComponentAs(
     version: reg.version,
     capabilities: reg.capabilities ?? [],
     metadata: reg.metadata ?? {},
+    ...(kind === "agent" ? agentCardOf(reg) : {}),
   })
   return {
     instanceId: res.instanceId,

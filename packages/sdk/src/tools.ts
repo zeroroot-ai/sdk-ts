@@ -91,6 +91,13 @@ export interface ToolCallResult {
   output: unknown
   /** Structured error from the tool or the harness; absent on success. */
   error?: { code: string; message: string; retryable: boolean }
+  /**
+   * The id that the daemon recorded for this call. Unset for a plugin query. Empty when the daemon
+   * recorded none. Cite it in the `tool_call_ids` of a finding
+   * (`citeToolCalls`), and the platform builds recorded evidence from its
+   * own record of the call.
+   */
+  toolCallId?: string
 }
 
 /**
@@ -112,6 +119,7 @@ export async function callGibsonTool(
   })
   return {
     output: parseMaybeJSON(res.outputJson),
+    toolCallId: res.toolCallId,
     ...(res.error
       ? { error: { code: res.error.code, message: res.error.message, retryable: res.error.retryable } }
       : {}),

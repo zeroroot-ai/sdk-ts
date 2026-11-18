@@ -4,6 +4,7 @@
 import { appendFile, mkdir } from "node:fs/promises"
 import { dirname } from "node:path"
 import { getFindings, newFinding, submitFinding, type Finding, type GibsonSession, type Severity, type TaskHarness } from "@zeroroot-ai/sdk"
+import { EvidenceType } from "@zeroroot-ai/sdk/gen/gibson/types/v1/types_pb.js"
 import { z } from "zod"
 import type { ToolDefinition } from "../registry.js"
 import { defineTool } from "../tool.js"
@@ -11,6 +12,34 @@ import { failure, json, text } from "../tools/result.js"
 import type { HelperContext } from "./context.js"
 
 const SEVERITIES = ["critical", "high", "medium", "low", "info"] as const
+
+/**
+ * Map the evidence type string of the SDK finding to the proto enum, as the Go
+ * SDK does. An unknown string is OTHER. The agent never sets the tier of an
+ * item: the daemon sets it.
+ */
+export function evidenceTypeToProto(t: string): EvidenceType {
+  switch (t) {
+    case "http_request":
+      return EvidenceType.REQUEST
+    case "http_response":
+      return EvidenceType.RESPONSE
+    case "screenshot":
+      return EvidenceType.SCREENSHOT
+    case "code_snippet":
+      return EvidenceType.CODE
+    case "log":
+      return EvidenceType.LOG
+    case "payload":
+      return EvidenceType.PAYLOAD
+    case "conversation":
+      return EvidenceType.CONVERSATION
+    case "network_trace":
+      return EvidenceType.NETWORK_TRACE
+    default:
+      return EvidenceType.OTHER
+  }
+}
 
 export interface FindingsBackend {
   submit(f: Finding): Promise<string>
@@ -45,8 +74,10 @@ export function taskFindingsBackend(harness: TaskHarness): FindingsBackend {
           remediation: f.remediation ?? "",
           targetId: f.target_id ?? "",
           tags: f.tags ?? [],
-          evidence: (f.evidence ?? []).map((e) => ({ type: e.type, title: e.title, content: e.content })),
+          evidence: (f.evidence ?? []).map((e) => ({ type: evidenceTypeToProto(e.type), title: e.title, content: e.content })),
         } as never,
+        // The daemon builds recorded evidence from the tool calls that these IDs name.
+        toolCallIds: f.tool_call_ids ?? [],
       })
       if (res.error) throw new Error(`SubmitFinding refused: ${res.error.message}`)
       // The callback acknowledges without an id; the finding keeps the one
@@ -93,6 +124,13 @@ export function findingTools(ctx: HelperContext): ToolDefinition[] {
         remediation: z.string().optional().describe("How to fix or mitigate the issue."),
         target_id: z.string().optional().describe("Identifier of the affected target or component."),
         tags: z.array(z.string()).optional().describe("Labels for filtering."),
+        tool_call_ids: z
+          .array(z.string())
+          .optional()
+          .describe(
+            "IDs of the tool calls that back this finding (the tool_call_id that a tool result returns). " +
+              "The platform builds recorded evidence from its own record of each call. An ID that names no call of this mission refuses the finding. You cannot set an evidence tier.",
+          ),
       },
       handler: async (args) => {
         const finding = newFinding({
@@ -106,7 +144,8 @@ export function findingTools(ctx: HelperContext): ToolDefinition[] {
           ...(args.remediation ? { remediation: args.remediation } : {}),
           ...(args.target_id ? { targetID: args.target_id } : {}),
           ...(args.tags ? { tags: args.tags } : {}),
-          ...(args.evidence ? { evidence: [{ type: "text", title: "evidence", content: args.evidence, timestamp: new Date().toISOString() }] } : {}),
+          ...(args.tool_call_ids ? { toolCallIds: args.tool_call_ids } : {}),
+          ...(args.evidence ? { evidence: [{ type: "other", title: "evidence", content: args.evidence, timestamp: new Date().toISOString() }] } : {}),
         })
         try {
           const id = await ctx.findings.submit(finding)

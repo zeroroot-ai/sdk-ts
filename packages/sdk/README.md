@@ -12,6 +12,58 @@ Any TS program can use it to become a Gibson component and talk to the harness.
 The [`zerocool-plugins`](https://github.com/zeroroot-ai/zerocool-plugins) opencode
 plugins build on this SDK. Nothing opencode-specific lives here.
 
+## Call a model
+
+The daemon names the gateway and the model for a slot. `ModelClient` sends one
+Open Responses request shape to that gateway. It has no code for a model
+provider.
+
+```ts
+import { ModelClient, userMessage, responseText, staticGrantHeaders } from "@zeroroot-ai/sdk"
+
+const model = new ModelClient({
+  baseUrl: resolved.gatewayUrl,
+  model: resolved.model,
+  routeHeaders: resolved.routeHeaders,
+  caPem: resolved.gatewayCaPem, // the client trusts exactly this bundle
+  headers: staticGrantHeaders(() => taskGrant),
+})
+
+const reply = await model.create({ input: [userMessage("say hello")] })
+console.log(responseText(reply))
+
+const stream = await model.stream({ input: [userMessage("say hello")] })
+await stream.collect((delta) => process.stdout.write(delta))
+```
+
+For a tool call, set `tools` and send all items back with a
+`functionCallOutput` item. For a structured reply, call `createStructured`
+with a JSON schema.
+
+## Serve an agent over A2A
+
+An agent receives an A2A message and returns an A2A task. The agent opens no
+port. The daemon sends the message on the work queue.
+
+```ts
+import { startAgentWorker, TaskState } from "@zeroroot-ai/sdk"
+
+startAgentWorker(component, instance, {
+  handler: async ({ task }) => {
+    // task.goal is the text of the message. task.skillItems holds the pinned skills.
+    return { state: TaskState.TASK_STATE_COMPLETED, output: `done: ${task.goal}` }
+  },
+})
+```
+
+A handler that throws gives a work error with the code `EXECUTION_ERROR`. A
+handler that returns `TaskState.TASK_STATE_INPUT_REQUIRED` and an output
+shows the output to the caller as the question.
+
+A finding can name the tool calls that back it with `citeToolCalls`. The
+platform builds the evidence from its own record. An agent cannot set an
+evidence tier.
+
 ## License
 
 Elastic License 2.0. Zero Root AI is the licensor. It is source-available, not

@@ -10,7 +10,7 @@ statement.
 
 | Package | What it is |
 |---|---|
-| [`@zeroroot-ai/sdk`](packages/sdk) | the framework-agnostic SDK: connect-es bindings generated from the BSR, Capability Grant auth, component lifecycle, the task harness, and an OpenAI-compatible LLM shim |
+| [`@zeroroot-ai/sdk`](packages/sdk) | the framework-agnostic SDK: connect-es bindings generated from the BSR, Capability Grant auth, component lifecycle, the task harness, an Open Responses model client, and A2A for an agent |
 | [`@zeroroot-ai/gibson-mcp`](packages/gibson-mcp) | the Gibson MCP server: one tool surface for every coding agent host, built from the same generated descriptors. Bin: `gibson-mcp`. |
 
 ```bash

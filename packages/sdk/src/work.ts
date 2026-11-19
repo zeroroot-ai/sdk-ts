@@ -118,14 +118,27 @@ export interface AgentInvocation {
   /**
    * The model and Agent gateway calls of this run: `resolveModel`, `model`,
    * `resolveAgent` and `delegate`. They send the task grant of the work item
-   * and renew it. A work item with no grant fails each gateway call before it
-   * is sent.
+   * and renew it. `token` gives the grant to a handler that calls a gateway
+   * itself. A work item with no grant fails each gateway call and `token`
+   * before it is sent.
    */
   harness: AgentHarness
 }
 
 /** The harness of an agent that polls for work (pull mode). */
-export type AgentHarness = GatewayCalls
+export interface AgentHarness extends GatewayCalls {
+  /**
+   * The task grant in force now, with the name of `TaskHarness.token`. The SDK
+   * renews the grant within 2 minutes of its expiry, so each call returns the
+   * renewed value. It is a secret: send it in a header or pass it in the
+   * environment of a child process, and never log it or write it to disk. It
+   * throws when the work item has no grant.
+   *
+   * A work item has no callback endpoint, so a pull harness has no `endpoint`.
+   * `resolveModel` gives the `gatewayUrl` of the Model gateway for a slot.
+   */
+  token(): Promise<string>
+}
 
 /**
  * What an agent handler returns. The SDK turns it into the A2A Task of the
@@ -209,14 +222,17 @@ const agentCodec = (renewGrant?: GrantRenewer): WorkCodec<AgentInvocation, Agent
       goal: task.goal,
       timeoutMs: raw.timeoutMs,
       ...(raw.timeoutMs > 0 ? { signal: AbortSignal.timeout(raw.timeoutMs) } : {}),
-      harness: gatewayCalls(
-        {
-          resolveModel: async (slot) => resolvedModelOf(await component.resolveModel({ workId, slot })),
-          resolveAgent: async (name, bankId) =>
-            resolvedAgentOf(await component.resolveAgent({ workId, name, ...(bankId ? { bankId } : {}) })),
-        },
-        grant.headers(),
-      ),
+      harness: {
+        ...gatewayCalls(
+          {
+            resolveModel: async (slot) => resolvedModelOf(await component.resolveModel({ workId, slot })),
+            resolveAgent: async (name, bankId) =>
+              resolvedAgentOf(await component.resolveAgent({ workId, name, ...(bankId ? { bankId } : {}) })),
+          },
+          grant.headers(),
+        ),
+        token: () => grant.get(),
+      },
     }
   },
   prepare: async (inv, component) => {

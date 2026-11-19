@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.22.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.21.0...v0.22.0) (2026-11-19)
+
+
+### Features
+
+* expose the task grant on the agent invocation harness ([#132](https://github.com/zeroroot-ai/sdk-ts/issues/132)) ([e0506d9](https://github.com/zeroroot-ai/sdk-ts/commit/e0506d9cc80edced42c496e56604bfe1f1bb1ff7))
+
 ## [0.21.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.20.0...v0.21.0) (2026-11-19)
 
 

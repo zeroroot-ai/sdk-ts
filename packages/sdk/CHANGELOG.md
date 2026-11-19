@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.21.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.20.0...v0.21.0) (2026-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **sdk:** the generated AgentService, the LLM calls and the old delegation calls are gone from the bindings.
+
+### Features
+
+* **sdk:** align the sdk with the aaif model and a2a contract ([#130](https://github.com/zeroroot-ai/sdk-ts/issues/130)) ([2cdea64](https://github.com/zeroroot-ai/sdk-ts/commit/2cdea64e4d7e419cb1b3ebe02a2e6b996449a2d9))
+
+
+### Bug Fixes
+
+* **gibson-mcp:** self-heal a stale host key instead of wedging on a 401 ([#122](https://github.com/zeroroot-ai/sdk-ts/issues/122)) ([eaf305d](https://github.com/zeroroot-ai/sdk-ts/commit/eaf305d0631168d5ccae009ecbf31934ec6f991f)), closes [#120](https://github.com/zeroroot-ai/sdk-ts/issues/120)
+
 ## [0.20.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.19.0...v0.20.0) (2026-10-20)
 
 

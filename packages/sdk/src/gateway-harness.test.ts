@@ -189,7 +189,7 @@ async function runWork(
     submitResult: async () => (done(), {}),
     ...component,
   }
-  const stop = startAgentWorker(comp as never, fixedRef("i"), { handler, onError: () => {}, ...(renewGrant ? { renewGrant } : {}) })
+  const stop = startAgentWorker(comp as never, fixedRef("i"), { handler, onError: () => {}, renewGrant: renewGrant ?? (async () => { throw new Error("no renewal expected") }) })
   await finished
   stop()
 }
@@ -306,4 +306,101 @@ test("the pull harness renews a grant that is near its expiry", async () => {
     await gw.close()
     ca.cleanup()
   }
+})
+
+test("the handler reads the task grant of the poll reply with token()", async () => {
+  const token = farGrant("read")
+  let read = ""
+  await runWork({ taskGrant: token }, {}, async ({ harness }) => {
+    read = await harness.token()
+    return {}
+  })
+  assert.equal(read, token)
+})
+
+test("two token() calls at the same time share one renewal and both get the renewed grant", async () => {
+  const soon = jwt({ sub: "component:agent:a", mission_id: "m-1", task_id: "t-1", exp: Math.floor(Date.now() / 1000) + 30 })
+  const fresh = farGrant("fresh")
+  const renewed: string[] = []
+  let first = ""
+  let second = ""
+  await runWork(
+    { taskGrant: soon },
+    {},
+    async ({ harness }) => {
+      ;[first, second] = await Promise.all([harness.token(), harness.token()])
+      return {}
+    },
+    async (cur) => {
+      renewed.push(cur)
+      await new Promise((r) => setTimeout(r, 20))
+      return fresh
+    },
+  )
+  assert.equal(first, fresh, "the first read renews the grant that is near its expiry")
+  assert.equal(second, fresh)
+  assert.deepEqual(renewed, [soon])
+  assert.notEqual(first, soon)
+})
+
+test("token() of a work item with no grant fails before any call", async () => {
+  let failure: unknown
+  await runWork({ taskGrant: "" }, {}, async ({ harness }) => {
+    try {
+      await harness.token()
+    } catch (e) {
+      failure = e
+    }
+    return {}
+  })
+  assert.ok(failure instanceof NoGatewayGrantError)
+})
+
+test("a failed renewal of an ended grant puts the grant in neither the error text nor its cause", async () => {
+  const ended = jwt({ sub: "component:agent:a", mission_id: "m-1", task_id: "t-1", exp: Math.floor(Date.now() / 1000) - 10 })
+  let failure: Error | undefined
+  await runWork(
+    { taskGrant: ended },
+    {},
+    async ({ harness }) => {
+      try {
+        await harness.token()
+      } catch (e) {
+        failure = e as Error
+      }
+      return {}
+    },
+    async (cur) => {
+      throw new Error(`the daemon refused the grant ${cur}`)
+    },
+  )
+  assert.ok(failure, "token() rejects")
+  assert.match(failure.message, /has ended and the renewal failed/)
+  assert.ok(!failure.message.includes(ended))
+  const cause = failure.cause as Error
+  assert.ok(!cause.message.includes(ended), "the cause has no grant")
+  assert.ok(!String(cause.stack).includes(ended))
+})
+
+test("expiresAt() follows the grant of the work item, with the type of TaskHarness.expiresAt", async () => {
+  const soon = jwt({ sub: "component:agent:a", mission_id: "m-1", task_id: "t-1", exp: Math.floor(Date.now() / 1000) + 30 })
+  const fresh = farGrant("fresh")
+  const seen: number[] = []
+  await runWork(
+    { taskGrant: soon },
+    {},
+    async ({ harness }) => {
+      seen.push(harness.expiresAt())
+      await harness.token()
+      seen.push(harness.expiresAt())
+      return {}
+    },
+    async () => fresh,
+  )
+  assert.ok(seen[0] > Date.now() && seen[0] < Date.now() + 60_000, "the grant of the poll reply")
+  assert.ok(seen[1] > Date.now() + 60 * 60_000, "the renewed grant")
+  await runWork({ taskGrant: "" }, {}, async ({ harness }) => {
+    assert.equal(harness.expiresAt(), 0, "no grant gives 0")
+    return {}
+  })
 })

@@ -15,6 +15,10 @@ function jwt(payload: Record<string, unknown>): string {
 }
 
 const NOW = 1_800_000_000_000
+/** A renewer for a test that must not renew. */
+const stay = async (): Promise<string> => {
+  throw new Error("no renewal expected")
+}
 const grantExpiringIn = (ms: number, tag = "g") =>
   jwt({ sub: "component:agent:a", tenant: "t", mission_id: "m-1", task_id: "t-1", exp: Math.floor((NOW + ms) / 1000), tag })
 
@@ -65,16 +69,44 @@ test("a failed renewal of a grant that has ended names the renewal failure", asy
   const g = new TaskGrant(grantExpiringIn(-1_000), async () => {
     throw new Error("daemon down")
   }, () => NOW)
-  await assert.rejects(g.get(), /has ended and the renewal failed: daemon down/)
+  await assert.rejects(g.get(), /has ended and the renewal failed/)
+})
+
+test("an ended grant with a failed renewal puts the grant in neither the error text nor its cause", async () => {
+  const ended = grantExpiringIn(-1_000, "ended")
+  const g = new TaskGrant(ended, async (cur) => {
+    throw new Error(`renew refused for ${cur}`)
+  }, () => NOW)
+  const err = (await g.get().then(
+    () => assert.fail("must reject"),
+    (e: unknown) => e,
+  )) as Error
+  assert.ok(!err.message.includes(ended), "the error text has no grant")
+  assert.ok(!err.message.includes("renew refused"), "the error text does not copy the cause text")
+  const cause = err.cause as Error
+  assert.match(cause.message, /renew refused for \[task grant\]/)
+  assert.ok(!cause.message.includes(ended), "the cause has no grant")
+  assert.ok(!String(cause.stack).includes(ended), "the stack of the cause has no grant")
+  assert.ok(!JSON.stringify(err, Object.getOwnPropertyNames(err)).includes(ended))
+})
+
+test("expiresAt gives the expiry of the grant in force in milliseconds, and 0 when there is none", async () => {
+  const fresh = grantExpiringIn(30 * 60_000, "fresh")
+  const g = new TaskGrant(grantExpiringIn(60_000), async () => fresh, () => NOW)
+  assert.equal(g.expiresAt(), Math.floor((NOW + 60_000) / 1000) * 1000)
+  await g.get()
+  assert.equal(g.expiresAt(), Math.floor((NOW + 30 * 60_000) / 1000) * 1000, "it follows the renewal")
+  assert.equal(new TaskGrant("", async () => fresh).expiresAt(), 0)
+  assert.equal(new TaskGrant("not-a-jwt", async () => fresh).expiresAt(), 0)
 })
 
 test("a work item with no grant fails before anything is sent", async () => {
-  await assert.rejects(new TaskGrant("").get(), NoGatewayGrantError)
-  await assert.rejects(async () => await new TaskGrant("").headers()("/v1/responses"), /no task grant: the agent has no task grant to send to the gateway/)
+  await assert.rejects(new TaskGrant("", stay).get(), NoGatewayGrantError)
+  await assert.rejects(async () => await new TaskGrant("", stay).headers()("/v1/responses"), /no task grant: the agent has no task grant to send to the gateway/)
 })
 
 test("headers sends the grant in x-capability-grant and no authorization", async () => {
-  const g = new TaskGrant(grantExpiringIn(10 * 60_000))
+  const g = new TaskGrant(grantExpiringIn(10 * 60_000), stay)
   assert.deepEqual(await g.headers()("/v1/responses"), { "x-capability-grant": grantExpiringIn(10 * 60_000) })
 })
 

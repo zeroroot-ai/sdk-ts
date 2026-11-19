@@ -118,14 +118,35 @@ export interface AgentInvocation {
   /**
    * The model and Agent gateway calls of this run: `resolveModel`, `model`,
    * `resolveAgent` and `delegate`. They send the task grant of the work item
-   * and renew it. A work item with no grant fails each gateway call before it
-   * is sent.
+   * and renew it with the `renewGrant` of the worker. `token` gives the grant
+   * to a handler that calls a gateway itself. A work item with no grant fails
+   * each gateway call and `token` before it is sent.
    */
   harness: AgentHarness
 }
 
 /** The harness of an agent that polls for work (pull mode). */
-export type AgentHarness = GatewayCalls
+export interface AgentHarness extends GatewayCalls {
+  /**
+   * The task grant in force now. The SDK renews the grant within 2 minutes of
+   * its expiry with the `renewGrant` of the worker, so each call returns the
+   * renewed value. It is a secret: send it in a header or pass it in the
+   * environment of a child process, and never log it or write it to disk. It
+   * throws when the work item has no grant, and when the grant has ended and
+   * the renewal failed.
+   *
+   * A work item has no callback endpoint, so a pull harness has no `endpoint`.
+   * `resolveModel` gives the `gatewayUrl` of the Model gateway for a slot.
+   */
+  token(): Promise<string>
+  /**
+   * Expiry of the grant in force now, Unix milliseconds. `0` when unknown. It
+   * has the name and the type of `TaskHarness.expiresAt`. It shows the grant
+   * of the last renewal, so call `token()` first to renew a grant that is
+   * near its expiry.
+   */
+  expiresAt(): number
+}
 
 /**
  * What an agent handler returns. The SDK turns it into the A2A Task of the
@@ -195,7 +216,7 @@ const toolCodec: WorkCodec<ToolInvocation, unknown> = {
   fail: (message) => ({ result: encodeToolError(message) }),
 }
 
-const agentCodec = (renewGrant?: GrantRenewer): WorkCodec<AgentInvocation, AgentOutcome> => ({
+const agentCodec = (renewGrant: GrantRenewer): WorkCodec<AgentInvocation, AgentOutcome> => ({
   decode: (raw) => {
     const { task } = decodeAgentWork(raw.payload)
     const grant = new TaskGrant(raw.taskGrant, renewGrant)
@@ -209,14 +230,18 @@ const agentCodec = (renewGrant?: GrantRenewer): WorkCodec<AgentInvocation, Agent
       goal: task.goal,
       timeoutMs: raw.timeoutMs,
       ...(raw.timeoutMs > 0 ? { signal: AbortSignal.timeout(raw.timeoutMs) } : {}),
-      harness: gatewayCalls(
-        {
-          resolveModel: async (slot) => resolvedModelOf(await component.resolveModel({ workId, slot })),
-          resolveAgent: async (name, bankId) =>
-            resolvedAgentOf(await component.resolveAgent({ workId, name, ...(bankId ? { bankId } : {}) })),
-        },
-        grant.headers(),
-      ),
+      harness: {
+        ...gatewayCalls(
+          {
+            resolveModel: async (slot) => resolvedModelOf(await component.resolveModel({ workId, slot })),
+            resolveAgent: async (name, bankId) =>
+              resolvedAgentOf(await component.resolveAgent({ workId, name, ...(bankId ? { bankId } : {}) })),
+          },
+          grant.headers(),
+        ),
+        token: () => grant.get(),
+        expiresAt: () => grant.expiresAt(),
+      },
     }
   },
   prepare: async (inv, component) => {
@@ -369,10 +394,10 @@ export interface AgentWorkerOptions {
   /**
    * Gets a new task grant. The SDK calls it within 2 minutes of the expiry of
    * the grant of a work item. Use `daemonGrantRenewer(session.transport)`.
-   * Without it, the SDK does not renew, and a gateway call fails after the
-   * grant has ended.
+   * A gateway call and `token()` fail after the grant has ended and the
+   * renewal has failed.
    */
-  renewGrant?: GrantRenewer
+  renewGrant: GrantRenewer
   /** Called on transport errors; polling continues regardless. */
   onError?: (e: unknown) => void
   /** Called when a work item is claimed, before the handler runs. */

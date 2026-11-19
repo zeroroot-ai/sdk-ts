@@ -229,6 +229,11 @@ test("loadPinnedSkills names the skill that failed", async () => {
 
 // ── the loop ────────────────────────────────────────────────────────────────
 
+/** A renewer for a test whose work item has a grant far from its expiry or none. */
+const stayGrant = async (): Promise<string> => {
+  throw new Error("no renewal expected")
+}
+
 function fixedRef(id: string): InstanceRef {
   return { current: () => id, heartbeatIntervalMs: () => 15_000, renew: async () => id }
 }
@@ -279,6 +284,7 @@ test("an agent work item flows claim -> handler -> A2A Task", async () => {
   })
   let seen: AgentInvocation | undefined
   const stop = startAgentWorker(component as never, fixedRef("i1"), {
+    renewGrant: stayGrant,
     handler: async (item) => {
       seen = item
       return { state: TaskState.TASK_STATE_INPUT_REQUIRED, output: "which port?" }
@@ -313,6 +319,7 @@ test("pinned skills load before the handler runs", async () => {
   )
   let items = 0
   const stop = startAgentWorker(component as never, fixedRef("i1"), {
+    renewGrant: stayGrant,
     handler: async (item) => {
       items = item.task.skillItems.length
       return {}
@@ -334,6 +341,7 @@ test("a pinned skill that fails to load stops the run", async () => {
   )
   let ran = false
   const stop = startAgentWorker(component as never, fixedRef("i1"), {
+    renewGrant: stayGrant,
     handler: async () => {
       ran = true
       return {}
@@ -355,6 +363,7 @@ test("a bad payload is answered with DESERIALIZATION_ERROR, not left to time out
     payload: enc.encode("not json"),
   })
   const stop = startAgentWorker(component as never, fixedRef("i1"), {
+    renewGrant: stayGrant,
     handler: async () => ({}),
     onError: () => {},
   })
@@ -366,6 +375,7 @@ test("a bad payload is answered with DESERIALIZATION_ERROR, not left to time out
 test("a handler that throws is answered with EXECUTION_ERROR and no Task", async () => {
   const { component, submitted, finished } = fakeComponent({ workId: "w5", workType: "execute", payload: workMessage() })
   const stop = startAgentWorker(component as never, fixedRef("i1"), {
+    renewGrant: stayGrant,
     handler: async () => {
       throw new Error("opencode exited 1")
     },
@@ -381,6 +391,7 @@ test("a handler that throws is answered with EXECUTION_ERROR and no Task", async
 test("an output with no JSON form is answered with SERIALIZATION_ERROR", async () => {
   const { component, submitted, finished } = fakeComponent({ workId: "w6", workType: "execute", payload: workMessage() })
   const stop = startAgentWorker(component as never, fixedRef("i1"), {
+    renewGrant: stayGrant,
     handler: async () => ({ output: { n: 1n } }),
     onError: () => {},
   })

@@ -135,6 +135,12 @@ Do not edit the tables by hand.
 | ADR-0168 | CI is the gate, and no review and no signed commit is required |
 | ADR-0169 | A fork starts a node from the state of an earlier node |
 | ADR-0170 | A rewind starts a new run from a checkpoint |
+| ADR-0171 | Every credential rotates, and the drill proves it |
+| ADR-0172 | agentgateway is the one gateway for model, MCP and A2A traffic |
+| ADR-0173 | Open Responses is the one shape of a model call |
+| ADR-0174 | A2A is the one agent wire |
+| ADR-0175 | A mission state is an A2A Task state |
+| ADR-0176 | A finding and all of its evidence live in the tenant database |
 
 ## Retired
 

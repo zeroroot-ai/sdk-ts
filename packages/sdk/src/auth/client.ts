@@ -157,23 +157,46 @@ export class CapabilityGrantClient {
 
   get scope(): string | undefined { return this.componentScope }
 
+  /**
+   * Sign a fresh agent+jwt that is bound to one request. `method` is the value
+   * that ext-authz reads from the request `:path`. The audience is a fixed
+   * constant (AUDIENCE_GIBSON_DAEMON) that signAgentJWT sets.
+   */
+  private sign(method: string): string {
+    if (!this.agentID || !this.componentScope) {
+      throw new Error("gibson-client: call register() before making RPCs")
+    }
+    return signAgentJWT(this.agentKey, {
+      hostID: this.hostKey.id,
+      agentID: this.agentID,
+      method,
+      componentScope: this.componentScope,
+    })
+  }
+
+  /**
+   * Sign a fresh agent+jwt that is bound to one HTTP path, for a plain HTTP
+   * call such as the inbound A2A endpoint. The path starts with "/" and is the
+   * exact path of the request, for example "/a2a/inbound/recon".
+   *
+   * Send the token in the header `x-capability-grant`. A token is single use
+   * and lives 55 seconds, so sign a new one for each request. Never log it.
+   * Call register() before the first call.
+   */
+  signPath(path: string): string {
+    if (!path.startsWith("/")) {
+      throw new Error(`gibson-client: signPath: the path ${JSON.stringify(path)} does not start with /`)
+    }
+    return this.sign(path)
+  }
+
   /** Connect interceptor: attach a fresh agent+jwt Bearer to every RPC. */
   authInterceptor(): Interceptor {
     return (next) => async (req) => {
-      if (!this.agentID || !this.componentScope) {
-        throw new Error("gibson-client: call register() before making RPCs")
-      }
-      const token = signAgentJWT(this.agentKey, {
-        hostID: this.hostKey.id,
-        agentID: this.agentID,
-        // Bind the token to this exact RPC (gibson#1246). The gRPC method path
-        // is "/<service.typeName>/<method.name>" — the same string ext-authz
-        // reads from the request `:path`, so the verifier can require a match.
-        // The audience is now a fixed constant (AUDIENCE_GIBSON_DAEMON) minted
-        // inside signAgentJWT, not the platform URL.
-        method: `/${req.service.typeName}/${req.method.name}`,
-        componentScope: this.componentScope,
-      })
+      // Bind the token to this exact RPC (gibson#1246). The gRPC method path
+      // is "/<service.typeName>/<method.name>" — the same string ext-authz
+      // reads from the request `:path`, so the verifier can require a match.
+      const token = this.sign(`/${req.service.typeName}/${req.method.name}`)
       // The per-RPC agent+jwt travels in a DEDICATED header, not Authorization.
       //
       // The gateway contract (epic unified-cg-identity, "Option A") reserves

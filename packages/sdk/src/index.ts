@@ -13,6 +13,7 @@ export * from "./gateway.js"
 export * from "./a2a.js"
 export * from "./mission-state.js"
 export * from "./agent-gateway.js"
+export * from "./a2a-inbound.js"
 export * from "./gateway-harness.js"
 export * from "./task-grant.js"
 // Depth-2 surfaces (zerocool-plugins#7-#11).

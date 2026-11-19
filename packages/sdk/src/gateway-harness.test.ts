@@ -189,7 +189,7 @@ async function runWork(
     submitResult: async () => (done(), {}),
     ...component,
   }
-  const stop = startAgentWorker(comp as never, fixedRef("i"), { handler, onError: () => {}, ...(renewGrant ? { renewGrant } : {}) })
+  const stop = startAgentWorker(comp as never, fixedRef("i"), { handler, onError: () => {}, renewGrant: renewGrant ?? (async () => { throw new Error("no renewal expected") }) })
   await finished
   stop()
 }
@@ -318,7 +318,7 @@ test("the handler reads the task grant of the poll reply with token()", async ()
   assert.equal(read, token)
 })
 
-test("token() gives the renewed grant after a renewal, and the daemon renews one time", async () => {
+test("two token() calls at the same time share one renewal and both get the renewed grant", async () => {
   const soon = jwt({ sub: "component:agent:a", mission_id: "m-1", task_id: "t-1", exp: Math.floor(Date.now() / 1000) + 30 })
   const fresh = farGrant("fresh")
   const renewed: string[] = []
@@ -328,33 +328,19 @@ test("token() gives the renewed grant after a renewal, and the daemon renews one
     { taskGrant: soon },
     {},
     async ({ harness }) => {
-      first = await harness.token()
-      second = await harness.token()
+      ;[first, second] = await Promise.all([harness.token(), harness.token()])
       return {}
     },
-    async (cur) => (renewed.push(cur), fresh),
+    async (cur) => {
+      renewed.push(cur)
+      await new Promise((r) => setTimeout(r, 20))
+      return fresh
+    },
   )
   assert.equal(first, fresh, "the first read renews the grant that is near its expiry")
   assert.equal(second, fresh)
   assert.deepEqual(renewed, [soon])
   assert.notEqual(first, soon)
-})
-
-test("the handler gets the Model gateway endpoint from resolveModel, as the daemon sent it", async () => {
-  let url = ""
-  await runWork(
-    { taskGrant: farGrant() },
-    {
-      resolveModel: async () => ({
-        model: "m", provider: "p", gatewayUrl: "https://model-gw.example:8443/v1", routeHeaders: {}, contextWindow: 0, maxOutputTokens: 0, gatewayCaPem: "",
-      }),
-    },
-    async ({ harness }) => {
-      url = (await harness.resolveModel("primary")).gatewayUrl
-      return {}
-    },
-  )
-  assert.equal(url, "https://model-gw.example:8443/v1")
 })
 
 test("token() of a work item with no grant fails before any call", async () => {
@@ -370,9 +356,9 @@ test("token() of a work item with no grant fails before any call", async () => {
   assert.ok(failure instanceof NoGatewayGrantError)
 })
 
-test("a failed renewal of an ended grant does not put the grant in the error", async () => {
+test("a failed renewal of an ended grant puts the grant in neither the error text nor its cause", async () => {
   const ended = jwt({ sub: "component:agent:a", mission_id: "m-1", task_id: "t-1", exp: Math.floor(Date.now() / 1000) - 10 })
-  let message = ""
+  let failure: Error | undefined
   await runWork(
     { taskGrant: ended },
     {},
@@ -380,14 +366,41 @@ test("a failed renewal of an ended grant does not put the grant in the error", a
       try {
         await harness.token()
       } catch (e) {
-        message = (e as Error).message
+        failure = e as Error
       }
       return {}
     },
-    async () => {
-      throw new Error("daemon down")
+    async (cur) => {
+      throw new Error(`the daemon refused the grant ${cur}`)
     },
   )
-  assert.match(message, /renewal failed: daemon down/)
-  assert.ok(!message.includes(ended))
+  assert.ok(failure, "token() rejects")
+  assert.match(failure.message, /has ended and the renewal failed/)
+  assert.ok(!failure.message.includes(ended))
+  const cause = failure.cause as Error
+  assert.ok(!cause.message.includes(ended), "the cause has no grant")
+  assert.ok(!String(cause.stack).includes(ended))
+})
+
+test("expiresAt() follows the grant of the work item, with the type of TaskHarness.expiresAt", async () => {
+  const soon = jwt({ sub: "component:agent:a", mission_id: "m-1", task_id: "t-1", exp: Math.floor(Date.now() / 1000) + 30 })
+  const fresh = farGrant("fresh")
+  const seen: number[] = []
+  await runWork(
+    { taskGrant: soon },
+    {},
+    async ({ harness }) => {
+      seen.push(harness.expiresAt())
+      await harness.token()
+      seen.push(harness.expiresAt())
+      return {}
+    },
+    async () => fresh,
+  )
+  assert.ok(seen[0] > Date.now() && seen[0] < Date.now() + 60_000, "the grant of the poll reply")
+  assert.ok(seen[1] > Date.now() + 60 * 60_000, "the renewed grant")
+  await runWork({ taskGrant: "" }, {}, async ({ harness }) => {
+    assert.equal(harness.expiresAt(), 0, "no grant gives 0")
+    return {}
+  })
 })

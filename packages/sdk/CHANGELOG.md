@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.23.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.22.0...v0.23.0) (2026-11-19)
+
+
+### Features
+
+* **a2a:** add the inbound a2a client and the path signer ([#134](https://github.com/zeroroot-ai/sdk-ts/issues/134)) ([a7d1509](https://github.com/zeroroot-ai/sdk-ts/commit/a7d15090cf23063570c8548258aa60433827933e))
+
 ## [0.22.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.21.0...v0.22.0) (2026-11-19)
 
 

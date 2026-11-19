@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.8.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.7.1...gibson-mcp-v0.8.0) (2026-11-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **sdk:** the generated AgentService, the LLM calls and the old delegation calls are gone from the bindings.
+
+### Features
+
+* **sdk:** align the sdk with the aaif model and a2a contract ([#130](https://github.com/zeroroot-ai/sdk-ts/issues/130)) ([2cdea64](https://github.com/zeroroot-ai/sdk-ts/commit/2cdea64e4d7e419cb1b3ebe02a2e6b996449a2d9))
+
+
+### Bug Fixes
+
+* **gibson-mcp:** self-heal a stale host key instead of wedging on a 401 ([#122](https://github.com/zeroroot-ai/sdk-ts/issues/122)) ([eaf305d](https://github.com/zeroroot-ai/sdk-ts/commit/eaf305d0631168d5ccae009ecbf31934ec6f991f)), closes [#120](https://github.com/zeroroot-ai/sdk-ts/issues/120)
+* **gibson-mcp:** stop passing --tenant to the gibson CLI ([#121](https://github.com/zeroroot-ai/sdk-ts/issues/121)) ([478748e](https://github.com/zeroroot-ai/sdk-ts/commit/478748e695ef479e59fa97a01d0cb08c9ad7c913)), closes [#119](https://github.com/zeroroot-ai/sdk-ts/issues/119)
+
 ## [0.7.1](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.7.0...gibson-mcp-v0.7.1) (2026-10-25)
 
 

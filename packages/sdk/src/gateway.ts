@@ -48,14 +48,25 @@ export function checkGatewayUrl(baseUrl: string, caPem: string | undefined): voi
   }
 }
 
-const CERT_BLOCK = /-----BEGIN CERTIFICATE-----[\s\S]+?-----END CERTIFICATE-----/g
+const PEM_BEGIN = "-----BEGIN CERTIFICATE-----"
+const PEM_END = "-----END CERTIFICATE-----"
 
 /**
  * Split a PEM bundle into its certificates. It throws when the bundle holds no
- * certificate, or when one block is not a certificate.
+ * certificate, or when one block is not a certificate. The scan is linear. A
+ * bundle comes from the daemon, and a regular expression on it could run slow.
  */
 export function parseCaBundle(caPem: string): string[] {
-  const blocks = caPem.match(CERT_BLOCK) ?? []
+  const blocks: string[] = []
+  let from = 0
+  for (;;) {
+    const start = caPem.indexOf(PEM_BEGIN, from)
+    if (start < 0) break
+    const end = caPem.indexOf(PEM_END, start + PEM_BEGIN.length)
+    if (end < 0) break
+    blocks.push(caPem.slice(start, end + PEM_END.length))
+    from = end + PEM_END.length
+  }
   if (blocks.length === 0) {
     throw new Error("gibson-sdk: the CA bundle of the gateway holds no certificate")
   }

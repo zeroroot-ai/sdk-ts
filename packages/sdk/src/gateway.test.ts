@@ -88,3 +88,18 @@ test("gatewayFetch with no bundle sends the headers over plain http and does not
     server.close()
   }
 })
+
+test("parseCaBundle reads each certificate of a bundle, and a long run of begin lines is fast", () => {
+  const ca = makeTestCa()
+  const other = makeTestCa("other-ca")
+  try {
+    assert.equal(parseCaBundle(`${ca.caPem}\n${other.caPem}`).length, 2)
+    const hostile = "-----BEGIN CERTIFICATE-----\n".repeat(50_000)
+    const t0 = Date.now()
+    assert.throws(() => parseCaBundle(hostile), /no certificate/)
+    assert.ok(Date.now() - t0 < 2_000, "the scan is linear")
+  } finally {
+    ca.cleanup()
+    other.cleanup()
+  }
+})

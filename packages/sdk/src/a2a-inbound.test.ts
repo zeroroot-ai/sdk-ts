@@ -68,7 +68,7 @@ function task(id: string, state: TaskState) {
  * Enroll an identity with a stubbed platform, and start the edge that checks
  * its tokens. The stub records the agent key that the identity registers.
  */
-async function setup(opts: { refuse?: number; answerMessage?: boolean } = {}) {
+async function setup(opts: { refuse?: number; answerMessage?: boolean; reject?: boolean; redirect?: boolean } = {}) {
   const dir = mkdtempSync(join(tmpdir(), "inbound-"))
   const originalFetch = globalThis.fetch
   let agentKey: KeyObject | undefined
@@ -105,11 +105,23 @@ async function setup(opts: { refuse?: number; answerMessage?: boolean } = {}) {
   const paths: string[] = []
   const calls: RpcCall[] = []
   const refusals: string[] = []
+  const landed = { count: 0 }
   const srv = await startTlsServer(ca, (req: IncomingMessage, res: ServerResponse) => {
     const path = req.url ?? ""
     if (opts.refuse) {
       res.statusCode = opts.refuse
       res.end("refused")
+      return
+    }
+    if (path === "/landed") {
+      landed.count++
+      res.end("{}")
+      return
+    }
+    if (opts.redirect) {
+      res.statusCode = 307
+      res.setHeader("location", "/landed")
+      res.end()
       return
     }
     // ext-authz reads the :path of the request, which holds the query too.
@@ -145,7 +157,20 @@ async function setup(opts: { refuse?: number; answerMessage?: boolean } = {}) {
       const rpc = JSON.parse(Buffer.concat(chunks).toString("utf8")) as RpcCall & { id: unknown }
       calls.push({ method: rpc.method, params: rpc.params })
       let result: unknown
-      if (rpc.method === "SendMessage") {
+      if (rpc.method === "GetTask" && rpc.params.id !== "mission-1") {
+        // The answer of the daemon for the task of another caller.
+        res.end(JSON.stringify({ jsonrpc: "2.0", id: rpc.id, error: { code: -32001, message: "task not found" } }))
+        return
+      }
+      if (rpc.method === "SendMessage" && opts.reject) {
+        // The answer of the daemon for a refused message (RejectedTask).
+        const refused = task("refused-1", TaskState.TASK_STATE_REJECTED) as { status: Record<string, unknown> }
+        refused.status.message = {
+          messageId: "m-refused", role: "ROLE_AGENT", taskId: "refused-1", contextId: "ctx-1",
+          parts: [{ text: "the agent is not available for inbound calls" }],
+        }
+        result = { task: refused }
+      } else if (rpc.method === "SendMessage") {
         result = opts.answerMessage
           ? { message: { messageId: "m-1", role: "ROLE_AGENT", parts: [{ text: "hello" }] } }
           : { task: task("mission-1", TaskState.TASK_STATE_SUBMITTED) }
@@ -158,7 +183,7 @@ async function setup(opts: { refuse?: number; answerMessage?: boolean } = {}) {
     })
   })
   return {
-    identity, ca, srv, key, seenJti, paths, calls, refusals,
+    identity, ca, srv, key, seenJti, paths, calls, refusals, landed,
     client: new InboundA2AClient({ baseUrl: srv.url, signer: identity, caPem: ca.caPem }),
     async close() {
       await srv.close()
@@ -226,6 +251,56 @@ test("an answer that is a message and not a task is an error", async () => {
   const s = await setup({ answerMessage: true })
   try {
     await assert.rejects(s.client.sendMessage("recon", "scan"), /not a task/)
+  } finally {
+    await s.close()
+  }
+})
+
+test("a refused message is a Task in the state rejected, and not a thrown error", async () => {
+  const s = await setup({ reject: true })
+  try {
+    const out = await s.client.sendMessage("recon", "scan", { targets: ["target-outside"] })
+    assert.equal(out.status?.state, TaskState.TASK_STATE_REJECTED)
+    const part = out.status?.message?.parts[0]
+    assert.equal(part?.content?.$case === "text" ? part.content.value : "", "the agent is not available for inbound calls")
+  } finally {
+    await s.close()
+  }
+})
+
+test("a JSON-RPC error of the agent, such as task not found, is a thrown error", async () => {
+  const s = await setup()
+  try {
+    await assert.rejects(
+      s.client.getTask("recon", "mission-of-another-caller"),
+      (err: unknown) => err instanceof Error && !(err instanceof InboundA2ARefusedError) && /not found/i.test(err.message),
+    )
+  } finally {
+    await s.close()
+  }
+})
+
+test("an abort signal ends the call", async () => {
+  const s = await setup()
+  try {
+    const signal = AbortSignal.abort(new Error("stopped by the caller"))
+    await assert.rejects(s.client.sendMessage("recon", "scan", { signal }))
+    await assert.rejects(s.client.getTask("recon", "mission-1", { signal }))
+    await assert.rejects(s.client.cancelTask("recon", "mission-1", { signal }))
+    await assert.rejects(s.client.agentCard("recon", { signal }))
+    assert.deepEqual(s.paths, [], "no request reached the agent")
+  } finally {
+    await s.close()
+  }
+})
+
+test("the client follows no redirect, so it signs no token for another URL", async () => {
+  const s = await setup({ redirect: true })
+  try {
+    await assert.rejects(s.client.agentCard("recon"))
+    await assert.rejects(s.client.sendMessage("recon", "scan"))
+    await assert.rejects(s.client.getTask("recon", "mission-1"))
+    assert.equal(s.landed.count, 0, "no request went to the target of the redirect")
   } finally {
     await s.close()
   }

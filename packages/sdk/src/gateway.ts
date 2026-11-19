@@ -18,7 +18,9 @@ import { Readable } from "node:stream"
 
 /**
  * Return the headers to add to a call. The route is the path of the request
- * URL. The agent uses this to send its grant in the header `x-capability-grant`.
+ * URL, with the query when the URL has one. It is the value that the gateway
+ * reads as the path of the request. The agent uses this to send its grant in
+ * the header `x-capability-grant`.
  */
 export type HeaderFunc = (route: string) => Record<string, string> | Promise<Record<string, string>>
 
@@ -115,7 +117,7 @@ export function gatewayFetch(opts: GatewayFetchOptions): typeof fetch {
     const headers = new Headers(request.headers)
     for (const [k, v] of Object.entries(opts.fixedHeaders ?? {})) headers.set(k, v)
     if (opts.headers) {
-      for (const [k, v] of Object.entries(await opts.headers(url.pathname))) headers.set(k, v)
+      for (const [k, v] of Object.entries(await opts.headers(url.pathname + url.search))) headers.set(k, v)
     }
     const body = request.body ? Buffer.from(await request.arrayBuffer()) : undefined
     return await send(url, request.method, headers, body, request.signal, agent)

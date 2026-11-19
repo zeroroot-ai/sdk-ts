@@ -84,7 +84,13 @@ export interface InboundSendOptions extends InboundCallOptions {
 
 /**
  * The platform refused the caller before the agent saw the request. Status 401
- * means a refused token. Status 403 means a caller with no right to the agent.
+ * reports a token that the platform does not accept, for example the token of a
+ * revoked identity. Status 403 reports an identity that is not a caller
+ * identity: it does not have the ceiling `mission:originate`, or it holds
+ * another capability.
+ *
+ * A caller with no grant to the agent does not get this error. See
+ * {@link InboundA2AClient.sendMessage} and {@link InboundA2AClient.agentCard}.
  */
 export class InboundA2ARefusedError extends Error {
   constructor(readonly status: number) {
@@ -148,9 +154,15 @@ export class InboundA2AClient {
    * the message started. The Task id is the handle for {@link getTask} and
    * {@link cancelTask}.
    *
-   * A message that the policy refuses gives a Task in the state rejected, and
-   * no mission starts. A caller that the platform refuses gives an
-   * {@link InboundA2ARefusedError}.
+   * A refused message is a value and not an error: the Task has the state
+   * rejected, its status message holds the reason, and no mission starts. The
+   * platform answers this way for a target outside the definition, for an
+   * agent that is not published, and for a caller with no grant to the agent.
+   * The last two get the same answer, so a caller cannot tell which agents
+   * exist.
+   *
+   * An {@link InboundA2ARefusedError} means that the platform refused the
+   * caller before the agent saw the message.
    */
   async sendMessage(agent: string, text: string, opts: InboundSendOptions = {}): Promise<A2ATask> {
     const client = await this.rpc(agent)
@@ -174,7 +186,11 @@ export class InboundA2AClient {
     return await client.getTask({ tenant: "", id }, callOptions(opts))
   }
 
-  /** End a mission that this caller started, and return the Task. */
+  /**
+   * End a mission that this caller started, and return the Task. The caller
+   * needs its grant to the agent at the time of the call. Without the grant,
+   * the call throws.
+   */
   async cancelTask(agent: string, id: string, opts: InboundCallOptions = {}): Promise<A2ATask> {
     const client = await this.rpc(agent)
     return await client.cancelTask({ tenant: "", id, metadata: undefined }, callOptions(opts))
@@ -182,7 +198,9 @@ export class InboundA2AClient {
 
   /**
    * Return the Agent Card of a published agent. The platform serves a card only
-   * to a caller with a right to the agent.
+   * to a caller with a grant to the agent. A caller with no grant gets the
+   * error of an agent that is not published, so it cannot tell which agents
+   * exist. This error is not an {@link InboundA2ARefusedError}.
    */
   async agentCard(agent: string, opts: InboundCallOptions = {}): Promise<AgentCard> {
     const path = this.path(agent) + CARD_SUFFIX

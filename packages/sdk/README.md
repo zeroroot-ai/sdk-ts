@@ -8,6 +8,7 @@ Any TS program can use it to become a Gibson component and talk to the harness.
 - **Component lifecycle** — `RegisterComponent` + heartbeat; `connectGibson()` session.
 - **Model client** — one Open Responses client (`ModelClient`) for a plain call, a tool call, a structured call and a streamed call. The daemon names the gateway with `ResolveModel`. The client trusts exactly the CA bundle that the daemon sends.
 - **A2A** — an agent receives an A2A message and returns an A2A task over the work queue. It delegates to another agent through the Agent gateway.
+- **Inbound A2A** — an outside program calls a published Gibson agent with `InboundA2AClient`.
 
 The [`zerocool-plugins`](https://github.com/zeroroot-ai/zerocool-plugins) opencode
 plugins build on this SDK. Nothing opencode-specific lives here.
@@ -65,6 +66,37 @@ A2A message through the Agent gateway and returns the A2A task.
 A tool result has a `toolCallId`. A finding can name the tool calls that back it
 with `citeToolCalls`. The platform builds the evidence from its own record. An
 agent cannot set an evidence tier.
+
+
+## Call a Gibson agent from outside
+
+An outside program calls a published Gibson agent with A2A. The call starts a
+mission from the definition that the tenant published for the agent. A standard
+A2A client cannot make this call, because each request needs a Capability Grant
+JWT in the header `x-capability-grant`. The token is bound to the path of the
+request, and the platform accepts it one time. `InboundA2AClient` signs a new
+token for each request.
+
+```ts
+import { CapabilityGrantClient, InboundA2AClient } from "@zeroroot-ai/sdk"
+
+const identity = new CapabilityGrantClient({
+  platformURL: "https://api.example.com",
+  agentName: "my-caller",
+  hostKeyPath: "/var/lib/my-caller/host_key.pem",
+})
+await identity.register() // the first run reads GIBSON_BOOTSTRAP_TOKEN
+
+const client = new InboundA2AClient({ baseUrl: "https://api.example.com", signer: identity })
+const card = await client.agentCard("recon")
+let task = await client.sendMessage("recon", "scan the staging hosts", { targets: ["target-id"] })
+task = await client.getTask("recon", task.id)
+task = await client.cancelTask("recon", task.id)
+```
+
+`targets` narrows the targets of the published definition. The platform never
+reads a target from the text of a message. A program with its own HTTP client
+calls `identity.signPath("/a2a/inbound/recon")` and sends the token itself.
 
 ## License
 

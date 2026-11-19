@@ -46,6 +46,10 @@ test("gatewayFetch trusts exactly the bundle and adds the headers", async () => 
     assert.equal(seen[0]?.headers["x-capability-grant"], "g:/a2a/helper")
     assert.equal(seen[0]?.path, "/a2a/helper")
 
+    // The route holds the query, because the gateway reads the path with it.
+    await f(`${gw.url}/a2a/helper?x=1`, { method: "POST", body: "{}" })
+    assert.equal(seen[1]?.headers["x-capability-grant"], "g:/a2a/helper?x=1")
+
     // No bundle: the system roots do not trust the test CA.
     await assert.rejects(gatewayFetch({ baseUrl: gw.url })(`${gw.url}/x`))
     // Another bundle: the call fails.

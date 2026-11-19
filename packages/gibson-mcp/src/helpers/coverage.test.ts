@@ -154,6 +154,10 @@ const NOT_A_TOOL: Record<string, string> = {
   gatewayFetch: "the fetch of a gateway call with the trust rule, inside the clients",
   parseCaBundle: "checks the CA bundle of a gateway, inside the clients",
   staticGrantHeaders: "puts the task grant on a gateway call, inside the clients",
+  // Inbound A2A is for an outside program that calls a Gibson agent (gibson#1367).
+  // A host of this server starts a mission with the mission tools.
+  InboundA2AClient: "the client of an outside program for the inbound A2A endpoint; a host uses the mission tools",
+  InboundA2ARefusedError: "the error of a refused inbound A2A call, inside that client",
   isSettled: "tells when an A2A delegation can stop waiting, inside the client",
   newMessage: "builds an A2A message for an agent on the platform",
   textPart: "builds an A2A part for an agent on the platform",

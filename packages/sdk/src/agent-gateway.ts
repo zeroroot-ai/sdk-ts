@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { ClientFactory, ClientFactoryOptions, JsonRpcTransportFactory } from "@a2a-js/sdk/client"
 import { Role, TaskState } from "@a2a-js/sdk"
-import type { AgentCard, Message as A2AMessage, Task as A2ATask } from "@a2a-js/sdk"
+import type { Message as A2AMessage, Task as A2ATask } from "@a2a-js/sdk"
+import { jsonRpcClient } from "./a2a-client.js"
 import { gatewayFetch, type HeaderFunc } from "./gateway.js"
 
 /**
@@ -60,23 +60,6 @@ export function isSettled(state: TaskState): boolean {
   }
 }
 
-function cardOf(url: string): AgentCard {
-  return {
-    name: "gibson-delegate",
-    description: "",
-    supportedInterfaces: [{ url, protocolBinding: "JSONRPC", protocolVersion: "1.0", tenant: "" }],
-    provider: undefined,
-    version: "",
-    capabilities: undefined,
-    securitySchemes: {},
-    securityRequirements: [],
-    defaultInputModes: [],
-    defaultOutputModes: [],
-    skills: [],
-    signatures: [],
-  }
-}
-
 /** Wrap the plain reply of an agent that made no task. */
 function taskOfMessage(m: A2AMessage): A2ATask {
   return {
@@ -129,13 +112,7 @@ export async function delegateToResolvedAgent(
     fixedHeaders: agent.routeHeaders,
     ...(opts.headers ? { headers: opts.headers } : {}),
   })
-  const factory = new ClientFactory(
-    ClientFactoryOptions.createFrom(ClientFactoryOptions.default, {
-      transports: [new JsonRpcTransportFactory({ fetchImpl })],
-      preferredTransports: ["JSONRPC"],
-    }),
-  )
-  const client = await factory.createFromAgentCard(cardOf(agent.gatewayUrl))
+  const client = await jsonRpcClient(agent.gatewayUrl, fetchImpl)
   const message: A2AMessage = {
     ...msg,
     messageId: msg.messageId || crypto.randomUUID(),

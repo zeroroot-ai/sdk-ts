@@ -14,6 +14,7 @@ import type { GibsonSession, TaskHarness } from "@zeroroot-ai/sdk"
 import { buildSurface } from "./build.js"
 import { GENERATED_RPC_COUNT } from "./generated/tools.js"
 import { helperToolsFor } from "./helpers/index.js"
+import { gatewayStub } from "./gateway-stub.test.js"
 
 /**
  * The tool surface per check-in source, seen through a real MCP client over
@@ -49,6 +50,7 @@ async function open(env: NodeJS.ProcessEnv, deps = {}) {
 
 function fakeHarness(): TaskHarness {
   return {
+    ...gatewayStub,
     transport: createRouterTransport(() => {}),
     client: {} as never,
     endpoint: "d:50001",
@@ -128,7 +130,7 @@ test("gibson_status names the tenant, target and component scope once checked in
     "every helper the posture can reach, plus status, login, connect and the two meta-tools",
   )
   assert.ok(names.includes("gibson_api_search") && names.includes("gibson_api_call"))
-  assert.ok(names.includes("delegate"))
+  assert.ok(!names.includes("delegate"), "delegation needs a task grant, and the component posture has none")
   assert.ok(!names.includes("remember"), "a memory is a World write and the component posture holds no mission")
   await s.close()
 })

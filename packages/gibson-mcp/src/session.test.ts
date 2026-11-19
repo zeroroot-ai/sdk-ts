@@ -7,6 +7,7 @@ import { createRouterTransport } from "@connectrpc/connect"
 import { HostRegistrationError, type GibsonSession, type LiveMission, type OpenTaskHarnessOptions, type TaskHarness } from "@zeroroot-ai/sdk"
 import type { Settings } from "./config.js"
 import { openGibson } from "./session.js"
+import { gatewayStub } from "./gateway-stub.test.js"
 
 const settings = (o: Partial<Settings> = {}): Settings => ({
   callbackInsecure: false,
@@ -34,6 +35,7 @@ function fakeSession(): GibsonSession & { stopped: number } {
 
 function fakeHarness(agentName = "gibson-mcp"): TaskHarness & { stopped: number } {
   const h = {
+    ...gatewayStub,
     stopped: 0,
     transport: createRouterTransport(() => {}),
     client: {} as never,

@@ -155,3 +155,9 @@ test("seamReason prefers the daemon's own explanation", () => {
   assert.equal(seamReason({ rawMessage: "   " }), null)
   assert.equal(seamReason(undefined), null)
 })
+
+test("callGibsonTool returns the tool call id that the daemon recorded", async () => {
+  const component = { callTool: async () => ({ outputJson: "{}", toolCallId: "tc-7" }) }
+  const result = await callGibsonTool(component as never, { name: "nmap", input: {} })
+  assert.equal(result.toolCallId, "tc-7")
+})

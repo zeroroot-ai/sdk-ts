@@ -3,143 +3,17 @@
 
 import type { Client } from "@connectrpc/connect"
 import type { ComponentService } from "./clients.js"
-import { isSeamUnavailable, seamReason } from "./tools.js"
 
 /**
- * Agent delegation and missions (zerocool-plugins#10).
+ * Missions (zerocool-plugins#10).
  *
- * WIRE FORMAT — `Task` and `Result` cross the wire as JSON inside the
- * `task_json` / `result_json` byte fields. The Go structs `agent.Task` and
- * `agent.Result` (`zeroroot-ai/sdk`, `agent/types.go`) carry **no JSON tags**, so Go
- * marshals them with the Go field names verbatim — `ID`, `Goal`, `Context`,
- * `Constraints`, `Status`, `Output`, `Findings`, `Metadata`. The interfaces below
- * use those exact keys. Renaming them to idiomatic camelCase would produce JSON
- * the Go side silently decodes as a zero-value task.
+ * Delegation to another agent is not here. It is `delegate` on the harness
+ * and `delegateToResolvedAgent`: an A2A message through the Agent gateway
+ * (gibson#1366).
  *
- * The one exception is `agent.Result.ErrorInfo`, which does carry a tag and
- * marshals as `error`.
- *
- * DAEMON STATE: the `agentDelegator` and `missionMgr` seams are declared but
- * never wired, so every RPC in this module answers `Unimplemented` on a live
- * cluster today — gibson#1186.
+ * DAEMON STATE: the `missionMgr` seam is declared but never wired on some
+ * daemons, so an RPC in this module can answer `Unimplemented` — gibson#1186.
  */
-
-/** Operational limits on a delegated task. Mirrors Go `agent.TaskConstraints`. */
-export interface TaskConstraints {
-  /** Max LLM turns; 0 means no limit. */
-  MaxTurns?: number
-  /** Max total tokens across the task; 0 means no limit. */
-  MaxTokens?: number
-  /** Allowlist of tools; empty means all available tools. */
-  AllowedTools?: string[]
-  /** Denylist of tools; takes precedence over AllowedTools. */
-  BlockedTools?: string[]
-}
-
-/** A unit of work handed to another agent. Mirrors Go `agent.Task`. */
-export interface Task {
-  ID: string
-  Goal: string
-  /** Target details, prior findings, mission context. Also carries `goal`. */
-  Context?: Record<string, unknown>
-  Constraints?: TaskConstraints
-  Metadata?: Record<string, unknown>
-}
-
-/** Terminal state of a delegated task. Mirrors Go `agent.ResultStatus`. */
-export type ResultStatus = "success" | "failed" | "partial" | "cancelled" | "timeout"
-
-/** The outcome of a delegated task. Mirrors Go `agent.Result`. */
-export interface Result {
-  Status: ResultStatus
-  Output?: unknown
-  /** IDs of findings the delegate submitted during the task. */
-  Findings?: string[]
-  Metadata?: Record<string, unknown>
-  /** Structured failure detail — Go `ErrorInfo`, tagged `error`. */
-  error?: { message?: string; code?: string; [key: string]: unknown }
-}
-
-/** Build a Task with the Go SDK's defaults (`agent.NewTask`). */
-export function newTask(goal: string, opts: Partial<Omit<Task, "Goal">> = {}): Task {
-  return {
-    ID: opts.ID ?? crypto.randomUUID(),
-    Goal: goal,
-    // The Go SDK keeps the goal in Context["goal"] as well; a delegate may read
-    // either, so populate both.
-    Context: { goal, ...opts.Context },
-    ...(opts.Constraints ? { Constraints: opts.Constraints } : {}),
-    ...(opts.Metadata ? { Metadata: opts.Metadata } : {}),
-  }
-}
-
-/** An agent available for delegation. Mirrors `AgentDescriptorProto`. */
-export interface GibsonAgent {
-  name: string
-  version: string
-  description: string
-  capabilities: string[]
-  targetTypes: string[]
-}
-
-export interface AgentDiscovery {
-  agents: GibsonAgent[]
-  /** Set when discovery could not run; the agent list is empty but nothing failed. */
-  unavailable?: string
-}
-
-/**
- * List the agents this tenant can delegate to. Like {@link listGibsonTools},
- * an unwired daemon seam degrades to an empty list with a reason.
- */
-export async function listAgents(
-  component: Client<typeof ComponentService>,
-  workId = "",
-): Promise<AgentDiscovery> {
-  try {
-    const res = await component.listAgents({ workId })
-    return {
-      agents: res.agents.map((a) => ({
-        name: a.name,
-        version: a.version,
-        description: a.description,
-        capabilities: a.capabilities,
-        targetTypes: a.targetTypes,
-      })),
-    }
-  } catch (e) {
-    if (isSeamUnavailable(e)) {
-      return {
-        agents: [],
-        unavailable: seamReason(e) ?? "the daemon has no agent delegator wired (gibson#1186)",
-      }
-    }
-    throw e
-  }
-}
-
-/**
- * Delegate a sub-task to another Gibson agent and wait for its Result.
- *
- * Rules-of-engagement, authz and budget denials surface as a thrown ConnectRPC
- * error carrying the daemon's status message — the caller should show it rather
- * than retry, because a denial is a policy decision, not a transient fault.
- */
-export async function delegateToAgent(
-  component: Client<typeof ComponentService>,
-  agentName: string,
-  task: Task,
-  workId = "",
-): Promise<Result> {
-  const res = await component.delegateToAgent({
-    workId,
-    agentName,
-    taskJson: encodeJSON(task),
-  })
-  const result = decodeJSON<Result>(res.resultJson)
-  if (!result) throw new Error(`delegateToAgent: agent ${agentName} returned an empty result`)
-  return result
-}
 
 // ---------------------------------------------------------------------------
 // Missions

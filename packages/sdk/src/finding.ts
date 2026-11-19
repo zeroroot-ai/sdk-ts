@@ -41,7 +41,15 @@ export interface MitreMapping {
   sub_techniques?: string[]
 }
 
-/** Mirrors Go `finding.Evidence`. */
+/**
+ * Mirrors Go `finding.Evidence`.
+ *
+ * It is the agent-side form of the evidence of the platform. It has no tier and
+ * no tool call ID, so an agent cannot set either. The platform sets the tier of
+ * each item. An item that an agent types is tier 2. To get tier 1 evidence,
+ * name the tool calls with {@link citeToolCalls}, and the platform builds the
+ * items from its own record.
+ */
 export interface Evidence {
   type: string
   title: string
@@ -73,6 +81,14 @@ export interface Finding {
   mitre_attack?: MitreMapping
   mitre_atlas?: MitreMapping
   evidence?: Evidence[]
+  /**
+   * The tool calls whose recorded results are the recorded evidence of the
+   * finding. Each ID is the tool execution ID of a tool call that the platform
+   * recorded in this mission. The platform reads the recorded result of each
+   * call. If an ID names no record of this mission, the platform refuses the
+   * whole finding.
+   */
+  tool_call_ids?: string[]
   reproduction?: ReproStep[]
   cvss_score?: number
   risk_score: number
@@ -97,6 +113,8 @@ export interface NewFindingInput {
   agentName?: string
   confidence?: number
   evidence?: Evidence[]
+  /** See {@link Finding.tool_call_ids}. */
+  toolCallIds?: string[]
   targetID?: string
   technique?: string
   tags?: string[]
@@ -144,6 +162,7 @@ export function newFinding(input: NewFindingInput): Finding {
     created_at: now,
     updated_at: now,
     ...(input.evidence ? { evidence: input.evidence } : {}),
+    ...(input.toolCallIds && input.toolCallIds.length > 0 ? { tool_call_ids: [...new Set(input.toolCallIds.filter(Boolean))] } : {}),
     ...(input.targetID ? { target_id: input.targetID } : {}),
     ...(input.technique ? { technique: input.technique } : {}),
     ...(input.tags ? { tags: input.tags } : {}),
@@ -170,9 +189,32 @@ export function validateFinding(f: Finding): string[] {
   return problems
 }
 
-/** Encode a Finding for the `bytes finding` field — JSON, not proto (see the module note). */
+/**
+ * Add tool call IDs to the finding. The platform builds recorded evidence from
+ * the tool calls that these IDs name. The function skips an empty ID and an ID
+ * that the finding already holds.
+ */
+export function citeToolCalls(f: Finding, ...ids: string[]): void {
+  for (const id of ids) {
+    if (!id || f.tool_call_ids?.includes(id)) continue
+    f.tool_call_ids = [...(f.tool_call_ids ?? []), id]
+  }
+}
+
+/** The fields of an evidence item that an agent may send. The platform sets the others. */
+const EVIDENCE_FIELDS = ["type", "title", "content", "timestamp", "metadata"] as const
+
+/**
+ * Encode a Finding for the `bytes finding` field — JSON, not proto (see the
+ * module note). An evidence item goes out with the agent fields only. A caller
+ * that adds a `tier` or a `tool_call_id` to an item by a cast does not get it
+ * to the platform, because the platform sets both.
+ */
 export function encodeFinding(f: Finding): Uint8Array {
-  return new TextEncoder().encode(JSON.stringify(f))
+  const body: Finding = f.evidence
+    ? { ...f, evidence: f.evidence.map((e) => Object.fromEntries(EVIDENCE_FIELDS.filter((k) => k in e).map((k) => [k, e[k]])) as unknown as Evidence) }
+    : f
+  return new TextEncoder().encode(JSON.stringify(body))
 }
 
 /**

@@ -14,6 +14,7 @@ import { buildSurface } from "./build.js"
 import { AMBIENT_URI, ambientSource, sessionCoordinates, SESSION_URI } from "./resources.js"
 import type { Gibson } from "./session.js"
 import { keyFor } from "./state.js"
+import { gatewayStub } from "./gateway-stub.test.js"
 
 function knowledge(queries: string[], hits = 1): KnowledgeSource {
   return {
@@ -38,6 +39,7 @@ function gibson(parts: Partial<Gibson>): Gibson {
 }
 
 const harness = (): TaskHarness => ({
+  ...gatewayStub,
   transport: createRouterTransport(() => {}),
   client: {} as never,
   endpoint: "daemon:50001",

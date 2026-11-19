@@ -405,3 +405,23 @@ test("the agent+jwt binds the request method and mints the stable daemon audienc
     )
   })
 })
+
+test("a call that brings its own grant keeps it, so a renewal can present the task grant", async () => {
+  await withTempDir(async (dir) => {
+    globalThis.fetch = stubFetch([]) as never
+    const client = new CapabilityGrantClient({
+      platformURL: "https://api.example.test",
+      agentName: "zerocool",
+      hostKeyPath: join(dir, "host.key"),
+      bootstrapToken: "one-time-token",
+    })
+    await client.register()
+    const headers = new Headers({ "x-capability-grant": "task-grant" })
+    await client.authInterceptor()((async (r: unknown) => r) as never)({
+      header: headers,
+      service: { typeName: "gibson.daemon.v1.DaemonService" },
+      method: { name: "RenewCapabilityGrant" },
+    } as never)
+    assert.equal(headers.get("x-capability-grant"), "task-grant")
+  })
+})

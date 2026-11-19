@@ -13,11 +13,13 @@ import type { TaskHarness } from "@zeroroot-ai/sdk"
 import { buildSurface } from "./build.js"
 import { InboxConflictError, InputKind, JobState, openInbox } from "./inbox.js"
 import { TURN_TOKEN_ENV } from "./http.js"
+import { gatewayStub } from "./gateway-stub.test.js"
 
 /** A harness that counts every SubscribeInput. The daemon allows one per member (ADR-0119). */
 function countingHarness(over: { subscribeInput?: () => AsyncIterable<unknown> } = {}) {
   const counts = { subscribe: 0, send: 0, states: [] as JobState[] }
   const harness: TaskHarness = {
+    ...gatewayStub,
     transport: createRouterTransport(() => {}),
     client: {
       subscribeInput: () => {

@@ -10,6 +10,8 @@ import { HarnessCallbackService } from "./clients.js"
 import { DaemonService } from "./gen/gibson/daemon/v1/daemon_pb.js"
 import type { ContextInfo } from "./gen/gibson/harness/v1/harness_callback_pb.js"
 import type { Claim, Claimer } from "./fork.js"
+import { GATEWAY_GRANT_HEADER, NoGatewayGrantError, type HeaderFunc } from "./gateway.js"
+import { gatewayCalls, resolvedAgentOf, resolvedModelOf, type GatewayCalls } from "./gateway-harness.js"
 
 /**
  * The task harness: everything a dispatched run needs to speak to
@@ -125,7 +127,7 @@ export function contextFromGrant(claims: GrantClaims): Omit<TaskContext, "missio
  */
 export type TaskContext = Pick<ContextInfo, "missionId" | "taskId" | "agentName" | "missionRunId">
 
-export interface TaskHarness {
+export interface TaskHarness extends GatewayCalls {
   /**
    * The transport the client rides, under the current task grant. Exposed so
    * a caller can create a client for another service on the same callback
@@ -344,6 +346,22 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): ForkableHarness {
   const client = createClient(HarnessCallbackService, transport)
   const daemon = createClient(DaemonService, transport)
 
+  // The model and the Agent gateway get the task grant that is in force now.
+  // The renewal below replaces `current`, so a call after a renewal sends the
+  // new grant. A harness with no grant fails the call before it is sent.
+  const grantHeaders: HeaderFunc = () => {
+    if (!current) throw new NoGatewayGrantError()
+    return { [GATEWAY_GRANT_HEADER]: current }
+  }
+  const calls = gatewayCalls(
+    {
+      resolveModel: async (slot) => resolvedModelOf(await client.resolveModel({ context, slot })),
+      resolveAgent: async (name, bankId) =>
+        resolvedAgentOf(await client.resolveAgent({ context, name, ...(bankId ? { bankId } : {}) })),
+    },
+    grantHeaders,
+  )
+
   let timer: ReturnType<typeof setTimeout> | undefined
   let stopped = false
 
@@ -383,6 +401,7 @@ export function openTaskHarness(opts: OpenTaskHarnessOptions): ForkableHarness {
   schedule()
 
   return {
+    ...calls,
     transport,
     client,
     endpoint: opts.endpoint,

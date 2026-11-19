@@ -188,7 +188,11 @@ export class CapabilityGrantClient {
       // exactly this ambiguity. ext-authz reads x-capability-grant, fetches the
       // verifying key by kid from the daemon, verifies the EdDSA signature, then
       // runs per-method FGA.
-      req.header.set("x-capability-grant", token)
+      //
+      // A call that brings its own grant keeps it. RenewCapabilityGrant
+      // presents the current task grant here, and that header replaces the
+      // per-RPC token for that one call.
+      if (!req.header.get("x-capability-grant")) req.header.set("x-capability-grant", token)
       return next(req)
     }
   }

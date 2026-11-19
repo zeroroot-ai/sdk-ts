@@ -10,6 +10,19 @@ import { liveMissionDefinition, NoTaskGrantError, startLiveMission } from "./liv
 const enc = new TextEncoder()
 const dec = new TextDecoder()
 
+/** The work payload of an agent: one A2A message in A2A JSON. */
+function a2aPayload(goal = "Interactive session"): Uint8Array {
+  return enc.encode(
+    JSON.stringify({
+      messageId: "m-1",
+      role: "ROLE_USER",
+      taskId: "run-1",
+      contextId: "ctx-1",
+      parts: [{ text: goal }],
+    }),
+  )
+}
+
 function fakeJwt(payload: Record<string, unknown>): string {
   const b64 = (o: unknown) => Buffer.from(JSON.stringify(o)).toString("base64url")
   return `${b64({ alg: "EdDSA" })}.${b64(payload)}.sig`
@@ -68,9 +81,9 @@ test("startLiveMission creates, runs, claims its own dispatch and ends it", asyn
     async () => ({ workId: "", workType: "", context: {} }), // poll timeout, no work
     async () => ({
       workId: "w-live",
-      workType: "agent_execute",
-      context: { capability_grant: grantFor("m-live"), callback_endpoint: "daemon.example:443" },
-      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" } })),
+      workType: "execute",
+      taskGrant: grantFor("m-live"), context: { callback_endpoint: "daemon.example:443" },
+      payload: a2aPayload("Interactive session"),
     }),
   ])
   const transport = createRouterTransport(() => {})
@@ -91,17 +104,19 @@ test("startLiveMission creates, runs, claims its own dispatch and ends it", asyn
   await live.end({ output: { turns: 3 } })
   const submitted = calls.submitResult![0] as { workId: string; result: Uint8Array }
   assert.equal(submitted.workId, "w-live")
-  const envelope = JSON.parse(dec.decode(submitted.result)) as { result: { status: string } }
-  assert.equal(envelope.result.status, "RESULT_STATUS_SUCCESS")
+  const task = JSON.parse(dec.decode(submitted.result)) as { id: string; contextId: string; status: { state: string } }
+  assert.equal(task.id, "run-1")
+  assert.equal(task.contextId, "ctx-1")
+  assert.equal(task.status.state, "TASK_STATE_COMPLETED")
 })
 
 test("a given originator creates and runs the mission; the component does not", async () => {
   const { session, calls } = fakeSession([
     async () => ({
       workId: "w-h",
-      workType: "agent_execute",
-      context: { capability_grant: grantFor("m-human"), callback_endpoint: "daemon.example:443" },
-      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" } })),
+      workType: "execute",
+      taskGrant: grantFor("m-human"), context: { callback_endpoint: "daemon.example:443" },
+      payload: a2aPayload("Interactive session"),
     }),
   ])
   const seen: { definition: unknown; targetId: string }[] = []
@@ -127,9 +142,9 @@ test("a queue dispatch without a task grant is answered with an error and refuse
   const { session, calls } = fakeSession([
     async () => ({
       workId: "w-q",
-      workType: "agent_execute",
+      workType: "execute",
       context: { mission_id: "m-q", authz_context: "{}", agent: "zerocool-claude" },
-      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" }, missionRunId: "run-q" })),
+      payload: a2aPayload("Interactive session"),
     }),
   ])
   await assert.rejects(
@@ -148,15 +163,15 @@ test("work for another mission is answered with an error result, not swallowed",
   const { session, calls } = fakeSession([
     async () => ({
       workId: "w-other",
-      workType: "agent_execute",
-      context: { capability_grant: grantFor("m-other") },
-      payload: enc.encode(JSON.stringify({ task: { goal: "someone else's" } })),
+      workType: "execute",
+      taskGrant: grantFor("m-other"), context: {},
+      payload: a2aPayload("someone else's"),
     }),
     async () => ({
       workId: "w-live",
-      workType: "agent_execute",
-      context: { capability_grant: grantFor("m-live"), callback_endpoint: "d:443" },
-      payload: enc.encode("{}"),
+      workType: "execute",
+      taskGrant: grantFor("m-live"), context: { callback_endpoint: "d:443" },
+      payload: a2aPayload(),
     }),
   ])
   const live = await startLiveMission(session, {
@@ -165,9 +180,10 @@ test("work for another mission is answered with an error result, not swallowed",
     harness: { transport: createRouterTransport(() => {}), renew: false },
   })
   assert.equal(live.workId, "w-live")
-  const refused = calls.submitResult![0] as { workId: string; result: Uint8Array }
+  const refused = calls.submitResult![0] as { workId: string; error: { code: string; message: string } }
   assert.equal(refused.workId, "w-other")
-  assert.match(dec.decode(refused.result), /only serves its own live mission m-live/)
+  assert.equal(refused.error.code, "EXECUTION_ERROR")
+  assert.match(refused.error.message, /only serves its own live mission m-live/)
   live.harness.stop()
 })
 
@@ -181,7 +197,7 @@ test("startLiveMission gives up when its dispatch never arrives", async () => {
       claimTimeoutMs: 1_000,
       clock: () => (now += 600),
     }),
-    /no agent_execute dispatch for it reached instance inst-1/,
+    /no agent dispatch for it reached instance inst-1/,
   )
 })
 
@@ -189,9 +205,9 @@ test("a failed answer to a work item with no task grant does not hide the missin
   const { session } = fakeSession([
     async () => ({
       workId: "w-f",
-      workType: "agent_execute",
+      workType: "execute",
       context: { mission_id: "m-f", authz_context: "{}", agent: "zerocool-claude" },
-      payload: enc.encode(JSON.stringify({ task: { goal: "Interactive session" }, missionRunId: "run-f" })),
+      payload: a2aPayload("Interactive session"),
     }),
   ])
   const transportFailure = new Error("transport down")
@@ -207,4 +223,24 @@ test("a failed answer to a work item with no task grant does not hide the missin
     }),
     (e: unknown) => e instanceof NoTaskGrantError && e.workId === "w-f" && e.cause === transportFailure,
   )
+})
+
+test("only the work type execute is an agent dispatch", async () => {
+  let now = 0
+  const { session, calls } = fakeSession([
+    async () => ({
+      workId: "w-old",
+      workType: "agent_execute",
+      taskGrant: grantFor("m-live"),
+      context: { callback_endpoint: "d:443" },
+      payload: a2aPayload(),
+    }),
+  ])
+  await assert.rejects(
+    startLiveMission(session, { agentName: "zerocool-claude", targetId: "tgt-1", claimTimeoutMs: 1_000, clock: () => (now += 600) }),
+    /no agent dispatch for it reached/,
+  )
+  const refused = calls.submitResult![0] as { workId: string; error: { code: string } }
+  assert.equal(refused.workId, "w-old")
+  assert.equal(refused.error.code, "EXECUTION_ERROR")
 })

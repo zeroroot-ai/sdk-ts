@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: Elastic-2.0
 // Copyright 2026 Zero Root AI
 
-import { create, fromJsonString, toJsonString } from "@bufbuild/protobuf"
 import type { Client } from "@connectrpc/connect"
+import {
+  decodeWorkMessage,
+  encodeTask,
+  loadPinnedSkills,
+  resultToTask,
+  taskFromMessage,
+  type A2AMessage,
+  type AgentResult,
+  type AgentTask,
+} from "./a2a.js"
 import type { ComponentService } from "./clients.js"
 import type { InstanceRef } from "./component.js"
-import {
-  ExecuteRequestSchema,
-  ExecuteResponseSchema,
-  type ExecuteRequest,
-} from "./gen/gibson/agent/v1/agent_pb.js"
-import { ErrorSchema } from "./gen/gibson/common/v1/gibson_common_pb.js"
-import { ResultSchema, ResultStatus, type Task } from "./gen/gibson/types/v1/types_pb.js"
+import { gatewayCalls, resolvedAgentOf, resolvedModelOf, type GatewayCalls } from "./gateway-harness.js"
+import { TaskGrant, type GrantRenewer } from "./task-grant.js"
 
 /**
  * Dispatched work — the pull side of the component contract.
@@ -22,9 +26,8 @@ import { ResultSchema, ResultStatus, type Task } from "./gen/gibson/types/v1/typ
  * a mission node reaches code that lives outside the cluster.
  *
  * WHICH KINDS GET WORK. All three: `tool` (work_type `execute_proto`), `plugin`
- * (`plugin_invoke`) and `agent` (`agent_execute`). Agent dispatch was added in
- * gibson#1197 / ADR-0111 — before that an agent node resolved only against an
- * in-process registry, and a component registered as kind=agent polled forever.
+ * (`plugin_invoke`) and `agent` (work_type `execute`). Agent dispatch was added
+ * in gibson#1197 / ADR-0111.
  *
  * Each kind carries its own payload contract, so each gets its own codec and
  * its own `start*Worker` entry point. The poll/claim/submit/renew loop is the
@@ -34,9 +37,10 @@ import { ResultSchema, ResultStatus, type Task } from "./gen/gibson/types/v1/typ
  *   - **tool** — a protojson `gibson.tool.v1.ExecuteRequest` (`{ inputJson }`)
  *     answered with an `ExecuteResponse` (`{ outputJson }`). Both fields are
  *     JSON *strings*, not objects; the harness parses them on the far side.
- *   - **agent** — a protojson `gibson.agent.v1.ExecuteRequest` answered with a
- *     `gibson.agent.v1.ExecuteResponse`. Genuinely typed messages, so this side
- *     uses the generated schemas rather than hand-built JSON.
+ *   - **agent** — an A2A v1.0 `Message` in A2A JSON, answered with an A2A v1.0
+ *     `Task` in A2A JSON (gibson#1366). The Gibson context that A2A has no
+ *     field for rides in `Message.metadata` under one extension key (see
+ *     `a2a.ts`). The agent has no AgentService and opens no port.
  */
 
 /** What a tool handler receives: the already-parsed tool input. */
@@ -88,110 +92,80 @@ export function encodeToolError(message: string): Uint8Array {
   return enc.encode(JSON.stringify({ outputJson: "", error: { message } }))
 }
 
-// ── agent contract (zerocool-plugins#33) ────────────────────────────────────
+// ── agent contract (A2A over the work queue, gibson#1366) ───────────────────
 
 /**
- * What an agent handler receives: the decoded `gibson.agent.v1.ExecuteRequest`
- * plus the work-item envelope it arrived in.
- *
- * A goal-driven executor needs more than a parameter bag, so unlike
- * {@link ToolInvocation} this exposes the whole decoded request. The named
- * fields are the ones every handler reaches for; `request` carries the rest
- * (`mission`, `target`, and anything a newer daemon adds) without this type
- * having to grow a field per proto field.
+ * What an agent handler receives: the task that the SDK built from the A2A
+ * message of the work item, plus the work-item envelope it arrived in.
  */
 export interface AgentInvocation {
   workId: string
   workType: string
-  context: Record<string, string>
-  /** The task to pursue. Absent only from a malformed dispatch. */
-  task?: Task
-  /** `task.goal` — the natural-language objective. `""` when no task was sent. */
-  goal: string
   /**
-   * Where to reach HarnessCallbackService for LLM, tools, findings and
-   * knowledge during this run, and the token that authenticates to it. Empty
-   * when the daemon dispatched without a callback seam.
+   * The context map of the work item: `mission_id`, `mission_name`,
+   * `mission_phase`, `target_id` and the other keys. They are not in the A2A
+   * message.
    */
-  callbackEndpoint: string
-  callbackToken: string
+  context: Record<string, string>
+  /** The task. `task.goal` is the text of the message. `task.message` is the whole A2A message. */
+  task: AgentTask
+  /** `task.goal`. */
+  goal: string
   /** Deadline for this run, in ms. `0` when the caller set none. */
   timeoutMs: number
-  /** Provenance the platform correlates this run by. */
-  missionRunId: string
-  agentRunId: string
-  runNumber: number
-  traceId: string
-  parentSpanId: string
-  /** The full decoded request, for anything the named fields omit. */
-  request: ExecuteRequest
+  /** Aborts when the deadline of the run ends. Unset when the caller set no deadline. */
+  signal?: AbortSignal
+  /**
+   * The model and Agent gateway calls of this run: `resolveModel`, `model`,
+   * `resolveAgent` and `delegate`. They send the task grant of the work item
+   * and renew it. A work item with no grant fails each gateway call before it
+   * is sent.
+   */
+  harness: AgentHarness
 }
 
+/** The harness of an agent that polls for work (pull mode). */
+export type AgentHarness = GatewayCalls
+
 /**
- * What an agent handler returns. Mapped onto `gibson.types.v1.Result`, which is
- * what `agent.ProtoToResult` reads on the gibson side.
+ * What an agent handler returns. The SDK turns it into the A2A Task of the
+ * result. The state of the Task is `state`. A handler that throws gives a work
+ * item error with the code `EXECUTION_ERROR` and no Task.
  */
-export interface AgentOutcome {
-  /** JSON-encoded into `Result.output`. */
-  output?: unknown
-  /** IDs of findings this run submitted, for `Result.finding_ids`. */
-  findingIds?: string[]
-  /** Free-form strings for `Result.metadata`. */
-  metadata?: Record<string, string>
-  /**
-   * `false` marks the run failed without throwing — a goal the agent judged
-   * unreachable is a real outcome, not an exception. Defaults to `true`.
-   */
-  success?: boolean
-}
+export type AgentOutcome = AgentResult
 
 export type AgentHandler = (invocation: AgentInvocation) => Promise<AgentOutcome>
 
-/**
- * Decode an `agent_execute` payload.
- *
- * `ignoreUnknownFields` mirrors gibson's own `protojson.UnmarshalOptions{
- * DiscardUnknown: true}` on the response leg: a daemon that adds a field must
- * not crash every worker built against the older schema.
- */
-export function decodeAgentExecute(payload: Uint8Array): ExecuteRequest {
-  const raw = dec.decode(payload).trim()
-  if (!raw) return create(ExecuteRequestSchema, {})
-  return fromJsonString(ExecuteRequestSchema, raw, { ignoreUnknownFields: true })
-}
-
-/** Encode a successful (or self-reported failed) run as an ExecuteResponse. */
-export function encodeAgentResult(outcome: AgentOutcome): Uint8Array {
-  const metadata: Record<string, { kind: { case: "stringValue"; value: string } }> = {}
-  for (const [k, v] of Object.entries(outcome.metadata ?? {})) {
-    metadata[k] = { kind: { case: "stringValue", value: v } }
-  }
-  const response = create(ExecuteResponseSchema, {
-    result: create(ResultSchema, {
-      status: outcome.success === false ? ResultStatus.FAILED : ResultStatus.SUCCESS,
-      output: { kind: { case: "stringValue", value: JSON.stringify(outcome.output ?? null) } },
-      findingIds: outcome.findingIds ?? [],
-      metadata,
-    }),
-  })
-  return enc.encode(toJsonString(ExecuteResponseSchema, response))
-}
-
-/**
- * Encode a failure as an ExecuteResponse carrying `error`.
- *
- * `code` is set as well as `message` because gibson's gate is
- * `e.GetMessage() != "" || e.GetCode() != ""` — an error object with neither is
- * read as success, which would report a crashed run as a completed one.
- */
-export function encodeAgentError(message: string, code = "AGENT_EXECUTION_FAILED"): Uint8Array {
-  const response = create(ExecuteResponseSchema, {
-    error: create(ErrorSchema, { code, message, retryable: false }),
-  })
-  return enc.encode(toJsonString(ExecuteResponseSchema, response))
+/** Decode an agent work payload. It throws {@link WorkMessageError} for a bad message. */
+export function decodeAgentWork(payload: Uint8Array): { message: A2AMessage; task: AgentTask } {
+  const message = decodeWorkMessage(payload)
+  return { message, task: taskFromMessage(message) }
 }
 
 // ── the shared loop ─────────────────────────────────────────────────────────
+
+/** The error codes of a work item that failed in the SDK, not in the code of the author. */
+export type WorkErrorCode =
+  | "DESERIALIZATION_ERROR"
+  | "PINNED_SKILL_LOAD_FAILED"
+  | "EXECUTION_ERROR"
+  | "SERIALIZATION_ERROR"
+
+/** The answer to a work item that failed. `error` is unset for a failure that rides in the result. */
+interface WorkFailure {
+  result: Uint8Array
+  error?: { code: string; message: string; retryable: boolean }
+}
+
+/** Thrown by `prepare` to fail the work item with a code. */
+class PrepareFailure extends Error {
+  constructor(
+    message: string,
+    readonly code: WorkErrorCode,
+  ) {
+    super(message)
+  }
+}
 
 /** How one work kind turns a claimed item into an invocation and back. */
 interface WorkCodec<TInvocation, TOutcome> {
@@ -200,9 +174,14 @@ interface WorkCodec<TInvocation, TOutcome> {
     workType: string
     context: Record<string, string>
     payload: Uint8Array
+    timeoutMs: number
+    taskGrant: string
+    component: Client<typeof ComponentService>
   }): TInvocation
-  encodeResult(outcome: TOutcome): Uint8Array
-  encodeError(message: string): Uint8Array
+  /** Runs after `decode` and before the handler. It throws {@link PrepareFailure}. */
+  prepare?(invocation: TInvocation, component: Client<typeof ComponentService>): Promise<void>
+  encodeResult(outcome: TOutcome, invocation: TInvocation): Uint8Array
+  fail(message: string, code: WorkErrorCode): WorkFailure
 }
 
 const toolCodec: WorkCodec<ToolInvocation, unknown> = {
@@ -212,33 +191,56 @@ const toolCodec: WorkCodec<ToolInvocation, unknown> = {
     context: raw.context,
     input: decodeToolInput(raw.payload),
   }),
-  encodeResult: encodeToolOutput,
-  encodeError: encodeToolError,
+  encodeResult: (outcome) => encodeToolOutput(outcome),
+  fail: (message) => ({ result: encodeToolError(message) }),
 }
 
-const agentCodec: WorkCodec<AgentInvocation, AgentOutcome> = {
+const agentCodec = (renewGrant?: GrantRenewer): WorkCodec<AgentInvocation, AgentOutcome> => ({
   decode: (raw) => {
-    const request = decodeAgentExecute(raw.payload)
+    const { task } = decodeAgentWork(raw.payload)
+    const grant = new TaskGrant(raw.taskGrant, renewGrant)
+    const component = raw.component
+    const workId = raw.workId
     return {
       workId: raw.workId,
       workType: raw.workType,
       context: raw.context,
-      task: request.task,
-      goal: request.task?.goal ?? "",
-      callbackEndpoint: request.callbackEndpoint,
-      callbackToken: request.callbackToken,
-      timeoutMs: Number(request.timeoutMs),
-      missionRunId: request.missionRunId,
-      agentRunId: request.agentRunId,
-      runNumber: request.runNumber,
-      traceId: request.traceId,
-      parentSpanId: request.parentSpanId,
-      request,
+      task,
+      goal: task.goal,
+      timeoutMs: raw.timeoutMs,
+      ...(raw.timeoutMs > 0 ? { signal: AbortSignal.timeout(raw.timeoutMs) } : {}),
+      harness: gatewayCalls(
+        {
+          resolveModel: async (slot) => resolvedModelOf(await component.resolveModel({ workId, slot })),
+          resolveAgent: async (name, bankId) =>
+            resolvedAgentOf(await component.resolveAgent({ workId, name, ...(bankId ? { bankId } : {}) })),
+        },
+        grant.headers(),
+      ),
     }
   },
-  encodeResult: encodeAgentResult,
-  encodeError: encodeAgentError,
-}
+  prepare: async (inv, component) => {
+    if (inv.task.pinnedSkills.length === 0) return
+    // A skill that fails to load stops the run. The agent must not start with
+    // a part of its pinned skills (gibson#1375).
+    try {
+      inv.task.skillItems = await loadPinnedSkills(async (toolName, inputJson) => {
+        const res = await component.callTool({ workId: inv.workId, toolName, inputJson })
+        if (res.error && (res.error.code || res.error.message)) {
+          throw new Error(`${res.error.code}: ${res.error.message}`)
+        }
+        return res.outputJson
+      }, inv.task.pinnedSkills)
+    } catch (e) {
+      throw new PrepareFailure((e as Error).message, "PINNED_SKILL_LOAD_FAILED")
+    }
+  },
+  encodeResult: (outcome, inv) => encodeTask(resultToTask(inv.task, outcome)),
+  fail: (message, code) => ({
+    result: new Uint8Array(),
+    error: { code, message, retryable: false },
+  }),
+})
 
 interface LoopOptions<TInvocation, TOutcome> {
   handler: (invocation: TInvocation) => Promise<TOutcome>
@@ -256,26 +258,62 @@ function runWorker<TInvocation, TOutcome>(
   let stopped = false
   const backoff = opts.backoffMs ?? 2_000
 
+  /** Answer the work item with a failure, so the mission node fails fast with a reason. */
+  const submitFailure = async (workId: string, failure: WorkFailure): Promise<void> => {
+    await component.submitResult({
+      workId,
+      result: failure.result,
+      ...(failure.error ? { error: failure.error } : {}),
+    })
+  }
+
   const loop = async (): Promise<void> => {
     while (!stopped) {
       try {
         const res = await component.pollWork({ instanceId: ref.current() })
         if (!res.workId) continue // block timeout expired with no work
-        const invocation = codec.decode({
-          workId: res.workId,
-          workType: res.workType,
-          context: res.context ?? {},
-          payload: res.payload ?? new Uint8Array(),
-        })
-        opts.onWork?.(invocation)
-        let result: Uint8Array
+        let invocation: TInvocation
         try {
-          result = codec.encodeResult(await opts.handler(invocation))
+          invocation = codec.decode({
+            workId: res.workId,
+            workType: res.workType,
+            context: res.context ?? {},
+            payload: res.payload ?? new Uint8Array(),
+            timeoutMs: Number(res.timeoutMs ?? 0n),
+            taskGrant: res.taskGrant ?? "",
+            component,
+          })
+        } catch (e) {
+          opts.onError?.(e)
+          await submitFailure(res.workId, codec.fail(`decode the work payload: ${(e as Error).message}`, "DESERIALIZATION_ERROR"))
+          continue
+        }
+        opts.onWork?.(invocation)
+        try {
+          await codec.prepare?.(invocation, component)
+        } catch (e) {
+          opts.onError?.(e)
+          const code = e instanceof PrepareFailure ? e.code : "EXECUTION_ERROR"
+          await submitFailure(res.workId, codec.fail((e as Error).message, code))
+          continue
+        }
+        let outcome: TOutcome
+        try {
+          outcome = await opts.handler(invocation)
         } catch (e) {
           // The handler failing is a work error, not a worker error: answer the
           // work item so the mission node fails fast with a reason.
-          result = codec.encodeError((e as Error).message)
           opts.onError?.(e)
+          await submitFailure(res.workId, codec.fail((e as Error).message, "EXECUTION_ERROR"))
+          continue
+        }
+        let result: Uint8Array
+        try {
+          result = codec.encodeResult(outcome, invocation)
+        } catch (e) {
+          opts.onError?.(e)
+          await submitFailure(res.workId, codec.fail(`encode the result: ${(e as Error).message}`, "SERIALIZATION_ERROR"))
+          continue
         }
         await component.submitResult({ workId: res.workId, result })
       } catch (e) {
@@ -328,6 +366,13 @@ export function startWorker(
 export interface AgentWorkerOptions {
   /** Handles a claimed agent invocation. */
   handler: AgentHandler
+  /**
+   * Gets a new task grant. The SDK calls it within 2 minutes of the expiry of
+   * the grant of a work item. Use `daemonGrantRenewer(session.transport)`.
+   * Without it, the SDK does not renew, and a gateway call fails after the
+   * grant has ended.
+   */
+  renewGrant?: GrantRenewer
   /** Called on transport errors; polling continues regardless. */
   onError?: (e: unknown) => void
   /** Called when a work item is claimed, before the handler runs. */
@@ -337,16 +382,16 @@ export interface AgentWorkerOptions {
 }
 
 /**
- * Poll for and serve `agent_execute` work as a registered `kind=agent`.
+ * Poll for and serve agent work as a registered `kind=agent`.
  *
- * The counterpart to {@link startWorker} for goal-driven executors: the daemon
- * hands over a Task and a callback seam, and the handler pursues the goal for as
- * long as the dispatch allows.
+ * The counterpart to {@link startWorker} for goal-driven executors. The daemon
+ * hands over an A2A message. The handler pursues the goal and returns an
+ * {@link AgentOutcome}. The SDK submits it as an A2A Task.
  */
 export function startAgentWorker(
   component: Client<typeof ComponentService>,
   ref: InstanceRef,
   opts: AgentWorkerOptions,
 ): () => void {
-  return runWorker(component, ref, agentCodec, opts)
+  return runWorker(component, ref, agentCodec(opts.renewGrant), opts)
 }

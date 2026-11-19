@@ -1,0 +1,18 @@
+{
+  "input": [
+    {
+      "content": [
+        {
+          "text": "say hello",
+          "type": "input_text"
+        }
+      ],
+      "role": "user",
+      "type": "message"
+    }
+  ],
+  "instructions": "Be brief.",
+  "max_output_tokens": 100,
+  "model": "claude-test-1",
+  "temperature": 0.2
+}

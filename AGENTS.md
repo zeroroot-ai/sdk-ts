@@ -9,8 +9,9 @@ A pnpm workspace with two published packages.
 `packages/sdk` → `@zeroroot-ai/sdk` — the framework-agnostic TypeScript SDK for the
 Gibson platform: connect-es bindings, Capability-Grant auth (Ed25519
 host/agent keys, `agent+jwt` interceptor), component lifecycle
-(`RegisterComponent` + heartbeat, `connectGibson()`), and a local
-OpenAI-compatible LLM shim proxying to `ComponentService.Complete`.
+(`RegisterComponent` + heartbeat, `connectGibson()`), one Open Responses
+model client (`ModelClient`), and A2A for an agent: the work payload is an A2A
+message and the result is an A2A task.
 `packages/gibson-mcp` → `@zeroroot-ai/gibson-mcp` — the Gibson MCP server, the
 one tool surface every coding agent host loads (ADR-0158). It is
 built from the same generated descriptors and rides the SDK release train.
@@ -52,6 +53,15 @@ dashboard).
   License 2.0, not open source. Component-dev scope only — no
   admin/operator/billing surface belongs here (ADR-0058 discipline applies to
   what the SDK exposes).
+
+- **The model and the agent wire follow the Go SDK.** The contract with the
+  daemon is the Go SDK branch `epic/aaif-alignment` (gibson#1366). The golden
+  request bodies in `packages/sdk/src/testdata/openresponses` are copies of
+  `openresponses/testdata` in the Go SDK. Change both or neither.
+- **A2A types come from `@a2a-js/sdk`** (Apache-2.0, A2A v1.0). `src/a2a.ts` is
+  the one place that converts an agent task and result to A2A types.
+- **The gateway trust rule is in `src/gateway.ts`.** A client trusts exactly the
+  PEM bundle that the daemon sends. It has no option to skip verification.
 
 ## Links
 

@@ -8,14 +8,15 @@ import type { GibsonSession } from "./connect.js"
 import { createMission, runMission } from "./delegate.js"
 import { MissionDefinitionSchema, NodeType } from "./gen/gibson/mission/v1/mission_definition_pb.js"
 import { decodeGrantClaims, openTaskHarness, type OpenTaskHarnessOptions, type TaskHarness } from "./task-harness.js"
-import { decodeAgentExecute, encodeAgentError, encodeAgentResult, type AgentOutcome } from "./work.js"
+import { encodeTask, resultToTask } from "./a2a.js"
+import { decodeAgentWork, type AgentOutcome } from "./work.js"
 
 /**
  * A live mission: one mission per interactive session (gibson#1593, decision 9).
  *
  * Launching an interactive coding agent creates one mission whose single AGENT
  * node names this very component. The brain dispatches that node as
- * `agent_execute` work to us, and the work item carries the task grant. From
+ * agent work to us, and the work item carries the task grant. From
  * then on the session is a dispatched agent: `Observe`, `WorldView`,
  * `QueryNodes` and the session store all run under that grant, attributed to a
  * mission a person launched (ADR-0157). The session ends the node with
@@ -68,6 +69,9 @@ export interface LiveMission {
   /** Complete the node. The mission completes at quiescence. */
   end(outcome?: AgentOutcome): Promise<void>
 }
+
+/** The work type of an agent dispatch. The payload is an A2A message (gibson#1366). */
+const AGENT_WORK_TYPE = "execute"
 
 const DEFAULT_TIMEOUT_SECONDS = 8 * 60 * 60
 const DEFAULT_CLAIM_TIMEOUT_MS = 60_000
@@ -156,7 +160,7 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
     const grant = grantOf(res)
     const grantMission = grant ? decodeGrantClaims(grant).missionId : ""
     const dispatchMission = res.context?.mission_id ?? ""
-    if (res.workType === "agent_execute" && (grantMission === missionId || dispatchMission === missionId)) {
+    if (res.workType === AGENT_WORK_TYPE && (grantMission === missionId || dispatchMission === missionId)) {
       const workId = res.workId
       if (!grant) {
         // Answer the dispatch, so the node does not wait for its full timeout.
@@ -164,21 +168,18 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
         // NoTaskGrantError, and the failure of the answer rides as its cause.
         let answerFailure: unknown
         try {
-          await component.submitResult({
-            workId,
-            result: encodeAgentError(`work item ${workId} carries no task grant`),
-          })
+          await component.submitResult(failedWork(workId, `work item ${workId} carries no task grant`))
         } catch (e) {
           answerFailure = e
         }
         throw new NoTaskGrantError(workId, answerFailure)
       }
-      const request = decodeAgentExecute(res.payload ?? new Uint8Array())
+      const { task } = decodeAgentWork(res.payload ?? new Uint8Array())
       const harness = openTaskHarness({
         ...opts.harness,
-        endpoint: request.callbackEndpoint || res.context?.callback_endpoint || "",
+        endpoint: res.context?.callback_endpoint ?? "",
         token: grant,
-        ...(request.missionRunId ? { missionRunId: request.missionRunId } : {}),
+        ...(task.run.missionRunId ? { missionRunId: task.run.missionRunId } : {}),
       })
       return {
         missionId,
@@ -186,30 +187,32 @@ export async function startLiveMission(session: GibsonSession, opts: LiveMission
         harness,
         end: async (outcome = {}) => {
           harness.stop()
-          await component.submitResult({ workId, result: encodeAgentResult(outcome) })
+          await component.submitResult({ workId, result: encodeTask(resultToTask(task, outcome)) })
         },
       }
     }
 
-    await component.submitResult({
-      workId: res.workId,
-      result: encodeAgentError(
+    await component.submitResult(
+      failedWork(
+        res.workId,
         `work item ${res.workId} (${res.workType}) reached an interactive session that only serves its own live mission ${missionId}`,
       ),
-    })
+    )
   }
 
   throw new Error(
-    `gibson-sdk: mission ${missionId} was created and run, but no agent_execute dispatch for it reached ` +
+    `gibson-sdk: mission ${missionId} was created and run, but no agent dispatch for it reached ` +
       `instance ${session.instance.current()} within ${opts.claimTimeoutMs ?? DEFAULT_CLAIM_TIMEOUT_MS}ms. ` +
       `Check that agent_name ${JSON.stringify(opts.agentName)} is this component's registered name.`,
   )
 }
 
-/** The task grant a work item carries, wherever the daemon put it. */
-function grantOf(res: { context?: Record<string, string>; payload?: Uint8Array; workType: string }): string {
-  const fromContext = res.context?.capability_grant
-  if (fromContext) return fromContext
-  if (res.workType !== "agent_execute") return ""
-  return decodeAgentExecute(res.payload ?? new Uint8Array()).callbackToken
+/** Answer a work item with an error, so the node does not wait for its full timeout. */
+function failedWork(workId: string, message: string) {
+  return { workId, result: new Uint8Array(), error: { code: "EXECUTION_ERROR", message, retryable: false } }
+}
+
+/** The task grant a work item carries. The A2A message has no grant. It is a field of the poll reply. */
+function grantOf(res: { taskGrant?: string }): string {
+  return res.taskGrant ?? ""
 }

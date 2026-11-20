@@ -220,9 +220,9 @@ export enum IdentityClass {
 
   /**
    * IDENTITY_CLASS_PLATFORM_OPERATOR is a platform-operator service account
-   * with cross-tenant authority (e.g. tenant-operator on its admin RPCs,
-   * billing aggregators). FGA gates these RPCs on the platform_operator
-   * relation against the system tenant.
+   * with cross-tenant authority (e.g. tenant-operator on its admin RPCs).
+   * FGA gates these RPCs on the platform_operator relation against the
+   * system tenant.
    *
    * @generated from enum value: IDENTITY_CLASS_PLATFORM_OPERATOR = 8;
    */

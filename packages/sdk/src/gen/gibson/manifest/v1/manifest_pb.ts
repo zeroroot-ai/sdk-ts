@@ -14,7 +14,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file gibson/manifest/v1/manifest.proto.
  */
 export const file_gibson_manifest_v1_manifest: GenFile = /*@__PURE__*/
-  fileDesc("CiFnaWJzb24vbWFuaWZlc3QvdjEvbWFuaWZlc3QucHJvdG8SEmdpYnNvbi5tYW5pZmVzdC52MSKBBQoSQ2FwYWJpbGl0eU1hbmlmZXN0EhMKC21hbmlmZXN0X2lkGAEgASgJEhgKEG1hbmlmZXN0X3ZlcnNpb24YAiABKAQSEQoJdGVuYW50X2lkGAMgASgJEg8KB3N1YmplY3QYBCABKAkSLgoKZXhwaXJlc19hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEwoLdHRsX3NlY29uZHMYByABKA0SNwoGYWdlbnRzGAsgAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSNgoFdG9vbHMYDCADKAsyJy5naWJzb24ubWFuaWZlc3QudjEuQ29tcG9uZW50Q2FwYWJpbGl0eRI4CgdwbHVnaW5zGA0gAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSMwoGbGltaXRzGB4gASgLMiMuZ2lic29uLm1hbmlmZXN0LnYxLkxpbWl0c0FuZFF1b3RhcxI1CgZtZW1vcnkYICABKAsyJS5naWJzb24ubWFuaWZlc3QudjEuTWVtb3J5UGVybWlzc2lvbnMSEgoJc2lnbmF0dXJlGMgBIAEoDEoECGQQZUoECGUQZkoECAUQBkoECAoQC0oECBQQFUoECBUQFkoECB8QIEoGCMkBEMoBUglpc3N1ZWRfYXRSDnRlbmFudF9jb250ZXh0UhVjcm9zc19jb21wb25lbnRfcnVsZXNSH2Nyb3NzX2NvbXBvbmVudF9ydWxlc190cnVuY2F0ZWRSE2F2YWlsYWJsZV9sbG1fc2xvdHNSDnNpZ25pbmdfa2V5X2lkIrsCChNDb21wb25lbnRDYXBhYmlsaXR5EgwKBG5hbWUYASABKAkSDAoEa2luZBgCIAEoCRIVCg1jb21wb25lbnRfcmVmGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSFAoMb3duZXJfdGVuYW50GAcgASgJEhMKC3Blcm1pc3Npb25zGAogAygJEjcKCGxpdmVuZXNzGB4gASgLMiUuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudExpdmVuZXNzSgQIBhAHSgQIFBAVSgQIFRAWSgQIFhAXSgQIKBApUglpc19zeXN0ZW1SDmFnZW50X2NvbnRyYWN0Ug10b29sX2NvbnRyYWN0Ug9wbHVnaW5fY29udHJhY3RSDnByaW5jaXBhbF9raW5kIn4KD0xpbWl0c0FuZFF1b3RhcxIbChNtYXhfdG9rZW5zX3Blcl9jYWxsGAEgASgESgQIAhADSgQIAxAESgQIBBAFUhZtYXhfdG9rZW5zX3Blcl9zZXNzaW9uUhVyYXRlX2xpbWl0X3Blcl9taW51dGVSDW1heF9zcGVuZF91c2QiRQoRTWVtb3J5UGVybWlzc2lvbnMSDwoHd29ya2luZxgBIAEoCRIPCgdtaXNzaW9uGAIgASgJSgQIAxAEUghsb25ndGVybSJtChFDb21wb25lbnRMaXZlbmVzcxIOCgZzdGF0dXMYASABKAkSMgoObGFzdF9oZWFydGJlYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSgQIAxAEUg5pbnN0YW5jZV9jb3VudCJEChxHZXRDYXBhYmlsaXR5TWFuaWZlc3RSZXF1ZXN0EiQKEmFnZW50X3ByaW5jaXBhbF9pZBgBIAEoCUIIukgFcgMYgAgiWQodR2V0Q2FwYWJpbGl0eU1hbmlmZXN0UmVzcG9uc2USOAoIbWFuaWZlc3QYASABKAsyJi5naWJzb24ubWFuaWZlc3QudjEuQ2FwYWJpbGl0eU1hbmlmZXN0IiMKIVdhdGNoTWFuaWZlc3RJbnZhbGlkYXRpb25zUmVxdWVzdCJiCiJXYXRjaE1hbmlmZXN0SW52YWxpZGF0aW9uc1Jlc3BvbnNlEjwKBWV2ZW50GAEgASgLMi0uZ2lic29uLm1hbmlmZXN0LnYxLk1hbmlmZXN0SW52YWxpZGF0aW9uRXZlbnQimAIKGU1hbmlmZXN0SW52YWxpZGF0aW9uRXZlbnQSSwoKZXZlbnRfdHlwZRgBIAEoDjI3LmdpYnNvbi5tYW5pZmVzdC52MS5NYW5pZmVzdEludmFsaWRhdGlvbkV2ZW50LkV2ZW50VHlwZRIRCgl0ZW5hbnRfaWQYAiABKAkSDgoGcmVhc29uGAMgASgJIl0KCUV2ZW50VHlwZRIaChZFVkVOVF9UWVBFX1VOU1BFQ0lGSUVEEAASGAoURVZFTlRfVFlQRV9IRUFSVEJFQVQQARIaChZFVkVOVF9UWVBFX0lOVkFMSURBVEVEEAJKBAgEEAVKBAgFEAZSFG5ld19tYW5pZmVzdF92ZXJzaW9uUgplbWl0dGVkX2F0QlZQAVpAZ2l0aHViLmNvbS96ZXJvcm9vdC1haS9zZGsvYXBpL2dlbi9naWJzb24vbWFuaWZlc3QvdjE7bWFuaWZlc3RwYqoCD0dpYnNvbi5NYW5pZmVzdGIGcHJvdG8z", [file_google_protobuf_timestamp, file_gibson_identity_v1_identity, file_buf_validate_validate]);
+  fileDesc("CiFnaWJzb24vbWFuaWZlc3QvdjEvbWFuaWZlc3QucHJvdG8SEmdpYnNvbi5tYW5pZmVzdC52MSLaBAoSQ2FwYWJpbGl0eU1hbmlmZXN0EhMKC21hbmlmZXN0X2lkGAEgASgJEhgKEG1hbmlmZXN0X3ZlcnNpb24YAiABKAQSEQoJdGVuYW50X2lkGAMgASgJEg8KB3N1YmplY3QYBCABKAkSLgoKZXhwaXJlc19hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEwoLdHRsX3NlY29uZHMYByABKA0SNwoGYWdlbnRzGAsgAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSNgoFdG9vbHMYDCADKAsyJy5naWJzb24ubWFuaWZlc3QudjEuQ29tcG9uZW50Q2FwYWJpbGl0eRI4CgdwbHVnaW5zGA0gAygLMicuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudENhcGFiaWxpdHkSNQoGbWVtb3J5GCAgASgLMiUuZ2lic29uLm1hbmlmZXN0LnYxLk1lbW9yeVBlcm1pc3Npb25zEhIKCXNpZ25hdHVyZRjIASABKAxKBAgeEB9KBAhkEGVKBAhlEGZKBAgFEAZKBAgKEAtKBAgUEBVKBAgVEBZKBAgfECBKBgjJARDKAVIGbGltaXRzUglpc3N1ZWRfYXRSDnRlbmFudF9jb250ZXh0UhVjcm9zc19jb21wb25lbnRfcnVsZXNSH2Nyb3NzX2NvbXBvbmVudF9ydWxlc190cnVuY2F0ZWRSE2F2YWlsYWJsZV9sbG1fc2xvdHNSDnNpZ25pbmdfa2V5X2lkIrsCChNDb21wb25lbnRDYXBhYmlsaXR5EgwKBG5hbWUYASABKAkSDAoEa2luZBgCIAEoCRIVCg1jb21wb25lbnRfcmVmGAMgASgJEg8KB3ZlcnNpb24YBCABKAkSEwoLZGVzY3JpcHRpb24YBSABKAkSFAoMb3duZXJfdGVuYW50GAcgASgJEhMKC3Blcm1pc3Npb25zGAogAygJEjcKCGxpdmVuZXNzGB4gASgLMiUuZ2lic29uLm1hbmlmZXN0LnYxLkNvbXBvbmVudExpdmVuZXNzSgQIBhAHSgQIFBAVSgQIFRAWSgQIFhAXSgQIKBApUglpc19zeXN0ZW1SDmFnZW50X2NvbnRyYWN0Ug10b29sX2NvbnRyYWN0Ug9wbHVnaW5fY29udHJhY3RSDnByaW5jaXBhbF9raW5kIkUKEU1lbW9yeVBlcm1pc3Npb25zEg8KB3dvcmtpbmcYASABKAkSDwoHbWlzc2lvbhgCIAEoCUoECAMQBFIIbG9uZ3Rlcm0ibQoRQ29tcG9uZW50TGl2ZW5lc3MSDgoGc3RhdHVzGAEgASgJEjIKDmxhc3RfaGVhcnRiZWF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEoECAMQBFIOaW5zdGFuY2VfY291bnQiRAocR2V0Q2FwYWJpbGl0eU1hbmlmZXN0UmVxdWVzdBIkChJhZ2VudF9wcmluY2lwYWxfaWQYASABKAlCCLpIBXIDGIAIIlkKHUdldENhcGFiaWxpdHlNYW5pZmVzdFJlc3BvbnNlEjgKCG1hbmlmZXN0GAEgASgLMiYuZ2lic29uLm1hbmlmZXN0LnYxLkNhcGFiaWxpdHlNYW5pZmVzdCIjCiFXYXRjaE1hbmlmZXN0SW52YWxpZGF0aW9uc1JlcXVlc3QiYgoiV2F0Y2hNYW5pZmVzdEludmFsaWRhdGlvbnNSZXNwb25zZRI8CgVldmVudBgBIAEoCzItLmdpYnNvbi5tYW5pZmVzdC52MS5NYW5pZmVzdEludmFsaWRhdGlvbkV2ZW50IpgCChlNYW5pZmVzdEludmFsaWRhdGlvbkV2ZW50EksKCmV2ZW50X3R5cGUYASABKA4yNy5naWJzb24ubWFuaWZlc3QudjEuTWFuaWZlc3RJbnZhbGlkYXRpb25FdmVudC5FdmVudFR5cGUSEQoJdGVuYW50X2lkGAIgASgJEg4KBnJlYXNvbhgDIAEoCSJdCglFdmVudFR5cGUSGgoWRVZFTlRfVFlQRV9VTlNQRUNJRklFRBAAEhgKFEVWRU5UX1RZUEVfSEVBUlRCRUFUEAESGgoWRVZFTlRfVFlQRV9JTlZBTElEQVRFRBACSgQIBBAFSgQIBRAGUhRuZXdfbWFuaWZlc3RfdmVyc2lvblIKZW1pdHRlZF9hdEJWUAFaQGdpdGh1Yi5jb20vemVyb3Jvb3QtYWkvc2RrL2FwaS9nZW4vZ2lic29uL21hbmlmZXN0L3YxO21hbmlmZXN0cGKqAg9HaWJzb24uTWFuaWZlc3RiBnByb3RvMw", [file_google_protobuf_timestamp, file_gibson_identity_v1_identity, file_buf_validate_validate]);
 
 /**
  * CapabilityManifest is the single, signed, versioned snapshot of every
@@ -69,11 +69,6 @@ export type CapabilityManifest = Message<"gibson.manifest.v1.CapabilityManifest"
    * @generated from field: repeated gibson.manifest.v1.ComponentCapability plugins = 13;
    */
   plugins: ComponentCapability[];
-
-  /**
-   * @generated from field: gibson.manifest.v1.LimitsAndQuotas limits = 30;
-   */
-  limits?: LimitsAndQuotas | undefined;
 
   /**
    * @generated from field: gibson.manifest.v1.MemoryPermissions memory = 32;
@@ -162,27 +157,6 @@ export const ComponentCapabilitySchema: GenMessage<ComponentCapability> = /*@__P
   messageDesc(file_gibson_manifest_v1_manifest, 1);
 
 /**
- * LimitsAndQuotas carries the tier-derived resource ceilings applied to
- * the subject's session. max_spend_usd is a decimal string to avoid
- * floating-point rounding at quota boundaries.
- *
- * @generated from message gibson.manifest.v1.LimitsAndQuotas
- */
-export type LimitsAndQuotas = Message<"gibson.manifest.v1.LimitsAndQuotas"> & {
-  /**
-   * @generated from field: uint64 max_tokens_per_call = 1;
-   */
-  maxTokensPerCall: bigint;
-};
-
-/**
- * Describes the message gibson.manifest.v1.LimitsAndQuotas.
- * Use `create(LimitsAndQuotasSchema)` to create a new message.
- */
-export const LimitsAndQuotasSchema: GenMessage<LimitsAndQuotas> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 2);
-
-/**
  * MemoryPermissions expresses per-tier memory access (e.g. "ro", "rw", "").
  *
  * @generated from message gibson.manifest.v1.MemoryPermissions
@@ -204,7 +178,7 @@ export type MemoryPermissions = Message<"gibson.manifest.v1.MemoryPermissions"> 
  * Use `create(MemoryPermissionsSchema)` to create a new message.
  */
 export const MemoryPermissionsSchema: GenMessage<MemoryPermissions> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 3);
+  messageDesc(file_gibson_manifest_v1_manifest, 2);
 
 /**
  * ComponentLiveness is a snapshot of the component's runtime health at
@@ -230,7 +204,7 @@ export type ComponentLiveness = Message<"gibson.manifest.v1.ComponentLiveness"> 
  * Use `create(ComponentLivenessSchema)` to create a new message.
  */
 export const ComponentLivenessSchema: GenMessage<ComponentLiveness> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 4);
+  messageDesc(file_gibson_manifest_v1_manifest, 3);
 
 /**
  * GetCapabilityManifestRequest identifies the subject whose manifest is
@@ -251,7 +225,7 @@ export type GetCapabilityManifestRequest = Message<"gibson.manifest.v1.GetCapabi
  * Use `create(GetCapabilityManifestRequestSchema)` to create a new message.
  */
 export const GetCapabilityManifestRequestSchema: GenMessage<GetCapabilityManifestRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 5);
+  messageDesc(file_gibson_manifest_v1_manifest, 4);
 
 /**
  * GetCapabilityManifestResponse wraps the signed manifest. Wrapping keeps
@@ -273,7 +247,7 @@ export type GetCapabilityManifestResponse = Message<"gibson.manifest.v1.GetCapab
  * Use `create(GetCapabilityManifestResponseSchema)` to create a new message.
  */
 export const GetCapabilityManifestResponseSchema: GenMessage<GetCapabilityManifestResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 6);
+  messageDesc(file_gibson_manifest_v1_manifest, 5);
 
 /**
  * WatchManifestInvalidationsRequest opens a server-streaming channel
@@ -289,7 +263,7 @@ export type WatchManifestInvalidationsRequest = Message<"gibson.manifest.v1.Watc
  * Use `create(WatchManifestInvalidationsRequestSchema)` to create a new message.
  */
 export const WatchManifestInvalidationsRequestSchema: GenMessage<WatchManifestInvalidationsRequest> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 7);
+  messageDesc(file_gibson_manifest_v1_manifest, 6);
 
 /**
  * WatchManifestInvalidationsResponse wraps a single invalidation event
@@ -309,7 +283,7 @@ export type WatchManifestInvalidationsResponse = Message<"gibson.manifest.v1.Wat
  * Use `create(WatchManifestInvalidationsResponseSchema)` to create a new message.
  */
 export const WatchManifestInvalidationsResponseSchema: GenMessage<WatchManifestInvalidationsResponse> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 8);
+  messageDesc(file_gibson_manifest_v1_manifest, 7);
 
 /**
  * ManifestInvalidationEvent is delivered when the subject's manifest
@@ -340,7 +314,7 @@ export type ManifestInvalidationEvent = Message<"gibson.manifest.v1.ManifestInva
  * Use `create(ManifestInvalidationEventSchema)` to create a new message.
  */
 export const ManifestInvalidationEventSchema: GenMessage<ManifestInvalidationEvent> = /*@__PURE__*/
-  messageDesc(file_gibson_manifest_v1_manifest, 9);
+  messageDesc(file_gibson_manifest_v1_manifest, 8);
 
 /**
  * @generated from enum gibson.manifest.v1.ManifestInvalidationEvent.EventType
@@ -366,5 +340,5 @@ export enum ManifestInvalidationEvent_EventType {
  * Describes the enum gibson.manifest.v1.ManifestInvalidationEvent.EventType.
  */
 export const ManifestInvalidationEvent_EventTypeSchema: GenEnum<ManifestInvalidationEvent_EventType> = /*@__PURE__*/
-  enumDesc(file_gibson_manifest_v1_manifest, 9, 0);
+  enumDesc(file_gibson_manifest_v1_manifest, 8, 0);
 

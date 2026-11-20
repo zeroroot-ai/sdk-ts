@@ -4385,8 +4385,8 @@ export const DaemonService: GenService<{
    * GetCapabilityManifest returns the signed, versioned capability manifest
    * for the calling principal in their resolved tenant. SDKs call this on
    * session start and on invalidation events. The ADK calls it at scaffold
-   * time to discover what components, permissions, cross-component rules,
-   * and runtime limits apply.
+   * time to discover what components, permissions and cross-component rules
+   * apply.
    *
    * @generated from rpc gibson.daemon.v1.DaemonService.GetCapabilityManifest
    */

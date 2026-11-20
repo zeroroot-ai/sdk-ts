@@ -7,7 +7,7 @@ import type { ComponentService } from "./clients.js"
 /**
  * Gibson tools and plugins through the harness (zerocool-plugins#9).
  *
- * Every call is authz'd and metered server-side: `CallTool` discovers the tool in
+ * The daemon authorizes every call: `CallTool` discovers the tool in
  * the tenant registry (with a `_system` fallback), enqueues a work item and waits
  * for the result — gibson `internal/platform/component/service.go:1360`. A caller
  * never reaches a tool directly.

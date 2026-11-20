@@ -38,7 +38,7 @@ export function discoveredTool(session: GibsonSession, t: GibsonTool): ToolDefin
   const schemaNote = t.inputMessageType ? ` Input must match the Gibson message type ${t.inputMessageType}.` : ""
   return defineTool({
     name: toolKey(t.name),
-    description: `${t.description || `Gibson tool "${t.name}"`}${schemaNote} Runs through the Gibson harness, authorized and metered.`,
+    description: `${t.description || `Gibson tool "${t.name}"`}${schemaNote} Runs through the Gibson harness, which authorizes each call.`,
     input: {
       input: z.record(z.string(), z.unknown()).describe(`Input object for the ${t.name} tool.`),
       timeout_ms: z.number().int().min(1).optional().describe("Per-call timeout in milliseconds."),
@@ -55,7 +55,7 @@ export function discoveredPlugin(session: GibsonSession, p: GibsonPlugin): ToolD
   const methods = p.methods.length > 0 ? ` Methods: ${p.methods.join(", ")}.` : ""
   return defineTool({
     name: pluginKey(p.name),
-    description: `${p.description || `Gibson plugin "${p.name}"`}${methods} Runs through the Gibson harness, authorized and metered.`,
+    description: `${p.description || `Gibson plugin "${p.name}"`}${methods} Runs through the Gibson harness, which authorizes each call.`,
     input: {
       method: z.string().describe(`Method to call on the ${p.name} plugin.`),
       params: z.record(z.string(), z.unknown()).optional().describe("Method parameters."),

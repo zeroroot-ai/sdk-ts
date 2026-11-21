@@ -3,16 +3,14 @@
 
 import type { Client } from "@connectrpc/connect"
 import type { TaskHarness } from "./task-harness.js"
-import type { AttackChain, AttackPattern, FindingNode } from "./gen/gibson/graphrag/v1/graphrag_pb.js"
+import type { FindingNode } from "./gen/gibson/graphrag/v1/graphrag_pb.js"
 import type { ApplicationFinding } from "./gen/gibson/harness/v1/harness_callback_pb.js"
 import type { MissionRunSummary } from "./gen/gibson/types/v1/types_pb.js"
 import { RunScope } from "./gen/gibson/harness/v1/harness_callback_pb.js"
 import type { ComponentService } from "./clients.js"
 import {
   decodeProperties,
-  findSimilarAttacks,
   findSimilarFindings,
-  getAttackChains,
   getRelatedFindings,
   queryKnowledge,
   type KnowledgeHit,
@@ -33,7 +31,7 @@ import {
  *  - **No `workId` argument.** The callback service resolves tenant and mission
  *    from the task context the client already attaches, so there is nothing here
  *    for a caller to get wrong or to widen.
- *  - **Typed results.** ComponentService answers these four with
+ *  - **Typed results.** ComponentService answers these reads with
  *    `bytes results_json` whose schema lives in a comment; the callback wire
  *    carries real messages, so there is no JSON to decode and no second
  *    definition of the same shape to drift.
@@ -58,8 +56,6 @@ export interface KnowledgeSource {
   query(opts: QueryKnowledgeOptions): Promise<KnowledgeHit[]>
   similarFindings(findingId: string, topK?: number): Promise<FindingNode[]>
   relatedFindings(findingId: string): Promise<FindingNode[]>
-  similarAttacks(content: string, topK?: number): Promise<AttackPattern[]>
-  attackChains(techniqueId: string, maxDepth?: number): Promise<AttackChain[]>
   runHistory(): Promise<MissionRunSummary[]>
   /**
    * The Findings of one Application, with the lifecycle context that decides
@@ -121,14 +117,6 @@ export function taskKnowledge(harness: TaskHarness): KnowledgeSource {
       return (await client.getRelatedFindings({ context, findingId })).results
     },
 
-    async similarAttacks(content, topK = 5) {
-      return (await client.findSimilarAttacks({ context, content, topK })).results
-    },
-
-    async attackChains(techniqueId, maxDepth = 3) {
-      return (await client.getAttackChains({ context, techniqueId, maxDepth })).results
-    },
-
     async runHistory() {
       return (await client.getMissionRunHistory({ context })).runs
     },
@@ -174,17 +162,13 @@ export function componentKnowledge(component: Client<typeof ComponentService>): 
   return {
     query: (opts) => queryKnowledge(component, opts),
 
-    // ComponentService answers these four with `bytes results_json`, so they
+    // ComponentService answers these two with `bytes results_json`, so they
     // decode here rather than at every caller. The shapes match the typed
     // callback messages field-for-field — same graph, two transports.
     similarFindings: async (findingId, topK = 5) =>
       (await findSimilarFindings(component, findingId, topK)) as unknown as FindingNode[],
     relatedFindings: async (findingId) =>
       (await getRelatedFindings(component, findingId)) as unknown as FindingNode[],
-    similarAttacks: async (content, topK = 5) =>
-      (await findSimilarAttacks(component, content, topK)) as unknown as AttackPattern[],
-    attackChains: async (techniqueId, maxDepth = 3) =>
-      (await getAttackChains(component, techniqueId, maxDepth)) as unknown as AttackChain[],
 
     // ComponentService has GetMissionRunHistory, but the SDK has never exposed a
     // client for it. Reported as unsupported rather than answered with an empty

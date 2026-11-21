@@ -67,20 +67,6 @@ export function knowledgeTools(ctx: HelperContext): ToolDefinition[] {
         annotations: { readOnlyHint: true },
         handler: async (args) => json(await knowledge.relatedFindings(args.finding_id)),
       }),
-      defineTool({
-        name: "similar_attacks",
-        description: "Attack patterns in the graph that are semantically similar to a piece of content.",
-        input: { content: z.string().describe("Text to match attack patterns against."), limit: z.number().int().min(1).max(50).optional().describe("Maximum hits. Defaults to 5.") },
-        annotations: { readOnlyHint: true },
-        handler: async (args) => json(await knowledge.similarAttacks(args.content, args.limit ?? 5)),
-      }),
-      defineTool({
-        name: "attack_chains",
-        description: "Multi-hop attack paths that start from a MITRE technique.",
-        input: { technique_id: z.string().describe("MITRE technique id, e.g. T1190."), max_depth: z.number().int().min(1).max(10).optional().describe("Hops to follow. Defaults to 3.") },
-        annotations: { readOnlyHint: true },
-        handler: async (args) => json(await knowledge.attackChains(args.technique_id, args.max_depth ?? 3)),
-      }),
     )
   }
 

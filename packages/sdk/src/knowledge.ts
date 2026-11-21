@@ -105,28 +105,6 @@ export async function getRelatedFindings(
   return decodeJSONBytes<Record<string, unknown>[]>(res.resultsJson) ?? []
 }
 
-/** Attack patterns semantically similar to arbitrary content. */
-export async function findSimilarAttacks(
-  component: Client<typeof ComponentService>,
-  content: string,
-  topK = 5,
-  workId = "",
-): Promise<Record<string, unknown>[]> {
-  const res = await component.findSimilarAttacks({ workId, content, topK })
-  return decodeJSONBytes<Record<string, unknown>[]>(res.resultsJson) ?? []
-}
-
-/** Multi-hop attack paths starting from a MITRE technique. */
-export async function getAttackChains(
-  component: Client<typeof ComponentService>,
-  techniqueId: string,
-  maxDepth = 3,
-  workId = "",
-): Promise<Record<string, unknown>[]> {
-  const res = await component.getAttackChains({ workId, techniqueId, maxDepth })
-  return decodeJSONBytes<Record<string, unknown>[]>(res.resultsJson) ?? []
-}
-
 /**
  * Render knowledge hits as a compact block for a system prompt. Kept here rather
  * than in the plugin so every consumer formats recalled context the same way.

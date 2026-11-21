@@ -25,8 +25,6 @@ function fakeHarness(capture: Record<string, unknown>) {
     queryNodes: rec("queryNodes", { results: [{ node: { id: "n1", type: "host", content: "c" }, score: 0.9, distance: 0.1 }] }),
     findSimilarFindings: rec("findSimilarFindings", { results: [{ id: "f1" }] }),
     getRelatedFindings: rec("getRelatedFindings", { results: [{ id: "f2" }] }),
-    findSimilarAttacks: rec("findSimilarAttacks", { results: [{ techniqueId: "T1566" }] }),
-    getAttackChains: rec("getAttackChains", { results: [{ id: "c1" }] }),
     getMissionRunHistory: rec("getMissionRunHistory", { runs: [{ missionId: "m1", runNumber: 1 }] }),
     applicationFindings: rec("applicationFindings", { findings: [] }),
   }
@@ -49,8 +47,6 @@ test("every knowledge read carries the task context the callback service resolve
   await k.query({ text: "prior findings" })
   await k.similarFindings("f-1")
   await k.relatedFindings("f-1")
-  await k.similarAttacks("phishing")
-  await k.attackChains("T1566")
   await k.runHistory()
   for (const [name, req] of Object.entries(seen)) {
     assert.deepEqual((req as { context: unknown }).context, TASK_CONTEXT, `${name} must carry the task context`)
@@ -63,8 +59,6 @@ test("no knowledge read carries a workId or a tenant", async () => {
   await k.query({ text: "prior findings" })
   await k.similarFindings("f-1")
   await k.relatedFindings("f-1")
-  await k.similarAttacks("phishing")
-  await k.attackChains("T1566")
   await k.runHistory()
 
   for (const [name, req] of Object.entries(seen)) {
@@ -85,15 +79,13 @@ test("query flattens hits so a caller never decodes proto by hand", async () => 
   )
 })
 
-test("the four graph reads return typed results, not JSON blobs", async () => {
+test("the graph reads return typed results, not JSON blobs", async () => {
   // ComponentService answers these with `bytes results_json` whose schema lives
   // in a comment. The callback wire carries real messages, so there is nothing
   // to decode here and no second definition of the same shape to drift.
   const k = taskKnowledge(fakeHarness({}))
   assert.equal((await k.similarFindings("f-1"))[0]?.id, "f1")
   assert.equal((await k.relatedFindings("f-1"))[0]?.id, "f2")
-  assert.equal((await k.similarAttacks("p"))[0]?.techniqueId, "T1566")
-  assert.equal((await k.attackChains("T1566"))[0]?.id, "c1")
   assert.equal((await k.runHistory())[0]?.missionId, "m1")
 })
 

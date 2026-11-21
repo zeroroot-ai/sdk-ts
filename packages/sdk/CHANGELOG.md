@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.24.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.23.0...v0.24.0) (2026-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **gibson-mcp:** remove the attack_chains and similar_attacks tools ([#139](https://github.com/zeroroot-ai/sdk-ts/issues/139))
+* CapabilityManifest has no limits field, and the LimitsAndQuotas type and schema are gone.
+
+### Features
+
+* drop the manifest limits message ([#137](https://github.com/zeroroot-ai/sdk-ts/issues/137)) ([ef44893](https://github.com/zeroroot-ai/sdk-ts/commit/ef4489394adaf5eb5b7df9928d927296f3529bb8))
+* **gibson-mcp:** remove the attack_chains and similar_attacks tools ([#139](https://github.com/zeroroot-ai/sdk-ts/issues/139)) ([eb56c00](https://github.com/zeroroot-ai/sdk-ts/commit/eb56c00919cd5cb066fb7488f7da7a25e21390ea))
+
 ## [0.23.0](https://github.com/zeroroot-ai/sdk-ts/compare/v0.22.0...v0.23.0) (2026-11-19)
 
 

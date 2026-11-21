@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.8.0...gibson-mcp-v0.9.0) (2026-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **gibson-mcp:** remove the attack_chains and similar_attacks tools ([#139](https://github.com/zeroroot-ai/sdk-ts/issues/139))
+* CapabilityManifest has no limits field, and the LimitsAndQuotas type and schema are gone.
+
+### Features
+
+* **a2a:** add the inbound a2a client and the path signer ([#134](https://github.com/zeroroot-ai/sdk-ts/issues/134)) ([a7d1509](https://github.com/zeroroot-ai/sdk-ts/commit/a7d15090cf23063570c8548258aa60433827933e))
+* drop the manifest limits message ([#137](https://github.com/zeroroot-ai/sdk-ts/issues/137)) ([ef44893](https://github.com/zeroroot-ai/sdk-ts/commit/ef4489394adaf5eb5b7df9928d927296f3529bb8))
+* **gibson-mcp:** remove the attack_chains and similar_attacks tools ([#139](https://github.com/zeroroot-ai/sdk-ts/issues/139)) ([eb56c00](https://github.com/zeroroot-ai/sdk-ts/commit/eb56c00919cd5cb066fb7488f7da7a25e21390ea))
+
 ## [0.8.0](https://github.com/zeroroot-ai/sdk-ts/compare/gibson-mcp-v0.7.1...gibson-mcp-v0.8.0) (2026-11-19)
 
 

@@ -79,7 +79,6 @@ export interface Finding {
   severity: Severity
   confidence: number
   mitre_attack?: MitreMapping
-  mitre_atlas?: MitreMapping
   evidence?: Evidence[]
   /**
    * The tool calls whose recorded results are the recorded evidence of the

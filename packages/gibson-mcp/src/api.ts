@@ -10,7 +10,7 @@ import { failure, json } from "./tools/result.js"
 /**
  * The door to the full API (sdk-ts#70).
  *
- * The platform's whole surface is one tool per RPC, and there are 188 of
+ * The platform's whole surface is one tool per RPC, and there are 195 of
  * them. Every host loads every description into the model context on each
  * turn, so putting all of them in `tools/list` costs the same tokens whether
  * or not the agent needs a single one, buries the tools it actually reaches
@@ -153,7 +153,7 @@ export interface ApiToolOptions {
  * The description both meta-tools carry.
  *
  * It has one job: tell a model the door exists. A model that never reads the
- * 188 entries has no other way to learn that `CreateBank`, `OpenJob` or
+ * 195 entries has no other way to learn that `CreateBank`, `OpenJob` or
  * `PutSessionContext` are reachable at all, so the examples are not
  * decoration.
  */

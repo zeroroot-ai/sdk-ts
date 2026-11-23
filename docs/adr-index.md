@@ -43,7 +43,6 @@ Do not edit the tables by hand.
 | ADR-0033 | The saga runner calls each step, and each step is safe to run again |
 | ADR-0034 | The daemon owns LLM provider records and credentials |
 | ADR-0035 | CUE is the only mission authoring format |
-| ADR-0038 | Eino is the one LLM framework in gibson |
 | ADR-0041 | One grant model: FGA tuples, one read RPC, writes through the daemon |
 | ADR-0045 | One runtime identity for every component: the Capability Grant JWT |
 | ADR-0046 | The FGA model treats agent, tool and plugin principals the same |
@@ -51,7 +50,7 @@ Do not edit the tables by hand.
 | ADR-0056 | gibson is the one Go repo for the platform backend and the first-party plugins |
 | ADR-0058 | The SDK is the component-development surface only |
 | ADR-0059 | The tenant brings the embedding provider |
-| ADR-0060 | Billing is one private component with three connection points |
+| ADR-0060 | Billing is one private component with two connection points |
 | ADR-0061 | Connector auth is a platform capability (was 0064 until 2026-10-05) |
 | ADR-0063 | Mission origination requires a parent mission |
 | ADR-0064 | One light brand across the marketing site and the console |
@@ -114,7 +113,6 @@ Do not edit the tables by hand.
 | ADR-0137 | The schema declares which variable an edge feeds, and the trainer learns each strength |
 | ADR-0141 | The setec sandbox substrate is x86 with KVM |
 | ADR-0142 | A Gibson cluster dials one named setec fleet over mTLS, and the fleet enrolls each cluster |
-| ADR-0143 | Until the cutover, setec uses stock runtimes and a node installer |
 | ADR-0144 | Warm start is a pool of base snapshots that setec builds |
 | ADR-0145 | A restored sandbox must pass five isolation invariants |
 | ADR-0146 | A Sandbox is ephemeral or a session, and a session survives a suspend and a node loss |
@@ -141,6 +139,10 @@ Do not edit the tables by hand.
 | ADR-0174 | A2A is the one agent wire |
 | ADR-0175 | A mission state is an A2A Task state |
 | ADR-0176 | A finding and all of its evidence live in the tenant database |
+| ADR-0177 | A tool of the buyer comes in through a connector, and A2A is the one push path |
+| ADR-0178 | The check that raised a finding verifies its fix |
+| ADR-0179 | An agent merges its own fix, and the fix proves that the service still works |
+| ADR-0180 | A response action runs inside the grant |
 
 ## Retired
 
@@ -167,6 +169,7 @@ Do not edit the tables by hand.
 | ADR-0030 | A package stays in the SDK when customer code needs it | ADR-0058 |
 | ADR-0036 | A Capability Grant is always required | ADR-0045 |
 | ADR-0037 | Customer RPCs on two SDK services, operator RPCs on one | ADR-0058 |
+| ADR-0038 | Eino is the one LLM framework in gibson | ADR-0172, ADR-0173 |
 | ADR-0039 | Tenant admin services live in the OSS SDK | ADR-0058 |
 | ADR-0040 | Tenant administration is split into focused services | ADR-0058 |
 | ADR-0042 | Connect by cluster name, claim the public origin | ADR-0092 |
@@ -188,3 +191,4 @@ Do not edit the tables by hand.
 | ADR-0082 | A recreate restores only a named backup | ADR-0083 |
 | ADR-0085 | The chart is Apache-2.0, the images are not | ADR-0089 |
 | ADR-0091 | Staging is one EC2 instance with k3s | ADR-0095 |
+| ADR-0143 | Until the cutover, setec used stock runtimes and a node installer | ADR-0166 |

@@ -37,7 +37,7 @@ snippets and their smoke tests live in
 ## The tool surface
 
 Coverage is 1:1 with everything the SDK produces. **Exposure** is in two
-tiers, because 188 tool descriptions on every turn cost more context than
+tiers, because 195 tool descriptions on every turn cost more context than
 they are worth, bury the tools an agent reaches for, and trip the tool cap
 some hosts impose.
 
@@ -56,7 +56,7 @@ a person enrols now is callable in the same session.
 ### Full tier, behind the door
 
 Every RPC of every SDK service, generated from the proto descriptors and
-named `<service>_<method>` in snake case: **188 across 12 services** today.
+named `<service>_<method>` in snake case: **195 across 12 services** today.
 They are all built and all callable. They are simply not listed.
 
 ```
@@ -82,7 +82,7 @@ hiding a tool never means losing one.
 Registers the full tier in `tools/list` as well, which is what the server
 did before this became two tiers. Off by default. A host with a large
 context window and no tool cap can take the flat 1:1 surface. The door stays
-open with the flag on, because finding one RPC among 188 is still cheaper
+open with the flag on, because finding one RPC among 195 is still cheaper
 through a search than through the list.
 
 A posture registers only the tools its credential can reach. With no
